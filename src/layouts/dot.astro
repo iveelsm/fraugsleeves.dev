@@ -1,0 +1,28 @@
+---
+const { title = "the zealot chronicles" } = Astro.props;
+---
+
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>{title}</title>
+	<link rel="stylesheet" href="/styles/global.css" />
+</head>
+<body class="dot-layout">
+	<div class="border-frame">
+		<header>
+			<h1 class="site-title">{title}</h1>
+			<p class="site-subtitle">an exploration in wayfinding within software development</p>
+			<nav class="nav-links">
+				<a href="/">Home</a>
+				<a href="/archives">Archives</a>
+				<a href="/contact" class="active">Contact</a>
+			</nav>
+		</header>
+
+		<main>
+			<slot />
+		</main>
+	</div>
+</body>
+</html>
