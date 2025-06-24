@@ -1,0 +1,56 @@
+---
+import DotLayout from '../layouts/index.astro';
+import Github from '../icons/github.svg';
+import Gitlab from '../icons/gitlab.svg';
+import Mail from '../icons/mail.svg';
+import LinkedIn from '../icons/linkedin.svg';
+const {
+	email = "blog@frogman.simplelogin.com",
+	github = "https://github.com/iveelsm",
+	gitlab = "https://gitlab.com/iveelsm",
+	linkedin = "https://linkedin.com/msleevi"
+} = Astro.props;
+---
+<DotLayout title="the zealot chronicles">
+	<section class="about-content">
+		<div class="about-header">
+			<div class="contact-intro">
+				<p>
+					If you would like to contact me, feel free to click any of the icons on the right below my image.
+					If you would like to send me an email fill out the forms below and I will respond as quickly as I can.
+				</p>
+			</div>
+			
+			<div class="profile-side">
+				<img src="/gravatar.png" alt="Profile" class="profile-pic" />
+				<div class="social-icons">
+					<a href={email}>
+						<Mail width={100} height={100} />
+					</a>
+					<a href={linkedin}>
+						<LinkedIn width={100} height={100}/>
+					</a>
+					<a href={github}>
+						<Github width={100} height={100}/>
+					</a>
+					<a href={gitlab}>
+						<Gitlab width={100} height={100}/>
+					</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="about-grid">
+			<form class="contact-form">
+				<label for="name">Name</label>
+				<input id="name" name="name" type="text" />
+
+				<label for="email">Email</label>
+				<input id="email" name="email" type="email" />
+
+				<label for="message">Message</label>
+				<textarea id="message" name="message" rows="6"></textarea>
+			</form>
+		</div>
+	</section>
+</DotLayout>

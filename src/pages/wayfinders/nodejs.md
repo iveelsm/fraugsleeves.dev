@@ -1,4 +1,5 @@
 ---
+layout: ../layouts/blog.astro
 title: 'Node.js Wayfinder'
 pubDate: 2025-06-12
 description: 'Wayfinder point for all Node.js exploration topics'
