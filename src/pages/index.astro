@@ -21,20 +21,24 @@ const blogs = (await getCollection('blog')).sort(
 	</head>
 	<body>
 		<Navigation />
-		<ul>
-			{wayfinders.map(post => (
-				<li>
-					<a href={`/wayfinders/${post.id}`}>{post.data.title}</a>
-				</li>
-			))}
-		</ul>
-		<ul>
-			{blogs.map(post => (
-				<li>
-					<a href={`/blog/${post.id}`}>{post.data.title}</a>
-				</li>
-			))}
-		</ul>
+		<div class="wayfinders">
+			<ul>
+				{wayfinders.map(post => (
+					<li>
+						<a href={`/wayfinders/${post.id}`}>{post.data.title}</a>
+					</li>
+				))}
+			</ul>
+		</div>
+		<div class="blogs">
+			<ul>
+				{blogs.map(post => (
+					<li>
+						<a href={`/blog/${post.id}`}>{post.data.title}</a>
+					</li>
+				))}
+			</ul>
+		</div>
 		<Footer />
 	</body>
 </html>

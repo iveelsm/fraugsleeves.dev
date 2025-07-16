@@ -11,7 +11,7 @@ const blog = defineCollection({
 });
 
 const wayfinders = defineCollection({
- 	 loader: glob({ pattern: "**/*.md", base: "./src/pages/wayfinders" }),
+ 	loader: glob({ pattern: "**/*.md", base: "./src/pages/wayfinders" }),
 	schema: z.object({
 		title: z.string(),
 		description: z.string(),

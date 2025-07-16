@@ -1,5 +1,5 @@
 ---
-layout: ../layouts/blog.astro
+layout: ../../layouts/blog.astro
 title: 'When Microservices are the Problem'
 pubDate: 2025-06-12
 description: 'A sample document for Microservice '
