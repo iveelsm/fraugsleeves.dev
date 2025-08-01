@@ -1,18 +1,16 @@
 ---
-import '../styles/blog.css';
+import '../styles/wayfinders.css';
 
-import TableOfContents from '../components/toc.astro';
 import Navigation from '../components/navigation.astro';
 import Footer from '../components/footer.astro';
 const {
-  frontmatter,
-  headings
+  frontmatter
 } = Astro.props;
 ---
 <html lang="en">
-	<body class="blog-layout">
+	<body class="wayfinder-layout">
 		<Navigation />
-		<div class="blog-title">
+		<div class="wayfinder-title">
 			<div class="post-header">
 				<h1 class="post-title">
 					{frontmatter.title}
@@ -28,10 +26,7 @@ const {
 				</ul>
 			</div>
 		</div>
-		<div class="blog-post">
-			<aside>
-				<TableOfContents headings={headings}></TableOfContents>
-			</aside>
+		<div class="wayfinder-post">
 			<main>
 				<slot />
 			</main>

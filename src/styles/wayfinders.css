@@ -1,0 +1,211 @@
+/* Reset + base typography */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: 'Iosevka Web', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 16px;
+  line-height: 1.65;
+  background-color: #fcfcfc;
+  color: #1a1a1a;
+  scroll-behavior: smooth;
+}
+
+body {
+  padding: 2rem 1rem;
+  max-width: 960px;
+  margin: 0 auto;
+  background: #fcfcfc;
+}
+
+.post-header {
+  margin: 2.5rem 0 2rem;
+}
+
+.post-title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #000;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.5rem;
+}
+
+.post-summary {
+  font-size: 1.05rem;
+  color: #444;
+  margin-top: 1rem;
+  margin-bottom: 0.75rem;
+  font-style: italic;
+}
+
+.post-meta {
+  font-size: 0.9rem;
+  color: #777;
+  margin-bottom: 1rem;
+}
+
+.post-tags {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0;
+  margin: 0.25rem 0 2rem;
+}
+
+.tag {
+  background-color: #f0f0f0;
+  color: #333;
+  font-size: 0.85rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-family: monospace;
+  white-space: nowrap;
+}
+
+/* Dot background layout like tansanrao.com */
+.wayfinder-layout {
+  background-image: radial-gradient(#ccc 0.5px, transparent 0.5px);
+  background-size: 16px 16px;
+  background-attachment: fixed;
+}
+
+/* Frame with subtle border */
+.border-frame {
+  border: 1px solid #e2e2e2;
+  padding: 2rem;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+  border-radius: 4px;
+}
+
+/* Header styles */
+.site-title {
+  font-size: 2rem;
+  margin-bottom: 0.25rem;
+  color: #000;
+}
+
+.site-subtitle {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 2rem;
+  font-style: italic;
+}
+
+/* Main content styles */
+main {
+  font-size: 1rem;
+}
+
+main h1,
+main h2,
+main h3,
+main h4 {
+  font-weight: 600;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  color: #000;
+}
+
+main h1 {
+  font-size: 1.75rem;
+}
+
+main h2 {
+  font-size: 1.5rem;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.25rem;
+}
+
+main h3 {
+  font-size: 1.25rem;
+}
+
+main h4 {
+  font-size: 1.1rem;
+}
+
+main p {
+  margin: 1rem 0;
+  color: #1a1a1a;
+}
+
+main a {
+  color: #00449e;
+  text-decoration: underline;
+}
+
+main a:hover {
+  text-decoration: none;
+}
+
+main code {
+  background: #f4f4f4;
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-family: 'Iosevka Web', monospace;
+  font-size: 0.95em;
+}
+
+main pre {
+  background: #f4f4f4;
+  padding: 1rem;
+  overflow-x: auto;
+  border-radius: 6px;
+  font-size: 0.95em;
+  margin: 1.5rem 0;
+}
+
+main pre code {
+  background: none;
+  padding: 0;
+}
+
+/* Lists */
+main ul,
+main ol {
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+
+main li {
+  margin-bottom: 0.5rem;
+}
+
+/* Blockquote */
+main blockquote {
+  border-left: 3px solid #ddd;
+  margin: 1rem 0;
+  padding-left: 1rem;
+  color: #555;
+  font-style: italic;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #888;
+  margin-top: 3rem;
+  padding: 1rem 0;
+}
+
+/* Responsive tweaks */
+@media (max-width: 640px) {
+  body {
+    padding: 1rem;
+  }
+
+  .border-frame {
+    padding: 1.25rem;
+  }
+
+  .site-title {
+    font-size: 1.5rem;
+  }
+}
