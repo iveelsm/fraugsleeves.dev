@@ -1,9 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
 import NavigableLayout from '../layouts/navigable.astro';
-
 import '../styles/tags.css';
 
+// Get all blog posts and extract unique tags
 const blogs = await getCollection('blog');
 const allTags = blogs.flatMap(post => post.data.tags || []);
 const uniqueTags = [...new Set(allTags)].sort();

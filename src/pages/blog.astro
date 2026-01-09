@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import NavigableLayout from '../layouts/navigable.astro';
+import '../styles/blog-list.css';
 
 const blogs = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
@@ -31,74 +32,3 @@ function formatDate(date: Date): string {
 		</ul>
 	</div>
 </NavigableLayout>
-
-<style>
-	.blog-container {
-		max-width: var(--max-width-container);
-		margin: 0 auto;
-		padding: var(--space-xl);
-	}
-
-	.posts-list {
-		list-style: none;
-		padding: 0;
-		margin: 0;
-	}
-
-	.post-item {
-		padding: var(--space-md) 0;
-		border-bottom: 1px solid var(--color-border);
-	}
-
-	.post-item:last-child {
-		border-bottom: none;
-	}
-
-	.post-link {
-		display: flex;
-		justify-content: space-between;
-		align-items: baseline;
-		gap: var(--space-md);
-		text-decoration: none;
-		margin-bottom: var(--space-xs);
-	}
-
-	.post-title {
-		font-size: var(--text-lg);
-		font-weight: var(--font-medium);
-		color: var(--color-text);
-		transition: color var(--transition-fast);
-	}
-
-	.post-link:hover .post-title {
-		color: var(--color-accent);
-	}
-
-	.post-date {
-		font-size: var(--text-sm);
-		color: var(--color-text-subtle);
-		white-space: nowrap;
-	}
-
-	.post-description {
-		font-size: var(--text-sm);
-		color: var(--color-text-muted);
-		margin: 0;
-		line-height: var(--leading-normal);
-	}
-
-	@media (max-width: 640px) {
-		.blog-container {
-			padding: var(--space-lg);
-		}
-
-		.post-link {
-			flex-direction: column;
-			gap: var(--space-xs);
-		}
-
-		.post-date {
-			font-size: var(--text-xs);
-		}
-	}
-</style>
