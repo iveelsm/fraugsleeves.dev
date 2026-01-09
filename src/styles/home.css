@@ -1,0 +1,134 @@
+.index-container {
+	max-width: var(--max-width-container);
+	margin: 0 auto;
+	padding: var(--space-xl);
+}
+
+/* Welcome Section */
+.welcome-section {
+	text-align: center;
+	padding: var(--space-2xl) 0;
+	border-bottom: 1px solid var(--color-border);
+	margin-bottom: var(--space-2xl);
+}
+
+.welcome-title {
+	font-size: var(--text-4xl);
+	font-weight: var(--font-semibold);
+	color: var(--color-text);
+	margin-bottom: var(--space-md);
+}
+
+.welcome-text {
+	font-size: var(--text-base);
+	color: var(--color-text-muted);
+	max-width: 600px;
+	margin: 0 auto var(--space-lg);
+	line-height: var(--leading-normal);
+}
+
+.social-links {
+	display: flex;
+	justify-content: center;
+	gap: var(--space-md);
+}
+
+.social-link {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--color-text-muted);
+	padding: var(--space-sm);
+	border-radius: var(--radius-sm);
+	transition: all var(--transition-fast);
+}
+
+.social-link:hover {
+	color: var(--color-accent);
+	transform: rotate(8deg);
+}
+
+.social-link :global(svg) {
+	fill: currentColor;
+}
+
+/* Posts Section */
+.posts-section {
+	padding-bottom: var(--space-2xl);
+}
+
+.section-title {
+	font-size: var(--text-2xl);
+	font-weight: var(--font-semibold);
+	color: var(--color-text);
+	margin-bottom: var(--space-lg);
+	padding-bottom: var(--space-sm);
+	border-bottom: 1px solid var(--color-border);
+}
+
+.posts-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.post-item {
+	padding: var(--space-md) 0;
+	border-bottom: 1px solid var(--color-border);
+}
+
+.post-item:last-child {
+	border-bottom: none;
+}
+
+.post-link {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: var(--space-md);
+	text-decoration: none;
+	margin-bottom: var(--space-xs);
+}
+
+.post-title {
+	font-size: var(--text-lg);
+	font-weight: var(--font-medium);
+	color: var(--color-text);
+	transition: color var(--transition-fast);
+}
+
+.post-link:hover .post-title {
+	color: var(--color-accent);
+}
+
+.post-date {
+	font-size: var(--text-sm);
+	color: var(--color-text-subtle);
+	white-space: nowrap;
+}
+
+.post-description {
+	font-size: var(--text-sm);
+	color: var(--color-text-muted);
+	margin: 0;
+	line-height: var(--leading-normal);
+}
+
+@media (max-width: 640px) {
+	.index-container {
+		padding: var(--space-lg);
+	}
+
+	.welcome-title {
+		font-size: var(--text-3xl);
+	}
+
+	.post-link {
+		flex-direction: column;
+		gap: var(--space-xs);
+	}
+
+	.post-date {
+		font-size: var(--text-xs);
+	}
+}

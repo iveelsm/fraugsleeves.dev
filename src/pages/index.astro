@@ -1,34 +1,65 @@
 ---
-import '../styles/global.css';
-
 import { getCollection } from 'astro:content';
 import NavigableLayout from '../layouts/navigable.astro';
+import Github from '../icons/github.svg';
+import Gitlab from '../icons/gitlab.svg';
+import Mail from '../icons/mail.svg';
+import LinkedIn from '../icons/linkedin.svg';
 
-const wayfinders = (await getCollection('wayfinders')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+import '../styles/home.css';
 
 const blogs = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+
+const socialLinks = [
+	{ href: "mailto:blog@frogman.simplelogin.com", icon: Mail, label: "Email" },
+	{ href: "https://linkedin.com/in/msleevi", icon: LinkedIn, label: "LinkedIn" },
+	{ href: "https://github.com/iveelsm", icon: Github, label: "GitHub" },
+	{ href: "https://gitlab.com/iveelsm", icon: Gitlab, label: "GitLab" },
+];
+
+function formatDate(date: Date): string {
+	return date.toLocaleDateString('en-US', {
+		year: 'numeric',
+		month: 'long',
+		day: 'numeric'
+	});
+}
 ---
 <NavigableLayout title="fraugsleeves.dev">
-	<div class="wayfinders">
-		<ul>
-			{wayfinders.map(post => (
-				<li>
-					<a href={`/wayfinders/${post.id}`}>{post.data.title}</a>
-				</li>
-			))}
-		</ul>
-	</div>
-	<div class="blogs">
-		<ul>
-			{blogs.map(post => (
-				<li>
-					<a href={`/blog/${post.id}`}>{post.data.title}</a>
-				</li>
-			))}
-		</ul>
+	<div class="index-container">
+		<!-- Welcome Section -->
+		<section class="welcome-section">
+			<h1 class="welcome-title">Welcome!</h1>
+			<p class="welcome-text">
+				To an exposition of wayfinding within software development
+			</p>
+			<div class="social-links">
+				{socialLinks.map(link => (
+					<a href={link.href} class="social-link" aria-label={link.label} target="_blank" rel="noopener noreferrer">
+						<link.icon width={24} height={24} />
+					</a>
+				))}
+			</div>
+		</section>
+
+		<!-- Blog Posts Section -->
+		<section class="posts-section">
+			<h2 class="section-title">Recent Posts</h2>
+			<ul class="posts-list">
+				{blogs.map(post => (
+					<li class="post-item">
+						<a href={`/blog/${post.id}`} class="post-link">
+							<span class="post-title">{post.data.title}</span>
+							<span class="post-date">{formatDate(post.data.pubDate)}</span>
+						</a>
+						{post.data.description && (
+							<p class="post-description">{post.data.description}</p>
+						)}
+					</li>
+				))}
+			</ul>
+		</section>
 	</div>
 </NavigableLayout>
