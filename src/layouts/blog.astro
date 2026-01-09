@@ -10,32 +10,112 @@ const {
 } = Astro.props;
 ---
 <html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>{frontmatter.title}</title>
+	</head>
 	<body class="blog-layout">
 		<Navigation />
-		<div class="blog-title">
-			<div class="post-header">
-				<h1 class="post-title">
-					{frontmatter.title}
-				</h1>
-				<p class="post-summary">{frontmatter.description}</p>
-				<div class="post-meta">
-					<span>{frontmatter.pubDate}</span>
-					<span> · </span>
-					<span>{frontmatter.author}</span>
+
+		<!-- Fixed Header with Post Info -->
+		<header class="post-header-fixed">
+			<div class="post-header-box">
+				<div class="post-header-content">
+					<div class="post-header-main">
+						<h1 class="post-title">{frontmatter.title}</h1>
+						<div class="post-meta">
+							<span class="post-date">{new Date(frontmatter.pubDate).toDateString()}</span>
+							<span class="meta-separator">·</span>
+							<span class="post-author">{frontmatter.author}</span>
+						</div>
+					</div>
+					<div class="post-header-collapsible">
+						<p class="post-summary">{frontmatter.description}</p>
+						<ul class="post-tags">
+							{frontmatter.tags.map(tag => <li class="tag">#{tag}</li>)}
+						</ul>
+					</div>
 				</div>
-				<ul class="post-tags">
-					{frontmatter.tags.map(tag => <li class="tag" key={tag}>#{tag}</li>)}
-				</ul>
 			</div>
-		</div>
-		<div class="blog-post">
-			<aside>
-				<TableOfContents headings={headings}></TableOfContents>
+		</header>
+
+		<!-- Main Content Area with TOC Sidebar -->
+		<div class="blog-container">
+			<aside class="toc-sidebar">
+				<div class="toc-wrapper">
+					<h2 class="toc-title">Table of Contents</h2>
+					<TableOfContents headings={headings}></TableOfContents>
+				</div>
 			</aside>
-			<main>
+			<main class="post-content">
 				<slot />
 			</main>
 		</div>
+
 		<Footer />
+
+		<script>
+			// Header collapse on scroll
+			document.addEventListener('DOMContentLoaded', () => {
+				const header = document.querySelector('.post-header-fixed');
+				const collapseThreshold = 10; // Collapse summary/tags after small scroll
+				const hideThreshold = window.innerHeight / 2; // Fully hide after half window
+
+				const handleScroll = () => {
+					if (window.scrollY > hideThreshold) {
+						header?.classList.add('hidden');
+						header?.classList.add('collapsed');
+					} else if (window.scrollY > collapseThreshold) {
+						header?.classList.remove('hidden');
+						header?.classList.add('collapsed');
+					} else {
+						header?.classList.remove('hidden');
+						header?.classList.remove('collapsed');
+					}
+				};
+
+				window.addEventListener('scroll', handleScroll, { passive: true });
+				handleScroll(); // Check initial state
+			});
+
+			// Scroll spy to highlight active TOC item
+			document.addEventListener('DOMContentLoaded', () => {
+				const tocLinks = document.querySelectorAll('.article-toc a');
+				const headings = document.querySelectorAll('main h1[id], main h2[id], main h3[id], main h4[id]');
+
+				if (headings.length === 0 || tocLinks.length === 0) return;
+
+				const observerOptions = {
+					root: null,
+					rootMargin: '-80px 0px -70% 0px',
+					threshold: 0
+				};
+
+				let activeId = '';
+
+				const observerCallback = (entries: IntersectionObserverEntry[]) => {
+					entries.forEach(entry => {
+						if (entry.isIntersecting) {
+							activeId = entry.target.id;
+							updateActiveLink();
+						}
+					});
+				};
+
+				const updateActiveLink = () => {
+					tocLinks.forEach(link => {
+						link.classList.remove('active');
+						const href = link.getAttribute('href');
+						if (href === `#${activeId}`) {
+							link.classList.add('active');
+						}
+					});
+				};
+
+				const observer = new IntersectionObserver(observerCallback, observerOptions);
+				headings.forEach(heading => observer.observe(heading));
+			});
+		</script>
 	</body>
 </html>
