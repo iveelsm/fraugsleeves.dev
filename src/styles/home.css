@@ -8,7 +8,6 @@
 .welcome-section {
 	text-align: center;
 	padding: var(--space-2xl) 0;
-	border-bottom: 1px solid var(--color-border);
 	margin-bottom: var(--space-2xl);
 }
 
@@ -112,6 +111,42 @@
 	color: var(--color-text-muted);
 	margin: 0;
 	line-height: var(--leading-normal);
+}
+
+.view-all-link {
+	display: inline-block;
+	margin-top: var(--space-lg);
+	font-size: var(--text-sm);
+	color: var(--color-text-muted);
+	text-decoration: none;
+	transition: color var(--transition-fast);
+}
+
+.view-all-link:hover {
+	color: var(--color-accent);
+}
+
+/* Wayfinders Section */
+.wayfinders-section {
+	padding-bottom: var(--space-2xl);
+}
+
+.wayfinders-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: var(--space-md);
+}
+
+@media (max-width: 900px) {
+	.wayfinders-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media (max-width: 600px) {
+	.wayfinders-grid {
+		grid-template-columns: 1fr;
+	}
 }
 
 @media (max-width: 640px) {

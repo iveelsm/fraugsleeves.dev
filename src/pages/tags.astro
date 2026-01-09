@@ -1,0 +1,71 @@
+---
+import { getCollection } from 'astro:content';
+import NavigableLayout from '../layouts/navigable.astro';
+
+// Get all blog posts and extract unique tags
+const blogs = await getCollection('blog');
+const allTags = blogs.flatMap(post => post.data.tags || []);
+const uniqueTags = [...new Set(allTags)].sort();
+---
+
+<NavigableLayout title="Tags">
+	<div class="tags-container">
+		<h1 class="tags-title">Tags</h1>
+		<div class="tags-list">
+			{uniqueTags.map(tag => (
+				<span class="tag">{tag}</span>
+			))}
+		</div>
+		{uniqueTags.length === 0 && (
+			<p class="no-tags">No tags found.</p>
+		)}
+	</div>
+</NavigableLayout>
+
+<style>
+	.tags-container {
+		max-width: var(--max-width-container);
+		margin: 0 auto;
+		padding: var(--space-xl);
+	}
+
+	.tags-title {
+		font-size: var(--text-3xl);
+		font-weight: var(--font-semibold);
+		color: var(--color-text);
+		margin-bottom: var(--space-xl);
+		padding-bottom: var(--space-sm);
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	.tags-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-sm);
+	}
+
+	.tag {
+		display: inline-block;
+		padding: var(--space-xs) var(--space-md);
+		background-color: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-sm);
+		font-size: var(--text-sm);
+		color: var(--color-text-muted);
+	}
+
+	.no-tags {
+		color: var(--color-text-muted);
+		font-size: var(--text-base);
+	}
+
+	@media (max-width: 640px) {
+		.tags-container {
+			padding: var(--space-lg);
+		}
+
+		.tags-title {
+			font-size: var(--text-2xl);
+		}
+	}
+</style>
