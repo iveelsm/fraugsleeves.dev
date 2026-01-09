@@ -1,6 +1,32 @@
 ---
+import Github from '../icons/github.svg';
+import Gitlab from '../icons/gitlab.svg';
+import Mail from '../icons/mail.svg';
+import LinkedIn from '../icons/linkedin.svg';
+
+import '../styles/footer.css';
+
 const { title = "fraugsleeves.dev" } = Astro.props;
+const currentYear = new Date().getFullYear();
+
+const socialLinks = [
+	{ href: "mailto:blog@frogman.simplelogin.com", icon: Mail, label: "Email" },
+	{ href: "https://linkedin.com/in/msleevi", icon: LinkedIn, label: "LinkedIn" },
+	{ href: "https://github.com/iveelsm", icon: Github, label: "GitHub" },
+	{ href: "https://gitlab.com/iveelsm", icon: Gitlab, label: "GitLab" },
+];
 ---
-<footer>
-  <p>© {title} 2025</p>
+<footer class="site-footer">
+	<div class="footer-content">
+		<div class="footer-copyright">
+			<p>© {currentYear} {title}</p>
+		</div>
+		<div class="footer-social">
+			{socialLinks.map(link => (
+				<a href={link.href} class="social-link" aria-label={link.label} target="_blank" rel="noopener noreferrer">
+					<link.icon width={20} height={20} />
+				</a>
+			))}
+		</div>
+	</div>
 </footer>

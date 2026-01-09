@@ -1,8 +1,33 @@
 ---
+import '../styles/navigation.css';
+
+const currentPath = Astro.url.pathname;
+
+const navItems = [
+	{ href: '/', label: 'Home', exact: true },
+	{ href: '/wayfinders', label: 'Wayfinders', exact: false },
+	{ href: '/blog', label: 'Blog', exact: false },
+	{ href: '/about', label: 'About', exact: true },
+];
+
+function isActive(href: string, exact: boolean): boolean {
+	if (exact) {
+		return currentPath === href;
+	}
+	return currentPath === href || currentPath.startsWith(href + '/');
+}
 ---
-<div class="navigation">
-	<a href="/">Home</a>
-	<a href="/wayfinders">Wayfinders</a>
-	<a href="/blog">Blog</a>
-	<a href="/contact">Contact</a>
-</div>
+<nav class="toolbar">
+	<div class="toolbar-content">
+		<div class="toolbar-links">
+			{navItems.map(item => (
+				<a
+					href={item.href}
+					class:list={['toolbar-link', { active: isActive(item.href, item.exact) }]}
+				>
+					{item.label}
+				</a>
+			))}
+		</div>
+	</div>
+</nav>

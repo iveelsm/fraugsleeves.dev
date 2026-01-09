@@ -1,29 +1,21 @@
 ---
 import { getCollection } from 'astro:content';
+import NavigableLayout from '../layouts/navigable.astro';
 
 const blogs = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 ---
-
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>My Astro Learning Blog</h1>
-		<p>This is where I will post about my journey learning Astro.</p>
-		<div class="blog">
-			<ul>
-				{blogs.map(post => (
-					<li>
-						<a href={`/blog/${post.id}`}>{post.data.title}</a>
-					</li>
-				))}
-			</ul>
-		</div>
-	</body>
-</html>
+<NavigableLayout title="blog">
+	<h1>My Astro Learning Blog</h1>
+	<p>This is where I will post about my journey learning Astro.</p>
+	<div class="blog">
+		<ul>
+			{blogs.map(post => (
+				<li>
+					<a href={`/blog/${post.id}`}>{post.data.title}</a>
+				</li>
+			))}
+		</ul>
+	</div>
+</NavigableLayout>

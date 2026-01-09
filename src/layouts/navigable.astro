@@ -1,0 +1,38 @@
+---
+import Navigation from '../components/navigation.astro';
+import Footer from '../components/footer.astro';
+
+interface Props {
+	title?: string;
+	class?: string;
+}
+
+const { title = "the zealot chronicles", class: className } = Astro.props;
+---
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>{title}</title>
+		<slot name="head" />
+		<style>
+			html, body {
+				min-height: 100vh;
+			}
+			body {
+				display: flex;
+				flex-direction: column;
+			}
+			.main-content {
+				flex: 1;
+			}
+		</style>
+	</head>
+	<body class={className}>
+		<Navigation />
+		<div class="main-content">
+			<slot />
+		</div>
+		<Footer />
+	</body>
+</html>

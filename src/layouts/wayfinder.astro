@@ -1,36 +1,36 @@
 ---
 import '../styles/wayfinders.css';
 
-import Navigation from '../components/navigation.astro';
-import Footer from '../components/footer.astro';
+import NavigableLayout from './navigable.astro';
 const {
   frontmatter
 } = Astro.props;
 ---
-<html lang="en">
-	<body class="wayfinder-layout">
-		<Navigation />
-		<div class="wayfinder-title">
-			<div class="post-header">
-				<h1 class="post-title">
-					{frontmatter.title}
-				</h1>
-				<p class="post-summary">{frontmatter.description}</p>
-				<div class="post-meta">
-					<span>{frontmatter.pubDate}</span>
-					<span> · </span>
-					<span>{frontmatter.author}</span>
+<NavigableLayout title={frontmatter.title} class="wayfinder-layout">
+	<header class="post-header-fixed">
+		<div class="post-header-box">
+			<div class="post-header-content">
+				<div class="post-header-main">
+					<h1 class="post-title">{frontmatter.title}</h1>
+					<div class="post-meta">
+						<span class="post-date">{new Date(frontmatter.pubDate).toDateString()}</span>
+						<span class="meta-separator">·</span>
+						<span class="post-author">{frontmatter.author}</span>
+					</div>
 				</div>
-				<ul class="post-tags">
-					{frontmatter.tags.map(tag => <li class="tag" key={tag}>#{tag}</li>)}
-				</ul>
+				<div class="post-header-collapsible">
+					<p class="post-summary">{frontmatter.description}</p>
+					<ul class="post-tags">
+						{frontmatter.tags.map(tag => <li class="tag">#{tag}</li>)}
+					</ul>
+				</div>
 			</div>
 		</div>
-		<div class="wayfinder-post">
-			<main>
-				<slot />
-			</main>
-		</div>
-		<Footer />
-	</body>
-</html>
+	</header>
+
+	<div class="wayfinder-post">
+		<main>
+			<slot />
+		</main>
+	</div>
+</NavigableLayout>

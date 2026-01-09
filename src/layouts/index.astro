@@ -1,27 +1,18 @@
 ---
-import Navigation from '../components/navigation.astro';
-import Footer from '../components/footer.astro';
+import NavigableLayout from './navigable.astro';
 const { title = "the zealot chronicles" } = Astro.props;
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<title>{title}</title>
-		<link rel="stylesheet" href="/styles/global.css" />
-	</head>
-	<body class="dot-layout">
-		<Navigation />
-		<div class="border-frame">
-			<header>
-				<h1 class="site-title">{title}</h1>
-				<p class="site-subtitle">an exploration in wayfinding within software development</p>
-			</header>
+<NavigableLayout title={title} class="dot-layout">
+	<link slot="head" rel="stylesheet" href="/styles/global.css" />
+	<div class="border-frame">
+		<header>
+			<h1 class="site-title">{title}</h1>
+			<p class="site-subtitle">an exploration in wayfinding within software development</p>
+		</header>
 
-			<main>
-				<slot />
-			</main>
-		</div>
-		<Footer />
-	</body>
-</html>
+		<main>
+			<slot />
+		</main>
+	</div>
+</NavigableLayout>

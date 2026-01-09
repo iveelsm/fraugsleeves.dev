@@ -24,7 +24,7 @@ body.blog-layout {
 /* Fixed Header */
 .post-header-fixed {
   position: sticky;
-  top: 0;
+  top: 50px; /* Account for toolbar height */
   z-index: 100;
   background: #fcfcfc;
   padding: 1rem 1.5rem;

@@ -1,9 +1,9 @@
 ---
-import DotLayout from '../layouts/index.astro';
 import Github from '../icons/github.svg';
 import Gitlab from '../icons/gitlab.svg';
 import Mail from '../icons/mail.svg';
 import LinkedIn from '../icons/linkedin.svg';
+import NavigableLayout from '../layouts/navigable.astro';
 const {
 	email = "blog@frogman.simplelogin.com",
 	github = "https://github.com/iveelsm",
@@ -12,7 +12,7 @@ const {
 } = Astro.props;
 ---
 
-<DotLayout title="the zealot chronicles">
+<NavigableLayout title="the zealot chronicles">
 	<section class="about-content">
 		<div class="about-header">
 			<div class="contact-intro">
@@ -54,4 +54,4 @@ const {
 			</form>
 		</div>
 	</section>
-</DotLayout>
+</NavigableLayout>
