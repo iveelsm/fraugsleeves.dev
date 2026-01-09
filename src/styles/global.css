@@ -1,15 +1,9 @@
-/* public/styles/global.css */
-body {
-  margin: 0;
-  background-color: #1c131e;
-  color: #fff;
-  font-family: system-ui, sans-serif;
-}
+/* Global Styles for Index/Home Layout */
 
 .dot-layout .border-frame {
   border: 4px solid #213438;
-  margin: 2rem;
-  padding: 2rem;
+  margin: var(--space-xl);
+  padding: var(--space-xl);
   position: relative;
 }
 
@@ -33,32 +27,15 @@ body {
   right: -12px;
 }
 
-/* Add dots at each corner manually or with more ::before/::after variations */
-
 .site-title {
   color: #f9cb66;
   text-align: center;
-  font-size: 2rem;
+  font-size: var(--text-4xl);
 }
 
 .site-subtitle {
   text-align: center;
   color: #d37d75;
-  font-size: 1rem;
-  margin-top: 0.5rem;
-}
-
-.nav-links {
-  text-align: center;
-  margin-top: 1.5rem;
-}
-
-.nav-links a {
-  color: #d37d75;
-  text-decoration: none;
-  margin: 0 1rem;
-}
-
-.nav-links .active {
-  color: #ffffff;
+  font-size: var(--text-base);
+  margin-top: var(--space-sm);
 }

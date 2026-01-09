@@ -1,142 +1,141 @@
-/* Reset + base typography */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* Wayfinder Layout Styles */
+
+/* Fixed Header */
+.post-header-fixed {
+  position: sticky;
+  top: var(--toolbar-height);
+  z-index: 100;
+  background: var(--color-bg);
+  padding: var(--space-md) var(--space-lg);
+  transition: padding var(--transition-normal), transform var(--transition-normal);
 }
 
-html {
-  font-family: 'Iosevka Web', ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 16px;
-  line-height: 1.65;
-  background-color: #fcfcfc;
-  color: #1a1a1a;
-  scroll-behavior: smooth;
-}
-
-body {
-  padding: 2rem 1rem;
-  max-width: 960px;
+/* Header Box */
+.post-header-box {
+  max-width: var(--max-width-container);
   margin: 0 auto;
-  background: #fcfcfc;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border-dark);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem var(--space-lg);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-normal);
 }
 
-.post-header {
-  margin: 2.5rem 0 2rem;
+.post-header-content {
+  max-width: 100%;
+}
+
+.post-header-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-sm) var(--space-lg);
 }
 
 .post-title {
-  font-size: 2rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: #000;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 0.5rem;
-}
-
-.post-summary {
-  font-size: 1.05rem;
-  color: #444;
-  margin-top: 1rem;
-  margin-bottom: 0.75rem;
-  font-style: italic;
+  font-size: var(--text-2xl);
+  font-weight: var(--font-semibold);
+  color: var(--color-text);
+  line-height: var(--leading-tight);
+  margin: 0;
 }
 
 .post-meta {
-  font-size: 0.9rem;
-  color: #777;
-  margin-bottom: 1rem;
+  font-size: var(--text-sm);
+  color: var(--color-text-subtle);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.meta-separator {
+  color: var(--color-border);
+}
+
+/* Collapsible content */
+.post-header-collapsible {
+  overflow: hidden;
+  max-height: 200px;
+  opacity: 1;
+  margin-top: 0.75rem;
+  transition: all var(--transition-normal);
+}
+
+.post-summary {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0.75rem;
+  font-style: italic;
+  line-height: var(--leading-normal);
 }
 
 .post-tags {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: var(--space-sm);
   padding: 0;
-  margin: 0.25rem 0 2rem;
+  margin: 0;
 }
 
 .tag {
-  background-color: #f0f0f0;
-  color: #333;
-  font-size: 0.85rem;
-  padding: 0.2rem 0.6rem;
-  border-radius: 9999px;
-  font-family: monospace;
+  background-color: var(--color-tag-bg);
+  color: var(--color-tag-text);
+  font-size: var(--text-xs);
+  padding: 0.15rem var(--space-sm);
+  border-radius: var(--radius-full);
+  font-family: var(--font-mono);
   white-space: nowrap;
 }
 
-/* Dot background layout like tansanrao.com */
-.wayfinder-layout {
-  background-image: radial-gradient(#ccc 0.5px, transparent 0.5px);
-  background-size: 16px 16px;
-  background-attachment: fixed;
-}
-
-/* Frame with subtle border */
-.border-frame {
-  border: 1px solid #e2e2e2;
-  padding: 2rem;
-  background: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
-  border-radius: 4px;
-}
-
-/* Header styles */
-.site-title {
-  font-size: 2rem;
-  margin-bottom: 0.25rem;
-  color: #000;
-}
-
-.site-subtitle {
-  font-size: 1rem;
-  color: #666;
-  margin-bottom: 2rem;
-  font-style: italic;
+/* Main Wayfinder Content */
+.wayfinder-post {
+  max-width: var(--max-width-container);
+  margin: 0 auto;
+  padding: var(--space-xl);
 }
 
 /* Main content styles */
 main {
-  font-size: 1rem;
+  font-size: var(--text-base);
 }
 
 main h1,
 main h2,
 main h3,
 main h4 {
-  font-weight: 600;
+  font-weight: var(--font-semibold);
   margin-top: 2.5rem;
-  margin-bottom: 1rem;
-  color: #000;
+  margin-bottom: var(--space-md);
+  color: var(--color-text);
 }
 
 main h1 {
-  font-size: 1.75rem;
+  font-size: var(--text-3xl);
 }
 
 main h2 {
-  font-size: 1.5rem;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 0.25rem;
+  font-size: var(--text-2xl);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-xs);
 }
 
 main h3 {
-  font-size: 1.25rem;
+  font-size: var(--text-xl);
 }
 
 main h4 {
-  font-size: 1.1rem;
+  font-size: var(--text-lg);
 }
 
 main p {
-  margin: 1rem 0;
-  color: #1a1a1a;
+  margin: var(--space-md) 0;
+  color: var(--color-text);
 }
 
 main a {
-  color: #00449e;
+  color: var(--color-accent);
   text-decoration: underline;
 }
 
@@ -145,20 +144,20 @@ main a:hover {
 }
 
 main code {
-  background: #f4f4f4;
+  background: var(--color-code-bg);
   padding: 0.2em 0.4em;
-  border-radius: 4px;
-  font-family: 'Iosevka Web', monospace;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
   font-size: 0.95em;
 }
 
 main pre {
-  background: #f4f4f4;
-  padding: 1rem;
+  background: var(--color-code-bg);
+  padding: var(--space-md);
   overflow-x: auto;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   font-size: 0.95em;
-  margin: 1.5rem 0;
+  margin: var(--space-lg) 0;
 }
 
 main pre code {
@@ -169,43 +168,30 @@ main pre code {
 /* Lists */
 main ul,
 main ol {
-  padding-left: 1.5rem;
-  margin: 1rem 0;
+  padding-left: var(--space-lg);
+  margin: var(--space-md) 0;
 }
 
 main li {
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--space-sm);
 }
 
 /* Blockquote */
 main blockquote {
-  border-left: 3px solid #ddd;
-  margin: 1rem 0;
-  padding-left: 1rem;
-  color: #555;
+  border-left: 3px solid var(--color-accent);
+  margin: var(--space-md) 0;
+  padding-left: var(--space-md);
+  color: var(--color-text-muted);
   font-style: italic;
-}
-
-/* Footer */
-footer {
-  text-align: center;
-  font-size: 0.9rem;
-  color: #888;
-  margin-top: 3rem;
-  padding: 1rem 0;
 }
 
 /* Responsive tweaks */
 @media (max-width: 640px) {
-  body {
-    padding: 1rem;
+  .wayfinder-post {
+    padding: var(--space-md);
   }
 
-  .border-frame {
-    padding: 1.25rem;
-  }
-
-  .site-title {
-    font-size: 1.5rem;
+  .post-title {
+    font-size: 1.35rem;
   }
 }
