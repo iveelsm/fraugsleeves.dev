@@ -1,5 +1,6 @@
 ---
 import '../styles/navigation.css';
+import Search from './search.astro';
 
 const currentPath = Astro.url.pathname;
 
@@ -29,5 +30,6 @@ function isActive(href: string, exact: boolean): boolean {
 				</a>
 			))}
 		</div>
+		<Search />
 	</div>
 </nav>

@@ -12,7 +12,7 @@ tags: ["service-architecture", "microservices", "architectural-patterns"]
 # Context Management
 
 1. Never wrap `context` in a struct, always pass it explicitly
-2.  Avoid chaining `context`
+2. Avoid chaining `context`
 3. If you are passed a `context`, prefer continuing to pass it through the entire call chain
 4. Avoid using `context.Background()`
 5. Minimize `context` stores
