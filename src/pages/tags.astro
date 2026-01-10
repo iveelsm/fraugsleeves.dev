@@ -6,7 +6,14 @@ import '../styles/tags.css';
 
 const blogs = await getCollection('blog');
 const allTags = blogs.flatMap(post => post.data.tags || []);
-const uniqueTags = [...new Set(allTags)].sort();
+
+// Count occurrences of each tag
+const tagCounts = allTags.reduce((acc, tag) => {
+	acc[tag] = (acc[tag] || 0) + 1;
+	return acc;
+}, {} as Record<string, number>);
+
+const uniqueTags = Object.keys(tagCounts).sort();
 ---
 
 <NavigableLayout title="Tags">
@@ -14,7 +21,10 @@ const uniqueTags = [...new Set(allTags)].sort();
 		<h1 class="tags-title">Tags</h1>
 		<div class="tags-list">
 			{uniqueTags.map(tag => (
-				<span class="tag">{tag}</span>
+				<a href={`/blog?tag=${encodeURIComponent(tag)}`} class="tag-link">
+					<span class="tag-name">{tag}</span>
+					<span class="tag-count">{tagCounts[tag]}</span>
+				</a>
 			))}
 		</div>
 		{uniqueTags.length === 0 && (
