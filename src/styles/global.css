@@ -1,0 +1,360 @@
+/* ===========================================
+   Global Styles - Design System & Shared Components
+   =========================================== */
+
+/* ===========================================
+   CSS Variables / Design Tokens
+   =========================================== */
+:root {
+	/* Typography */
+	--font-mono: 'Iosevka Web', ui-monospace, SFMono-Regular, Menlo, monospace;
+	--font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+	/* Font Sizes */
+	--text-xs: 0.8rem;
+	--text-sm: 0.85rem;
+	--text-base: 1rem;
+	--text-lg: 1.1rem;
+	--text-xl: 1.25rem;
+	--text-2xl: 1.5rem;
+	--text-3xl: 1.75rem;
+	--text-4xl: 2rem;
+
+	/* Line Heights */
+	--leading-tight: 1.3;
+	--leading-normal: 1.65;
+
+	/* Font Weights */
+	--font-normal: 400;
+	--font-medium: 500;
+	--font-semibold: 600;
+
+	/* Colors - Light Theme */
+	--color-bg: #fffcf0;
+	--color-bg-alt: #cfcfcf;
+	--color-surface: #fff;
+	--color-text: #1a1a1a;
+	--color-text-muted: #666;
+	--color-text-subtle: #777;
+	--color-border: #e0e0e0;
+	--color-border-dark: #d0d0d0;
+	--color-accent: #00449e;
+	--color-accent-bg: #e8f0fe;
+	--color-code-bg: #f4f4f4;
+	--color-tag-bg: #f0f0f0;
+	--color-tag-text: #333;
+
+	/* Colors - Toolbar */
+	--color-toolbar-bg: #1a1a2e;
+	--color-toolbar-text: #a0a0b0;
+	--color-toolbar-text-active: #fff;
+	--color-toolbar-hover-bg: rgba(255, 255, 255, 0.1);
+	--color-toolbar-active-bg: rgba(255, 255, 255, 0.15);
+
+	/* Colors - Dot Pattern */
+	--color-dot: #cecdc3b3;
+
+	/* Spacing */
+	--space-xs: 0.25rem;
+	--space-sm: 0.5rem;
+	--space-md: 1rem;
+	--space-lg: 1.5rem;
+	--space-xl: 2rem;
+	--space-2xl: 3rem;
+
+	/* Layout */
+	--max-width-content: 750px;
+	--max-width-container: 900px;
+	--max-width-wide: 1200px;
+	--toolbar-height: 50px;
+	--toc-width: 250px;
+
+	/* Border Radius */
+	--radius-sm: 4px;
+	--radius-md: 6px;
+	--radius-lg: 8px;
+	--radius-full: 9999px;
+
+	/* Shadows */
+	--shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.06);
+	--shadow-md: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+	/* Transitions */
+	--transition-fast: 0.2s ease;
+	--transition-normal: 0.3s ease;
+}
+
+/* ===========================================
+   Base Reset
+   =========================================== */
+*,
+*::before,
+*::after {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+html {
+	font-family: var(--font-mono);
+	font-size: 16px;
+	line-height: var(--leading-normal);
+	background-color: var(--color-bg);
+	color: var(--color-text);
+	scroll-behavior: smooth;
+}
+
+html, body {
+	min-height: 100vh;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	background-image: radial-gradient(var(--color-dot) 1px, transparent 1px);
+	background-size: 16px 16px;
+	background-attachment: fixed;
+}
+
+/* ===========================================
+   Layout Utilities
+   =========================================== */
+.main-content {
+	flex: 1;
+}
+
+.container {
+	max-width: var(--max-width-container);
+	margin: 0 auto;
+	padding: var(--space-xl);
+}
+
+.container-wide {
+	max-width: var(--max-width-wide);
+	margin: 0 auto;
+	padding: var(--space-xl);
+}
+
+/* ===========================================
+   Typography
+   =========================================== */
+.section-title {
+	font-size: var(--text-2xl);
+	font-weight: var(--font-semibold);
+	color: var(--color-text);
+	margin-bottom: var(--space-lg);
+	padding-bottom: var(--space-sm);
+	border-bottom: 1px solid var(--color-border);
+}
+
+.page-title {
+	font-size: var(--text-3xl);
+	font-weight: var(--font-semibold);
+	color: var(--color-text);
+	margin-bottom: var(--space-xl);
+	padding-bottom: var(--space-sm);
+	border-bottom: 1px solid var(--color-border);
+}
+
+/* ===========================================
+   Post List Component
+   =========================================== */
+.posts-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-md);
+}
+
+.post-item {
+	padding: var(--space-lg);
+	background: var(--color-bg-alt);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-lg);
+	transition: all var(--transition-fast);
+}
+
+.post-item:hover {
+	border-color: var(--color-border-dark);
+	box-shadow: var(--shadow-md);
+}
+
+.post-link {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: var(--space-md);
+	text-decoration: none;
+	margin-bottom: var(--space-xs);
+}
+
+.post-title {
+	font-size: var(--text-lg);
+	font-weight: var(--font-medium);
+	color: var(--color-text);
+	transition: color var(--transition-fast);
+}
+
+.post-link:hover .post-title {
+	color: var(--color-accent);
+}
+
+.post-date {
+	font-size: var(--text-sm);
+	color: var(--color-text-subtle);
+	white-space: nowrap;
+}
+
+.post-description {
+	font-size: var(--text-sm);
+	color: var(--color-text-muted);
+	margin: 0;
+	line-height: var(--leading-normal);
+}
+
+/* ===========================================
+   Tag Component
+   =========================================== */
+.post-tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--space-xs);
+	margin-top: var(--space-sm);
+}
+
+.post-tag {
+	display: inline-block;
+	padding: 0.15rem var(--space-sm);
+	background-color: var(--color-tag-bg);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+	font-size: var(--text-xs);
+	color: var(--color-text-muted);
+	text-decoration: none;
+	transition: all var(--transition-fast);
+}
+
+.post-tag:hover {
+	background-color: var(--color-accent-bg);
+	border-color: var(--color-accent);
+	color: var(--color-accent);
+}
+
+.post-tag.active {
+	background-color: var(--color-accent);
+	border-color: var(--color-accent);
+	color: #fff;
+}
+
+/* ===========================================
+   Link Utilities
+   =========================================== */
+.view-all-link {
+	display: inline-block;
+	margin-top: var(--space-lg);
+	font-size: var(--text-sm);
+	color: var(--color-text-muted);
+	text-decoration: none;
+	transition: color var(--transition-fast);
+}
+
+.view-all-link:hover {
+	color: var(--color-accent);
+}
+
+/* ===========================================
+   Social Links
+   =========================================== */
+.social-link {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--color-text-muted);
+	padding: var(--space-sm);
+	border-radius: var(--radius-sm);
+	transition: all var(--transition-fast);
+}
+
+.social-link:hover {
+	color: var(--color-accent);
+	transform: rotate(8deg);
+}
+
+.social-link :global(svg) {
+	fill: currentColor;
+}
+
+/* ===========================================
+   Card Component
+   =========================================== */
+.card {
+	display: block;
+	padding: var(--space-lg);
+	background-color: var(--color-surface);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-md);
+	text-decoration: none;
+	transition: all var(--transition-fast);
+}
+
+.card:hover {
+	border-color: var(--color-accent);
+	transform: translateY(-2px);
+	box-shadow: var(--shadow-md);
+}
+
+.card-content {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-xs);
+}
+
+.card-title {
+	font-size: var(--text-lg);
+	font-weight: var(--font-semibold);
+	color: var(--color-text);
+	margin: 0;
+	transition: color var(--transition-fast);
+}
+
+.card:hover .card-title {
+	color: var(--color-accent);
+}
+
+.card-description {
+	font-size: var(--text-sm);
+	color: var(--color-text-muted);
+	margin: 0;
+	line-height: var(--leading-normal);
+}
+
+.card-date {
+	font-size: var(--text-xs);
+	color: var(--color-text-subtle);
+	margin-top: var(--space-xs);
+}
+
+/* ===========================================
+   Responsive Utilities
+   =========================================== */
+@media (max-width: 640px) {
+	.container,
+	.container-wide {
+		padding: var(--space-lg);
+	}
+
+	.post-link {
+		flex-direction: column;
+		gap: var(--space-xs);
+	}
+
+	.post-date {
+		font-size: var(--text-xs);
+	}
+
+	.page-title {
+		font-size: var(--text-2xl);
+	}
+}

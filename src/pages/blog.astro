@@ -1,0 +1,42 @@
+---
+import { getCollection } from 'astro:content';
+import NavigableLayout from '../layouts/navigable.astro';
+import BlogPostItem from '../components/blog-post-item.astro';
+import '../styles/blog-list.css';
+
+const allBlogs = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+<NavigableLayout title="Blog">
+	<div class="blog-container">
+		<div class="filter-header" id="filter-header" style="display: none;">
+			<span class="filter-label">Filtered by:</span>
+			<span class="filter-tag" id="filter-tag-name"></span>
+			<a href="/blog" class="filter-clear" aria-label="Clear filter" id="filter-clear">
+				<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<line x1="18" y1="6" x2="6" y2="18"></line>
+					<line x1="6" y1="6" x2="18" y2="18"></line>
+				</svg>
+			</a>
+		</div>
+
+		<p class="no-posts" id="no-posts" style="display: none;">No posts found.</p>
+
+		<ul class="posts-list" id="posts-list">
+			{allBlogs.map(post => (
+				<BlogPostItem
+					title={post.data.title}
+					href={`/blog/${post.id}`}
+					date={post.data.pubDate}
+					description={post.data.description}
+					tags={post.data.tags}
+				/>
+			))}
+		</ul>
+	</div>
+</NavigableLayout>
+
+<script>
+	import '../scripts/blog-filter.js';
+</script>

@@ -1,0 +1,75 @@
+/* ===========================================
+   Home Page Specific Styles
+   =========================================== */
+
+.index-container {
+	max-width: var(--max-width-container);
+	margin: 0 auto;
+	padding: var(--space-xl);
+}
+
+/* Welcome Section */
+.welcome-section {
+	text-align: center;
+	padding: var(--space-2xl) 0;
+	margin-bottom: var(--space-2xl);
+}
+
+.welcome-title {
+	font-size: var(--text-4xl);
+	font-weight: var(--font-semibold);
+	color: var(--color-text);
+	margin-bottom: var(--space-md);
+}
+
+.welcome-text {
+	font-size: var(--text-base);
+	color: var(--color-text-muted);
+	max-width: 600px;
+	margin: 0 auto var(--space-lg);
+	line-height: var(--leading-normal);
+}
+
+.social-links {
+	display: flex;
+	justify-content: center;
+	gap: var(--space-md);
+}
+
+/* Posts Section */
+.posts-section {
+	padding-bottom: var(--space-2xl);
+}
+
+/* Wayfinders Section */
+.wayfinders-section {
+	padding-bottom: var(--space-2xl);
+}
+
+.wayfinders-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: var(--space-md);
+}
+
+@media (max-width: 900px) {
+	.wayfinders-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media (max-width: 600px) {
+	.wayfinders-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 640px) {
+	.index-container {
+		padding: var(--space-lg);
+	}
+
+	.welcome-title {
+		font-size: var(--text-3xl);
+	}
+}
