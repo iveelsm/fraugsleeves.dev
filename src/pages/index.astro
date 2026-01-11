@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import NavigableLayout from '../layouts/navigable.astro';
 import Card from '../components/card.astro';
+import BlogPostItem from '../components/blog-post-item.astro';
 import Github from '../icons/github.svg';
 import Gitlab from '../icons/gitlab.svg';
 import Mail from '../icons/mail.svg';
@@ -27,14 +28,6 @@ const socialLinks = [
 	{ href: "https://github.com/iveelsm", icon: Github, label: "GitHub" },
 	{ href: "https://gitlab.com/iveelsm", icon: Gitlab, label: "GitLab" },
 ];
-
-function formatDate(date: Date): string {
-	return date.toLocaleDateString('en-US', {
-		year: 'numeric',
-		month: 'long',
-		day: 'numeric'
-	});
-}
 ---
 <NavigableLayout title="fraugsleeves.dev">
 	<div class="index-container">
@@ -74,15 +67,13 @@ function formatDate(date: Date): string {
 			<h2 class="section-title">Recent Posts</h2>
 			<ul class="posts-list">
 				{recentBlogs.map(post => (
-					<li class="post-item">
-						<a href={`/blog/${post.id}`} class="post-link">
-							<span class="post-title">{post.data.title}</span>
-							<span class="post-date">{formatDate(post.data.pubDate)}</span>
-						</a>
-						{post.data.description && (
-							<p class="post-description">{post.data.description}</p>
-						)}
-					</li>
+					<BlogPostItem
+						title={post.data.title}
+						href={`/blog/${post.id}`}
+						date={post.data.pubDate}
+						description={post.data.description}
+						tags={post.data.tags}
+					/>
 				))}
 			</ul>
 			<a href="/blog" class="view-all-link">View all posts →</a>

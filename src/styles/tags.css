@@ -1,3 +1,7 @@
+/* ===========================================
+   Tags Page Specific Styles
+   =========================================== */
+
 .tags-container {
 	max-width: var(--max-width-container);
 	margin: 0 auto;

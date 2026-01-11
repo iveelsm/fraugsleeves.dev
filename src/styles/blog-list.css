@@ -1,3 +1,7 @@
+/* ===========================================
+   Blog List Page Specific Styles
+   =========================================== */
+
 .blog-container {
 	max-width: var(--max-width-container);
 	margin: 0 auto;
@@ -50,97 +54,8 @@
 	padding: var(--space-2xl);
 }
 
-.blog-container .posts-list {
-	list-style: none;
-	padding: 0;
-	margin: 0;
-}
-
-.blog-container .post-item {
-	padding: var(--space-md) 0;
-	border-bottom: 1px solid var(--color-border);
-}
-
-.blog-container .post-item:last-child {
-	border-bottom: none;
-}
-
-.blog-container .post-link {
-	display: flex;
-	justify-content: space-between;
-	align-items: baseline;
-	gap: var(--space-md);
-	text-decoration: none;
-	margin-bottom: var(--space-xs);
-}
-
-.blog-container .post-title {
-	font-size: var(--text-lg);
-	font-weight: var(--font-medium);
-	color: var(--color-text);
-	transition: color var(--transition-fast);
-}
-
-.blog-container .post-link:hover .post-title {
-	color: var(--color-accent);
-}
-
-.blog-container .post-date {
-	font-size: var(--text-sm);
-	color: var(--color-text-subtle);
-	white-space: nowrap;
-}
-
-.blog-container .post-description {
-	font-size: var(--text-sm);
-	color: var(--color-text-muted);
-	margin: 0;
-	line-height: var(--leading-normal);
-}
-
-/* Post Tags */
-.blog-container .post-tags {
-	display: flex;
-	flex-wrap: wrap;
-	gap: var(--space-xs);
-	margin-top: var(--space-sm);
-}
-
-.blog-container .post-tag {
-	display: inline-block;
-	padding: 0.15rem var(--space-sm);
-	background-color: var(--color-tag-bg);
-	border: 1px solid var(--color-border);
-	border-radius: var(--radius-sm);
-	font-size: var(--text-xs);
-	color: var(--color-text-muted);
-	text-decoration: none;
-	transition: all var(--transition-fast);
-}
-
-.blog-container .post-tag:hover {
-	background-color: var(--color-accent-bg);
-	border-color: var(--color-accent);
-	color: var(--color-accent);
-}
-
-.blog-container .post-tag.active {
-	background-color: var(--color-accent);
-	border-color: var(--color-accent);
-	color: #fff;
-}
-
 @media (max-width: 640px) {
 	.blog-container {
 		padding: var(--space-lg);
-	}
-
-	.blog-container .post-link {
-		flex-direction: column;
-		gap: var(--space-xs);
-	}
-
-	.blog-container .post-date {
-		font-size: var(--text-xs);
 	}
 }

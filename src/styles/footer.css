@@ -1,3 +1,7 @@
+/* ===========================================
+   Footer Component Styles
+   =========================================== */
+
 .site-footer {
 	width: 100%;
 	padding: var(--space-lg) var(--space-xl);
@@ -26,21 +30,9 @@
 	gap: var(--space-md);
 }
 
-.social-link {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	color: var(--color-text-muted);
-	transition: color var(--transition-fast), transform var(--transition-fast);
-}
-
-.social-link:hover {
+/* Override social-link for footer context */
+.site-footer .social-link:hover {
 	color: var(--color-toolbar-bg);
-	transform: rotate(8deg);
-}
-
-.social-link :global(svg) {
-	fill: currentColor;
 }
 
 @media (max-width: 640px) {

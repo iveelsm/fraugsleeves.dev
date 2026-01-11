@@ -1,7 +1,7 @@
 ---
 import Navigation from '../components/navigation.astro';
 import Footer from '../components/footer.astro';
-import '../styles/variables.css';
+import '../styles/global.css';
 
 interface Props {
 	title?: string;
@@ -16,21 +16,6 @@ const { title = "the zealot chronicles", class: className } = Astro.props;
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>{title}</title>
 		<slot name="head" />
-		<style is:global>
-			html, body {
-				min-height: 100vh;
-			}
-			body {
-				display: flex;
-				flex-direction: column;
-				background-image: radial-gradient(#ccc 0.5px, transparent 0.5px);
-				background-size: 16px 16px;
-				background-attachment: fixed;
-			}
-			.main-content {
-				flex: 1;
-			}
-		</style>
 	</head>
 	<body class={className}>
 		<Navigation />

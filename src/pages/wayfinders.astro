@@ -1,24 +1,38 @@
 ---
 import { getCollection } from 'astro:content';
 import NavigableLayout from '../layouts/navigable.astro';
+import Card from '../components/card.astro';
+import '../styles/wayfinders-list.css';
 
 const wayfinders = (await getCollection('wayfinders')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 ---
 
-<NavigableLayout title="wayfinders">
-	<body>
-		<h1>My Astro Learning Blog</h1>
-		<p>This is where I will post about my journey learning Astro.</p>
-		<div class="wayfinders">
-			<ul>
-				{wayfinders.map(post => (
-					<li>
-						<a href={`/wayfinders/${post.id}`}>{post.data.title}</a>
-					</li>
-				))}
-			</ul>
+<NavigableLayout title="Wayfinders">
+	<div class="wayfinders-container">
+		<header class="wayfinders-header">
+			<h1 class="wayfinders-title">Wayfinders</h1>
+			<p class="wayfinders-quote">
+				Wayfinding encompasses all of the ways in which people orient themselves in physical space and navigate from place to place.
+			</p>
+			<p class="wayfinders-description">
+				This articles serve to provide avenues for exploring complex topics across a number of posts.
+				They give you the flexibility to choose the order in which you want to explore a topic,
+				while providing some guidelines for best practices for most. They rely heavily on relationships between
+				articles.
+			</p>
+		</header>
+
+		<div class="wayfinders-grid">
+			{wayfinders.map(wayfinder => (
+				<Card
+					title={wayfinder.data.title}
+					description={wayfinder.data.description}
+					date={wayfinder.data.pubDate}
+					href={`/wayfinders/${wayfinder.id}`}
+				/>
+			))}
 		</div>
-	</body>
+	</div>
 </NavigableLayout>

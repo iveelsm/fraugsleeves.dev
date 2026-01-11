@@ -1,19 +1,12 @@
 ---
 import { getCollection } from 'astro:content';
 import NavigableLayout from '../layouts/navigable.astro';
+import BlogPostItem from '../components/blog-post-item.astro';
 import '../styles/blog-list.css';
 
 const allBlogs = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
-
-function formatDate(date: Date): string {
-	return date.toLocaleDateString('en-US', {
-		year: 'numeric',
-		month: 'long',
-		day: 'numeric'
-	});
-}
 ---
 <NavigableLayout title="Blog">
 	<div class="blog-container">
@@ -32,31 +25,18 @@ function formatDate(date: Date): string {
 
 		<ul class="posts-list" id="posts-list">
 			{allBlogs.map(post => (
-				<li class="post-item" data-tags={JSON.stringify(post.data.tags || [])}>
-					<a href={`/blog/${post.id}`} class="post-link">
-						<span class="post-title">{post.data.title}</span>
-						<span class="post-date">{formatDate(post.data.pubDate)}</span>
-					</a>
-					{post.data.description && (
-						<p class="post-description">{post.data.description}</p>
-					)}
-					{post.data.tags && post.data.tags.length > 0 && (
-						<div class="post-tags">
-							{post.data.tags.map((tag: string) => (
-								<a
-									href={`/blog?tag=${encodeURIComponent(tag)}`}
-									class="post-tag"
-									data-tag={tag}
-								>
-									{tag}
-								</a>
-							))}
-						</div>
-					)}
-				</li>
+				<BlogPostItem
+					title={post.data.title}
+					href={`/blog/${post.id}`}
+					date={post.data.pubDate}
+					description={post.data.description}
+					tags={post.data.tags}
+				/>
 			))}
 		</ul>
 	</div>
 </NavigableLayout>
 
-<script is:inline src="/scripts/blog-filter.js"></script>
+<script>
+	import '../scripts/blog-filter.js';
+</script>

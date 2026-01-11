@@ -1,4 +1,8 @@
 ---
+/**
+ * Custom search component using Pagefind API
+ * with expanding toolbar search bar style
+ */
 import '../styles/search.css';
 ---
 
@@ -41,4 +45,120 @@ import '../styles/search.css';
 	</div>
 </div>
 
-<script is:inline src="/scripts/pagefind.js"></script>
+<script is:inline>
+(function() {
+	let pagefind = null;
+
+	async function loadPagefind() {
+		if (pagefind) return pagefind;
+		try {
+			pagefind = await import('/pagefind/pagefind.js');
+			await pagefind.init();
+			return pagefind;
+		} catch (e) {
+			console.error('Failed to load Pagefind:', e);
+			return null;
+		}
+	}
+
+	async function performSearch(query, dropdown, resultsContainer) {
+		if (!query.trim()) {
+			dropdown.classList.remove('visible');
+			resultsContainer.innerHTML = '';
+			return;
+		}
+
+		const pf = await loadPagefind();
+		if (!pf) {
+			resultsContainer.innerHTML = '<div class="search-no-results">Search unavailable</div>';
+			dropdown.classList.add('visible');
+			return;
+		}
+
+		const search = await pf.search(query);
+
+		if (search.results.length === 0) {
+			resultsContainer.innerHTML = '<div class="search-no-results">No results found</div>';
+			dropdown.classList.add('visible');
+			return;
+		}
+
+		const results = await Promise.all(
+			search.results.slice(0, 5).map(r => r.data())
+		);
+
+		resultsContainer.innerHTML = results.map(result => `
+			<a href="${result.url}" class="search-result">
+				<div class="search-result-title">${result.meta?.title || result.url}</div>
+				<div class="search-result-excerpt">${result.excerpt}</div>
+			</a>
+		`).join('');
+
+		dropdown.classList.add('visible');
+	}
+
+	function debounce(fn, delay) {
+		let timeout;
+		return function(...args) {
+			clearTimeout(timeout);
+			timeout = setTimeout(() => fn.apply(this, args), delay);
+		};
+	}
+
+	function initSearch() {
+		const container = document.getElementById('search-container');
+		const toggle = document.getElementById('search-toggle');
+		const input = document.getElementById('search-input');
+		const clearBtn = document.getElementById('search-clear');
+		const dropdown = document.getElementById('search-dropdown');
+		const resultsContainer = document.getElementById('search-results');
+
+		if (!container || !toggle || !input || !clearBtn || !dropdown || !resultsContainer) return;
+
+		const debouncedSearch = debounce((query) => performSearch(query, dropdown, resultsContainer), 200);
+		let isOpen = false;
+
+		function openSearch() {
+			isOpen = true;
+			container.classList.add('search-open');
+			toggle.style.opacity = '0';
+			toggle.style.transform = 'scale(0.8)';
+			toggle.style.pointerEvents = 'none';
+			setTimeout(() => input.focus(), 150);
+		}
+
+		function closeSearch() {
+			isOpen = false;
+			container.classList.remove('search-open');
+			toggle.style.opacity = '1';
+			toggle.style.transform = 'scale(1)';
+			toggle.style.pointerEvents = 'auto';
+			input.value = '';
+			dropdown.classList.remove('visible');
+			resultsContainer.innerHTML = '';
+		}
+
+		toggle.addEventListener('click', openSearch);
+		clearBtn.addEventListener('click', closeSearch);
+		input.addEventListener('input', (e) => debouncedSearch(e.target.value));
+
+		document.addEventListener('click', (e) => {
+			if (isOpen && !container.contains(e.target)) {
+				closeSearch();
+			}
+		});
+
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape' && isOpen) {
+				closeSearch();
+			}
+		});
+	}
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', initSearch);
+	} else {
+		initSearch();
+	}
+})();
+</script>
