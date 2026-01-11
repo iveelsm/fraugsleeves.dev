@@ -236,7 +236,7 @@ One of the biggest reasons that this comes up is that people find helpful articl
 2. It has no values
 3. It has no deadline
 
-This means that: you cannot store or pass any request context, you are completely isolated from the request lifecylce, and the function that you call with it could continue forever without ceasing if you aren't careful. Throughout this article, we have seen `context.Background()` used in problematic ways, but let's look at a more concrete example.
+This means that: you cannot store or pass any request context, you are completely isolated from the request lifecycle, and the function that you call with it could continue forever without ceasing if you aren't careful. Throughout this article, we have seen `context.Background()` used in problematic ways, but let's look at a more concrete example.
 
 ```go
 func RequestHandler(w http.ResponseWriter, r *http.Request) (interface{}, error) {
