@@ -1,22 +1,22 @@
 ---
-import { getCollection } from 'astro:content';
-import NavigableLayout from '../layouts/navigable.astro';
-import Card from '../components/card.astro';
-import BlogPostItem from '../components/blog-post-item.astro';
-import Github from '../icons/github.svg';
-import Gitlab from '../icons/gitlab.svg';
-import Mail from '../icons/mail.svg';
-import LinkedIn from '../icons/linkedin.svg';
+import { getCollection } from "astro:content";
+import NavigableLayout from "../layouts/navigable.astro";
+import Card from "../components/card.astro";
+import BlogPostItem from "../components/blog-post-item.astro";
+import Github from "../icons/github.svg";
+import Gitlab from "../icons/gitlab.svg";
+import Mail from "../icons/mail.svg";
+import LinkedIn from "../icons/linkedin.svg";
 
-import '../styles/home.css';
+import "../styles/home.css";
 
-const allBlogs = (await getCollection('blog')).sort(
+const allBlogs = (await getCollection("blog")).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 
 const recentBlogs = allBlogs.slice(0, 3);
 
-const allWayfinders = (await getCollection('wayfinders')).sort(
+const allWayfinders = (await getCollection("wayfinders")).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 
@@ -24,11 +24,16 @@ const recentWayfinders = allWayfinders.slice(0, 3);
 
 const socialLinks = [
 	{ href: "mailto:blog@frogman.simplelogin.com", icon: Mail, label: "Email" },
-	{ href: "https://linkedin.com/in/msleevi", icon: LinkedIn, label: "LinkedIn" },
+	{
+		href: "https://linkedin.com/in/msleevi",
+		icon: LinkedIn,
+		label: "LinkedIn",
+	},
 	{ href: "https://github.com/iveelsm", icon: Github, label: "GitHub" },
 	{ href: "https://gitlab.com/iveelsm", icon: Gitlab, label: "GitLab" },
 ];
 ---
+
 <NavigableLayout title="fraugsleeves.dev">
 	<div class="index-container">
 		<!-- Welcome Section -->
@@ -38,11 +43,19 @@ const socialLinks = [
 				To an exposition of wayfinding within software development
 			</p>
 			<div class="social-links">
-				{socialLinks.map(link => (
-					<a href={link.href} class="social-link" aria-label={link.label} target="_blank" rel="noopener noreferrer">
-						<link.icon width={24} height={24} />
-					</a>
-				))}
+				{
+					socialLinks.map((link) => (
+						<a
+							href={link.href}
+							class="social-link"
+							aria-label={link.label}
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							<link.icon width={24} height={24} />
+						</a>
+					))
+				}
 			</div>
 		</section>
 
@@ -50,31 +63,36 @@ const socialLinks = [
 		<section class="wayfinders-section">
 			<h2 class="section-title">Wayfinders</h2>
 			<div class="wayfinders-grid">
-				{recentWayfinders.map(wayfinder => (
-					<Card
-						title={wayfinder.data.title}
-						description={wayfinder.data.description}
-						date={wayfinder.data.pubDate}
-						href={`/wayfinders/${wayfinder.id}`}
-					/>
-				))}
+				{
+					recentWayfinders.map((wayfinder) => (
+						<Card
+							title={wayfinder.data.title}
+							description={wayfinder.data.description}
+							date={wayfinder.data.pubDate}
+							href={`/wayfinders/${wayfinder.id}`}
+						/>
+					))
+				}
 			</div>
-			<a href="/wayfinders" class="view-all-link">View all wayfinders →</a>
+			<a href="/wayfinders" class="view-all-link">View all wayfinders →</a
+			>
 		</section>
 
 		<!-- Blog Posts Section -->
 		<section class="posts-section">
 			<h2 class="section-title">Recent Posts</h2>
 			<ul class="posts-list">
-				{recentBlogs.map(post => (
-					<BlogPostItem
-						title={post.data.title}
-						href={`/blog/${post.id}`}
-						date={post.data.pubDate}
-						description={post.data.description}
-						tags={post.data.tags}
-					/>
-				))}
+				{
+					recentBlogs.map((post) => (
+						<BlogPostItem
+							title={post.data.title}
+							href={`/blog/${post.id}`}
+							date={post.data.pubDate}
+							description={post.data.description}
+							tags={post.data.tags}
+						/>
+					))
+				}
 			</ul>
 			<a href="/blog" class="view-all-link">View all posts →</a>
 		</section>

@@ -1,7 +1,19 @@
 ---
-import Entry from './tocEntry.astro';
+import Entry from "./tocEntry.astro";
 
-function buildSubtree(parent: any, headings: any[], offset: number, depth: number): number {
+export interface Heading {
+	depth: number;
+	slug: string;
+	text: string;
+	children: Heading[];
+}
+
+function buildSubtree(
+	parent: Heading,
+	headings: Heading[],
+	offset: number,
+	depth: number,
+): number {
 	if (offset == headings.length) {
 		return 0;
 	}
@@ -14,24 +26,29 @@ function buildSubtree(parent: any, headings: any[], offset: number, depth: numbe
 		parent.children = [...parent.children, current];
 
 		if (headings[next].depth != depth) {
-			increment += buildSubtree(current, headings, next, current.depth + 1);
+			increment += buildSubtree(
+				current,
+				headings,
+				next,
+				current.depth + 1,
+			);
 			next += increment;
 		}
 
 		offset = next;
-		next++
+		next++;
 		increment++;
 	}
 
 	return increment;
 }
 
-function buildTree(headings: any) {
+function buildTree(headings: Heading[]): Heading[] {
 	if (!headings) {
 		return [];
 	}
 
-	const toc: any[] = [];
+	const toc: Heading[] = [];
 
 	let tree = 0;
 	let i = 0;
@@ -50,10 +67,14 @@ const { headings } = Astro.props;
 const toc = buildTree(headings);
 ---
 
-{toc && toc.length > 0 && (
-	<nav class="article-toc">
-		<ul>
-			{toc.map((heading) => <Entry heading={heading} />)}
-		</ul>
-	</nav>
-)}
+{
+	toc && toc.length > 0 && (
+		<nav class="article-toc">
+			<ul>
+				{toc.map((heading) => (
+					<Entry heading={heading} />
+				))}
+			</ul>
+		</nav>
+	)
+}

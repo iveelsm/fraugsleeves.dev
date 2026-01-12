@@ -20,7 +20,9 @@
 .toolbar-links {
 	display: flex;
 	gap: var(--space-sm);
-	transition: transform var(--transition-fast), opacity var(--transition-fast);
+	transition:
+		transform var(--transition-fast),
+		opacity var(--transition-fast);
 }
 
 /* When search is expanded, shift links left */

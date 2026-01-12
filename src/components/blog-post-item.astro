@@ -8,35 +8,43 @@ interface Props {
 	showTags?: boolean;
 }
 
-const { title, href, date, description, tags = [], showTags = true } = Astro.props;
+const {
+	title,
+	href,
+	date,
+	description,
+	tags = [],
+	showTags = true,
+} = Astro.props;
 
 function formatDate(date: Date): string {
-	return date.toLocaleDateString('en-US', {
-		year: 'numeric',
-		month: 'long',
-		day: 'numeric'
+	return date.toLocaleDateString("en-US", {
+		year: "numeric",
+		month: "long",
+		day: "numeric",
 	});
 }
 ---
+
 <li class="post-item" data-tags={JSON.stringify(tags)}>
 	<a href={href} class="post-link">
 		<span class="post-title">{title}</span>
 		<span class="post-date">{formatDate(date)}</span>
 	</a>
-	{description && (
-		<p class="post-description">{description}</p>
-	)}
-	{showTags && tags.length > 0 && (
-		<div class="post-tags">
-			{tags.map((tag: string) => (
-				<a
-					href={`/blog?tag=${encodeURIComponent(tag)}`}
-					class="post-tag"
-					data-tag={tag}
-				>
-					{tag}
-				</a>
-			))}
-		</div>
-	)}
+	{description && <p class="post-description">{description}</p>}
+	{
+		showTags && tags.length > 0 && (
+			<div class="post-tags">
+				{tags.map((tag: string) => (
+					<a
+						href={`/blog?tag=${encodeURIComponent(tag)}`}
+						class="post-tag"
+						data-tag={tag}
+					>
+						{tag}
+					</a>
+				))}
+			</div>
+		)
+	}
 </li>

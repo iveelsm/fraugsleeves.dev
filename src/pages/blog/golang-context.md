@@ -1,14 +1,15 @@
 ---
 layout: ../../layouts/blog.astro
-title: 'Tips and Tricks for Context Management in Golang'
+title: "Tips and Tricks for Context Management in Golang"
 pubDate: 2025-06-12
-description: 'A sample document for Microservice '
-author: 'Mikey Sleevi'
+description: "A sample document for Microservice "
+author: "Mikey Sleevi"
 image:
-    url: 'https://docs.astro.build/assets/rose.webp'
-    alt: 'The Astro logo on a dark background with a pink glow.'
+  url: "https://docs.astro.build/assets/rose.webp"
+  alt: "The Astro logo on a dark background with a pink glow."
 tags: ["service-architecture", "microservices", "architectural-patterns"]
 ---
+
 # Context Management
 
 1. Never wrap `context` in a struct, always pass it explicitly
@@ -51,7 +52,6 @@ Below are some counter-examples for each point, a brief description of the probl
     - [Problem](#problem-6)
     - [Solution](#solution-6)
 - [References](#references)
-
 
 ## Never wrap `context` in a struct, always pass it explicitly
 
@@ -231,7 +231,7 @@ func HandleRequest(ctx context.Context) {
 
 In the example above, the context is unable to cancel the incoming request. So the parent is never notified that a function completed through the necessary channel.
 
-### Solution 
+### Solution
 
 Instead, we should approach it like this.
 
@@ -255,7 +255,7 @@ func HandleRequest(ctx context.Context) {
 
 > You use `context.Background` when you know that you need an empty context, like in main where you are just starting and you use `context.TODO` when you don’t know what context to use or haven’t wired things up. [4](https://blog.meain.io/2024/golang-context/)
 
-`context.Background()` has some interesting properties. 
+`context.Background()` has some interesting properties.
 
 1. It is never canceled
 2. It has no values
@@ -344,11 +344,11 @@ In general, storing values in `context` is a generally accepted pattern in Golan
 
 > Never store values that are not created and destroyed during the lifetime of the request
 
-This includes things like: 
+This includes things like:
 
-* Loggers
-* Database Connections
-* Global Variables
+- Loggers
+- Database Connections
+- Global Variables
 
 ### Antipattern
 
@@ -358,7 +358,7 @@ The following is an example anti-pattern.
 func Handle(w http.ResponseWriter, req *http.Request) {
 	// db is the global database connection pool
 	ctx := context.WithValue(ctx, "db", db)
-	
+
 	// process is a dangerous function that incorrectly handles database connections
 	go process(ctx)
 
@@ -393,9 +393,9 @@ func addRequestID(next http.Handler) http.Handler {
 
 Request Scoped Variables include things like:
 
-* Request ID
-* Trace ID
-* User ID
+- Request ID
+- Trace ID
+- User ID
 
 When `context` is mismanaged, you tend to get memory leaks. Which provides another reason to keep `context` small. If you start to leak `context`, a slow burn is better than a fast burn.
 
@@ -404,6 +404,7 @@ When `context` is mismanaged, you tend to get memory leaks. Which provides anoth
 > The biggest downside to using `context.WithValue()` and `context.Value()` is that you are actively choosing to give up information and type checking at compile time. You do gain the ability to write more versatile code, but this is a major thing to consider. We use typed parameters in our functions for a reason, so any time we opt to give up information like this it is worth considering whether it is worth the benefits. [5](https://www.calhoun.io/pitfalls-of-context-values-and-how-to-avoid-or-mitigate-them/)
 
 Type safety is generally valuable when possible. `context` is one of the few functions in Golang ecosystem that makes heavy use of `interface{}`, which effectively amounts to `void *`.
+
 ### Antipattern
 
 ```go
@@ -421,7 +422,7 @@ func ProcesssUser(ctx context.Context, userProcessor UserProcessor) *User {
 	if (timeout < 0) {
 		return nil
 	}
-	
+
 	return userProcessor.process(user)
 }
 ```
@@ -453,39 +454,38 @@ func GetUser(ctx context.Context) *User {
 }
 ```
 
-
 ## goroutines associated with a `context` must be properly terminated and should check against cancellation and deadlines.
 
-> Contexts in Go are used to manage the lifecycle and cancellation signaling of goroutines and other operations. A root context is usually created, and child contexts can be derived from it. Child contexts inherit cancellation from their parent contexts. If a goroutine is started with a context, but does not properly exit when that context is canceled, it can result in a goroutine leak. The goroutine will persist even though the operation it was handling has been canceled. [6]( https://medium.com/@jamal.kaksouri/the-complete-guide-to-context-in-golang-efficient-concurrency-management-43d722f6eaea)
+> Contexts in Go are used to manage the lifecycle and cancellation signaling of goroutines and other operations. A root context is usually created, and child contexts can be derived from it. Child contexts inherit cancellation from their parent contexts. If a goroutine is started with a context, but does not properly exit when that context is canceled, it can result in a goroutine leak. The goroutine will persist even though the operation it was handling has been canceled. [6](https://medium.com/@jamal.kaksouri/the-complete-guide-to-context-in-golang-efficient-concurrency-management-43d722f6eaea)
 
 ### Antipattern
 
 Here is an example anti-pattern.
 
 ```go
-func main() {  
-  ctx := context.Background()  
-  
-  go func(ctx context.Context) {  
-    for {  
-      select {  
-      case <-ctx.Done():  
-        // properly handling cancellation  
-        return   
-      default:  
-        // do work  
-      }  
-    }  
-  }(ctx)  
-  
-  time.Sleep(1 * time.Second)  
-  
-  cancel() // cancel the context   
-}  
-  
-func cancel() {  
-  ctx, cancel := context.WithCancel(context.Background())  
-  cancel() // cancel the context  
+func main() {
+  ctx := context.Background()
+
+  go func(ctx context.Context) {
+    for {
+      select {
+      case <-ctx.Done():
+        // properly handling cancellation
+        return
+      default:
+        // do work
+      }
+    }
+  }(ctx)
+
+  time.Sleep(1 * time.Second)
+
+  cancel() // cancel the context
+}
+
+func cancel() {
+  ctx, cancel := context.WithCancel(context.Background())
+  cancel() // cancel the context
 }
 ```
 
@@ -496,23 +496,23 @@ In this example, the goroutine started with the context does not properly exit w
 ### Solution
 
 ```go
-func main() {  
-  ctx, cancel := context.WithCancel(context.Background())  
-  
-  go func(ctx context.Context) {  
-    for {  
-      select {  
-      case <-ctx.Done():  
-        return // exit properly on cancellation    
-      default:  
-        // do work  
-      }  
-    }  
-  }(ctx)  
-  
-  time.Sleep(1 * time.Second)    
-  
-  cancel()  
+func main() {
+  ctx, cancel := context.WithCancel(context.Background())
+
+  go func(ctx context.Context) {
+    for {
+      select {
+      case <-ctx.Done():
+        return // exit properly on cancellation
+      default:
+        // do work
+      }
+    }
+  }(ctx)
+
+  time.Sleep(1 * time.Second)
+
+  cancel()
 }
 ```
 
