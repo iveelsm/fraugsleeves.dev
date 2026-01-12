@@ -1,13 +1,11 @@
 ---
-import '../styles/blog.css';
+import "../styles/blog.css";
 
-import NavigableLayout from './navigable.astro';
-import TableOfContents from '../components/toc.astro';
-const {
-  frontmatter,
-  headings
-} = Astro.props;
+import NavigableLayout from "./navigable.astro";
+import TableOfContents from "../components/toc.astro";
+const { frontmatter, headings } = Astro.props;
 ---
+
 <NavigableLayout title={frontmatter.title} class="blog-layout">
 	<!-- Fixed Header with Post Info -->
 	<header class="post-header-fixed">
@@ -16,7 +14,11 @@ const {
 				<div class="post-header-main">
 					<h1 class="post-title">{frontmatter.title}</h1>
 					<div class="post-meta">
-						<span class="post-date">{new Date(frontmatter.pubDate).toDateString()}</span>
+						<span class="post-date"
+							>{
+								new Date(frontmatter.pubDate).toDateString()
+							}</span
+						>
 						<span class="meta-separator">·</span>
 						<span class="post-author">{frontmatter.author}</span>
 					</div>
@@ -24,7 +26,11 @@ const {
 				<div class="post-header-collapsible">
 					<p class="post-summary">{frontmatter.description}</p>
 					<ul class="post-tags">
-						{frontmatter.tags.map(tag => <li class="tag">#{tag}</li>)}
+						{
+							frontmatter.tags.map((tag) => (
+								<li class="tag">#{tag}</li>
+							))
+						}
 					</ul>
 				</div>
 			</div>
@@ -36,7 +42,7 @@ const {
 		<aside class="toc-sidebar">
 			<div class="toc-wrapper">
 				<h2 class="toc-title">Table of Contents</h2>
-				<TableOfContents headings={headings}></TableOfContents>
+				<TableOfContents headings={headings} />
 			</div>
 		</aside>
 		<main class="post-content">
@@ -45,6 +51,6 @@ const {
 	</div>
 
 	<script>
-		import '../scripts/blog-post.js';
+		import "../scripts/blog-post.js";
 	</script>
 </NavigableLayout>

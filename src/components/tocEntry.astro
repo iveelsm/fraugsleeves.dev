@@ -1,16 +1,24 @@
 ---
+import type { Heading } from "./toc.astro";
+
+interface Props {
+	heading: Heading;
+}
+
 const { heading } = Astro.props;
 ---
 
 <li>
-	<a href={'#' + heading.slug}>
+	<a href={"#" + heading.slug}>
 		{heading.text}
 	</a>
-	{heading.children.length > 0 && (
-		<ul>
-			{heading.children.map((subheading: any) => (
-				<Astro.self heading={subheading} />
-			))}
-		</ul>
-	)}
+	{
+		heading.children.length > 0 && (
+			<ul>
+				{heading.children.map((subheading: Heading) => (
+					<Astro.self heading={subheading} />
+				))}
+			</ul>
+		)
+	}
 </li>
