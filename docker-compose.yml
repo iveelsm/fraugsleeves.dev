@@ -1,8 +1,8 @@
 services:
-  fraugsleeves.dev:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "4320:80"
-    restart: unless-stopped
+    fraugsleeves.dev:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - "4320:80"
+        restart: unless-stopped
