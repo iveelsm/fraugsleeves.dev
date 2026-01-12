@@ -1,5 +1,5 @@
-app = 'fraugsleeves-dev'
-primary_region = 'dfw'
+app = "fraugsleeves-dev"
+primary_region = "dfw"
 kill_signal = "SIGINT"
 kill_timeout = "5m0s"
 
@@ -12,10 +12,10 @@ kill_timeout = "5m0s"
 [http_service]
 	internal_port = 80
 	force_https = true
-	auto_stop_machines = 'stop'
+	auto_stop_machines = "stop"
 	auto_start_machines = true
 	min_machines_running = 0
-	processes = ['app']
+	processes = [ "app" ]
 
 [[services]]
 	internal_port = 80
@@ -42,6 +42,6 @@ kill_timeout = "5m0s"
 
 
 [[vm]]
-	memory = '1gb'
-	cpu_kind = 'shared'
+	memory = "1gb"
+	cpu_kind = "shared"
 	cpus = 1
