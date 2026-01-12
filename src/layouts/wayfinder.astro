@@ -3,6 +3,7 @@ import "../styles/wayfinders.css";
 
 import NavigableLayout from "./navigable.astro";
 const { frontmatter } = Astro.props;
+const { minutesRead } = frontmatter;
 ---
 
 <NavigableLayout title={frontmatter.title} class="wayfinder-layout">
@@ -19,6 +20,8 @@ const { frontmatter } = Astro.props;
 						>
 						<span class="meta-separator">·</span>
 						<span class="post-author">{frontmatter.author}</span>
+						<span class="meta-separator">·</span>
+						<span class="reading-time">{minutesRead}</span>
 					</div>
 				</div>
 				<div class="post-header-collapsible">

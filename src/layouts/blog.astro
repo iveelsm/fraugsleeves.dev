@@ -4,6 +4,7 @@ import "../styles/blog.css";
 import NavigableLayout from "./navigable.astro";
 import TableOfContents from "../components/toc.astro";
 const { frontmatter, headings } = Astro.props;
+const { minutesRead } = frontmatter;
 ---
 
 <NavigableLayout title={frontmatter.title} class="blog-layout">
@@ -21,6 +22,8 @@ const { frontmatter, headings } = Astro.props;
 						>
 						<span class="meta-separator">·</span>
 						<span class="post-author">{frontmatter.author}</span>
+						<span class="meta-separator">·</span>
+						<span class="reading-time">{minutesRead}</span>
 					</div>
 				</div>
 				<div class="post-header-collapsible">
