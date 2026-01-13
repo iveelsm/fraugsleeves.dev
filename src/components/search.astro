@@ -139,7 +139,10 @@ import "../styles/search.css";
 		</div>
 		<div class="search-overlay-results" id="search-overlay-results"></div>
 		<div class="search-overlay-hint">
-			<p>Try searching for topics like "golang", "microservices", or "context"</p>
+			<p>
+				Try searching for topics like "golang", "microservices", or
+				"context"
+			</p>
 		</div>
 	</div>
 </div>
@@ -160,11 +163,17 @@ import "../styles/search.css";
 			}
 		}
 
-		async function performSearch(query, resultsContainer, isOverlay = false) {
+		async function performSearch(
+			query,
+			resultsContainer,
+			isOverlay = false,
+		) {
 			if (!query.trim()) {
 				resultsContainer.innerHTML = "";
 				if (!isOverlay) {
-					resultsContainer.closest(".search-dropdown")?.classList.remove("visible");
+					resultsContainer
+						.closest(".search-dropdown")
+						?.classList.remove("visible");
 				}
 				return;
 			}
@@ -174,7 +183,9 @@ import "../styles/search.css";
 				resultsContainer.innerHTML =
 					'<div class="search-no-results">Search unavailable</div>';
 				if (!isOverlay) {
-					resultsContainer.closest(".search-dropdown")?.classList.add("visible");
+					resultsContainer
+						.closest(".search-dropdown")
+						?.classList.add("visible");
 				}
 				return;
 			}
@@ -185,13 +196,17 @@ import "../styles/search.css";
 				resultsContainer.innerHTML =
 					'<div class="search-no-results">No results found</div>';
 				if (!isOverlay) {
-					resultsContainer.closest(".search-dropdown")?.classList.add("visible");
+					resultsContainer
+						.closest(".search-dropdown")
+						?.classList.add("visible");
 				}
 				return;
 			}
 
 			const results = await Promise.all(
-				search.results.slice(0, isOverlay ? 10 : 5).map((r) => r.data()),
+				search.results
+					.slice(0, isOverlay ? 10 : 5)
+					.map((r) => r.data()),
 			);
 
 			resultsContainer.innerHTML = results
@@ -206,7 +221,9 @@ import "../styles/search.css";
 				.join("");
 
 			if (!isOverlay) {
-				resultsContainer.closest(".search-dropdown")?.classList.add("visible");
+				resultsContainer
+					.closest(".search-dropdown")
+					?.classList.add("visible");
 			}
 		}
 
@@ -233,9 +250,15 @@ import "../styles/search.css";
 
 			// Mobile elements
 			const overlay = document.getElementById("search-overlay");
-			const overlayClose = document.getElementById("search-overlay-close");
-			const overlayInput = document.getElementById("search-overlay-input");
-			const overlayResults = document.getElementById("search-overlay-results");
+			const overlayClose = document.getElementById(
+				"search-overlay-close",
+			);
+			const overlayInput = document.getElementById(
+				"search-overlay-input",
+			);
+			const overlayResults = document.getElementById(
+				"search-overlay-results",
+			);
 
 			if (!container || !toggle) return;
 
@@ -316,19 +339,23 @@ import "../styles/search.css";
 			document.addEventListener("keydown", (e) => {
 				if (e.key === "Escape") {
 					if (isDesktopOpen) closeDesktopSearch();
-					if (overlay?.classList.contains("active")) closeMobileSearch();
+					if (overlay?.classList.contains("active"))
+						closeMobileSearch();
 				}
 			});
 
 			// Handle resize - close appropriate search if viewport changes
-			window.addEventListener("resize", debounce(() => {
-				if (isMobile() && isDesktopOpen) {
-					closeDesktopSearch();
-				}
-				if (!isMobile() && overlay?.classList.contains("active")) {
-					closeMobileSearch();
-				}
-			}, 100));
+			window.addEventListener(
+				"resize",
+				debounce(() => {
+					if (isMobile() && isDesktopOpen) {
+						closeDesktopSearch();
+					}
+					if (!isMobile() && overlay?.classList.contains("active")) {
+						closeMobileSearch();
+					}
+				}, 100),
+			);
 		}
 
 		if (document.readyState === "loading") {
