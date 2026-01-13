@@ -3,6 +3,49 @@
    =========================================== */
 
 /* ===========================================
+   Berkeley Mono Font (EULA: WOFF/WOFF2 only)
+   =========================================== */
+@font-face {
+	font-family: "Berkeley Mono";
+	src:
+		url("/fonts/BerkeleyMono-Regular.woff2") format("woff2"),
+		url("/fonts/BerkeleyMono-Regular.woff") format("woff");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Berkeley Mono";
+	src:
+		url("/fonts/BerkeleyMono-Italic.woff2") format("woff2"),
+		url("/fonts/BerkeleyMono-Italic.woff") format("woff");
+	font-weight: 400;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Berkeley Mono";
+	src:
+		url("/fonts/BerkeleyMono-Bold.woff2") format("woff2"),
+		url("/fonts/BerkeleyMono-Bold.woff") format("woff");
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Berkeley Mono";
+	src:
+		url("/fonts/BerkeleyMono-BoldItalic.woff2") format("woff2"),
+		url("/fonts/BerkeleyMono-BoldItalic.woff") format("woff");
+	font-weight: 700;
+	font-style: italic;
+	font-display: swap;
+}
+
+/* ===========================================
    uchu.style Expanded Color Palette
    =========================================== */
 :root {
@@ -115,7 +158,7 @@
    =========================================== */
 :root {
 	/* Typography */
-	--font-mono: "Iosevka Web", ui-monospace, SFMono-Regular, Menlo, monospace;
+	--font-mono: "Berkeley Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 	--font-sans:
 		system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
