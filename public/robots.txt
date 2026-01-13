@@ -1,0 +1,9 @@
+# robots.txt for fraugsleeves.dev
+
+User-agent: *
+Allow: /
+Crawl-delay: 10
+
+Sitemap: https://fraugsleeves.dev/sitemap-index.xml
+
+Content-Signal: ai-train=no, search=yes, ai-input=no

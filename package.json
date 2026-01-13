@@ -13,6 +13,7 @@
 		"lint:fix": "prettier --write . && eslint . --fix"
 	},
 	"dependencies": {
+		"@astrojs/sitemap": "^3.6.1",
 		"astro": "^5.9.2",
 		"astro-pagefind": "^1.8.5"
 	},
