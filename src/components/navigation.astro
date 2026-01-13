@@ -26,19 +26,19 @@ function isActive(href: string, exact: boolean): boolean {
 		</a>
 		<div class="toolbar-right">
 			<div class="toolbar-links">
-			{
-				navItems.map((item) => (
-					<a
-						href={item.href}
-						class:list={[
-							"toolbar-link",
-							{ active: isActive(item.href, item.exact) },
-						]}
-					>
-						{item.label}
-					</a>
-				))
-			}
+				{
+					navItems.map((item) => (
+						<a
+							href={item.href}
+							class:list={[
+								"toolbar-link",
+								{ active: isActive(item.href, item.exact) },
+							]}
+						>
+							{item.label}
+						</a>
+					))
+				}
 			</div>
 			<Search />
 		</div>
