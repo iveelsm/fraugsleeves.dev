@@ -3,7 +3,7 @@
    =========================================== */
 
 /* ===========================================
-   Berkeley Mono Font (EULA: WOFF/WOFF2 only)
+   Berkeley Mono Font
    =========================================== */
 @font-face {
 	font-family: "Berkeley Mono";
@@ -187,15 +187,15 @@
 	--color-surface: var(--uchu-yang);
 	--color-text: var(--uchu-yin-6);
 	--color-text-heading: var(--uchu-yin);
-	--color-text-muted: var(--uchu-yin-4);
-	--color-text-subtle: var(--uchu-yin-3);
+	--color-text-muted: var(--uchu-yin-6);
+	--color-text-subtle: var(--uchu-yin-7);
 	--color-border: var(--uchu-gray-4);
 	--color-border-dark: var(--uchu-gray-6);
 	--color-accent: var(--uchu-blue-5);
 	--color-accent-bg: var(--uchu-blue-1);
 	--color-code-bg: var(--uchu-gray-2);
 	--color-tag-bg: var(--uchu-gray-3);
-	--color-tag-text: var(--uchu-yin-7);
+	--color-tag-text: var(--uchu-yin-9);
 
 	/* Colors - Toolbar (using uchu expanded palette) */
 	--color-toolbar-bg: var(--uchu-yin-9);
