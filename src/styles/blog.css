@@ -38,7 +38,7 @@
 .post-title {
 	font-size: var(--text-2xl);
 	font-weight: var(--font-semibold);
-	color: var(--color-text);
+	color: var(--color-text-heading);
 	line-height: var(--leading-tight);
 	margin: 0;
 	transition: font-size var(--transition-normal);
@@ -186,7 +186,7 @@
 
 .article-toc a:hover {
 	color: var(--color-text);
-	background-color: #f5f5f5;
+	background-color: var(--color-bg-alt);
 }
 
 /* Active TOC Item */
@@ -213,7 +213,7 @@
 	font-weight: var(--font-semibold);
 	margin-top: var(--space-xl);
 	margin-bottom: var(--space-md);
-	color: var(--color-text);
+	color: var(--color-text-heading);
 	scroll-margin-top: 120px;
 }
 
@@ -285,7 +285,7 @@
 	border-left: 3px solid var(--color-accent);
 	margin: var(--space-lg) 0;
 	padding: var(--space-sm) var(--space-md);
-	background: #f8f9fa;
+	background: var(--color-bg-alt);
 	color: var(--color-text-muted);
 	font-style: italic;
 	border-radius: 0 var(--radius-sm) var(--radius-sm) 0;

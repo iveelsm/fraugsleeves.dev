@@ -17,7 +17,7 @@
 .wayfinders-title {
 	font-size: var(--text-3xl);
 	font-weight: var(--font-semibold);
-	color: var(--color-text);
+	color: var(--color-text-heading);
 	margin-bottom: var(--space-md);
 }
 
