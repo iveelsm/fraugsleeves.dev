@@ -2,6 +2,7 @@
 /**
  * Custom search component using Pagefind API
  * with expanding toolbar search bar style
+ * and full-screen mobile search overlay
  */
 import "../styles/search.css";
 ---
@@ -30,7 +31,8 @@ import "../styles/search.css";
 		</svg>
 	</button>
 
-	<div class="search-input-wrapper" id="search-input-wrapper">
+	<!-- Desktop: Inline search input -->
+	<div class="search-input-wrapper search-desktop" id="search-input-wrapper">
 		<svg
 			class="search-input-icon"
 			xmlns="http://www.w3.org/2000/svg"
@@ -76,8 +78,72 @@ import "../styles/search.css";
 		</button>
 	</div>
 
-	<div class="search-dropdown" id="search-dropdown">
+	<!-- Desktop: Dropdown results -->
+	<div class="search-dropdown search-desktop" id="search-dropdown">
 		<div class="search-results" id="search-results"></div>
+	</div>
+</div>
+
+<!-- Mobile: Full-screen search overlay -->
+<div class="search-overlay" id="search-overlay">
+	<div class="search-overlay-container">
+		<div class="search-overlay-header">
+			<h1 class="search-overlay-title">Search</h1>
+			<button
+				class="search-overlay-close"
+				id="search-overlay-close"
+				type="button"
+				aria-label="Close search"
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				>
+					<line x1="18" y1="6" x2="6" y2="18"></line>
+					<line x1="6" y1="6" x2="18" y2="18"></line>
+				</svg>
+			</button>
+		</div>
+		<div class="search-overlay-form">
+			<div class="search-overlay-input-wrapper">
+				<svg
+					class="search-overlay-icon"
+					xmlns="http://www.w3.org/2000/svg"
+					width="20"
+					height="20"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				>
+					<circle cx="11" cy="11" r="8"></circle>
+					<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+				</svg>
+				<input
+					type="text"
+					class="search-overlay-input"
+					id="search-overlay-input"
+					placeholder="What are you looking for?"
+					autocomplete="off"
+				/>
+			</div>
+		</div>
+		<div class="search-overlay-results" id="search-overlay-results"></div>
+		<div class="search-overlay-hint">
+			<p>
+				Try searching for topics like "golang", "microservices", or
+				"context"
+			</p>
+		</div>
 	</div>
 </div>
 
@@ -97,10 +163,18 @@ import "../styles/search.css";
 			}
 		}
 
-		async function performSearch(query, dropdown, resultsContainer) {
+		async function performSearch(
+			query,
+			resultsContainer,
+			isOverlay = false,
+		) {
 			if (!query.trim()) {
-				dropdown.classList.remove("visible");
 				resultsContainer.innerHTML = "";
+				if (!isOverlay) {
+					resultsContainer
+						.closest(".search-dropdown")
+						?.classList.remove("visible");
+				}
 				return;
 			}
 
@@ -108,7 +182,11 @@ import "../styles/search.css";
 			if (!pf) {
 				resultsContainer.innerHTML =
 					'<div class="search-no-results">Search unavailable</div>';
-				dropdown.classList.add("visible");
+				if (!isOverlay) {
+					resultsContainer
+						.closest(".search-dropdown")
+						?.classList.add("visible");
+				}
 				return;
 			}
 
@@ -117,26 +195,36 @@ import "../styles/search.css";
 			if (search.results.length === 0) {
 				resultsContainer.innerHTML =
 					'<div class="search-no-results">No results found</div>';
-				dropdown.classList.add("visible");
+				if (!isOverlay) {
+					resultsContainer
+						.closest(".search-dropdown")
+						?.classList.add("visible");
+				}
 				return;
 			}
 
 			const results = await Promise.all(
-				search.results.slice(0, 5).map((r) => r.data()),
+				search.results
+					.slice(0, isOverlay ? 10 : 5)
+					.map((r) => r.data()),
 			);
 
 			resultsContainer.innerHTML = results
 				.map(
 					(result) => `
 			<a href="${result.url}" class="search-result">
-				<div class="search-result-title">${result.meta?.title || result.url}</div>
+				<div class="search-result-title">${result.meta?.title || result.meta?.name || result.title || result.url}</div>
 				<div class="search-result-excerpt">${result.excerpt}</div>
 			</a>
 		`,
 				)
 				.join("");
 
-			dropdown.classList.add("visible");
+			if (!isOverlay) {
+				resultsContainer
+					.closest(".search-dropdown")
+					?.classList.add("visible");
+			}
 		}
 
 		function debounce(fn, delay) {
@@ -147,7 +235,12 @@ import "../styles/search.css";
 			};
 		}
 
+		function isMobile() {
+			return window.innerWidth <= 640;
+		}
+
 		function initSearch() {
+			// Desktop elements
 			const container = document.getElementById("search-container");
 			const toggle = document.getElementById("search-toggle");
 			const input = document.getElementById("search-input");
@@ -155,59 +248,114 @@ import "../styles/search.css";
 			const dropdown = document.getElementById("search-dropdown");
 			const resultsContainer = document.getElementById("search-results");
 
-			if (
-				!container ||
-				!toggle ||
-				!input ||
-				!clearBtn ||
-				!dropdown ||
-				!resultsContainer
-			)
-				return;
+			// Mobile elements
+			const overlay = document.getElementById("search-overlay");
+			const overlayClose = document.getElementById(
+				"search-overlay-close",
+			);
+			const overlayInput = document.getElementById(
+				"search-overlay-input",
+			);
+			const overlayResults = document.getElementById(
+				"search-overlay-results",
+			);
 
-			const debouncedSearch = debounce(
-				(query) => performSearch(query, dropdown, resultsContainer),
+			if (!container || !toggle) return;
+
+			const debouncedDesktopSearch = debounce(
+				(query) => performSearch(query, resultsContainer, false),
 				200,
 			);
-			let isOpen = false;
 
-			function openSearch() {
-				isOpen = true;
+			const debouncedMobileSearch = debounce(
+				(query) => performSearch(query, overlayResults, true),
+				200,
+			);
+
+			let isDesktopOpen = false;
+
+			function openDesktopSearch() {
+				isDesktopOpen = true;
 				container.classList.add("search-open");
 				toggle.style.opacity = "0";
 				toggle.style.transform = "scale(0.8)";
 				toggle.style.pointerEvents = "none";
-				setTimeout(() => input.focus(), 150);
+				setTimeout(() => input?.focus(), 150);
 			}
 
-			function closeSearch() {
-				isOpen = false;
+			function closeDesktopSearch() {
+				isDesktopOpen = false;
 				container.classList.remove("search-open");
 				toggle.style.opacity = "1";
 				toggle.style.transform = "scale(1)";
 				toggle.style.pointerEvents = "auto";
-				input.value = "";
-				dropdown.classList.remove("visible");
-				resultsContainer.innerHTML = "";
+				if (input) input.value = "";
+				dropdown?.classList.remove("visible");
+				if (resultsContainer) resultsContainer.innerHTML = "";
 			}
 
-			toggle.addEventListener("click", openSearch);
-			clearBtn.addEventListener("click", closeSearch);
-			input.addEventListener("input", (e) =>
-				debouncedSearch(e.target.value),
+			function openMobileSearch() {
+				overlay?.classList.add("active");
+				document.body.style.overflow = "hidden";
+				setTimeout(() => overlayInput?.focus(), 150);
+			}
+
+			function closeMobileSearch() {
+				overlay?.classList.remove("active");
+				document.body.style.overflow = "";
+				if (overlayInput) overlayInput.value = "";
+				if (overlayResults) overlayResults.innerHTML = "";
+			}
+
+			// Toggle click - check if mobile or desktop
+			toggle.addEventListener("click", () => {
+				if (isMobile()) {
+					openMobileSearch();
+				} else {
+					openDesktopSearch();
+				}
+			});
+
+			// Desktop events
+			clearBtn?.addEventListener("click", closeDesktopSearch);
+			input?.addEventListener("input", (e) =>
+				debouncedDesktopSearch(e.target.value),
 			);
 
+			// Mobile events
+			overlayClose?.addEventListener("click", closeMobileSearch);
+			overlayInput?.addEventListener("input", (e) =>
+				debouncedMobileSearch(e.target.value),
+			);
+
+			// Close on outside click (desktop only)
 			document.addEventListener("click", (e) => {
-				if (isOpen && !container.contains(e.target)) {
-					closeSearch();
+				if (isDesktopOpen && !container.contains(e.target)) {
+					closeDesktopSearch();
 				}
 			});
 
+			// Escape key closes both
 			document.addEventListener("keydown", (e) => {
-				if (e.key === "Escape" && isOpen) {
-					closeSearch();
+				if (e.key === "Escape") {
+					if (isDesktopOpen) closeDesktopSearch();
+					if (overlay?.classList.contains("active"))
+						closeMobileSearch();
 				}
 			});
+
+			// Handle resize - close appropriate search if viewport changes
+			window.addEventListener(
+				"resize",
+				debounce(() => {
+					if (isMobile() && isDesktopOpen) {
+						closeDesktopSearch();
+					}
+					if (!isMobile() && overlay?.classList.contains("active")) {
+						closeMobileSearch();
+					}
+				}, 100),
+			);
 		}
 
 		if (document.readyState === "loading") {

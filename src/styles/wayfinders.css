@@ -193,6 +193,22 @@ main blockquote {
 		padding: var(--space-md);
 	}
 
+	.post-header-main {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--space-xs);
+	}
+
+	.post-meta {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--space-xs);
+	}
+
+	.meta-separator {
+		display: none;
+	}
+
 	.post-title {
 		font-size: 1.35rem;
 	}
