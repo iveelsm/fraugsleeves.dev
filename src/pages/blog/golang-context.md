@@ -1,12 +1,12 @@
 ---
 layout: ../../layouts/blog.astro
-title: 'Tips and Tricks for Context Management in Go'
+title: "Tips and Tricks for Context Management in Go"
 pubDate: 2026-01-15
-description: 'Seven tips for managing Context in Go projects. The tips range from strong suggestions through best practices all the way to hard requirements. Each tip provides a reasonable example of a problematic use, as well as a reasonable counter example for refactoring. Information and tips, where possible, are corroborated with different sources.'
-author: 'Mikey Sleevi'
+description: "Seven tips for managing Context in Go projects. The tips range from strong suggestions through best practices all the way to hard requirements. Each tip provides a reasonable example of a problematic use, as well as a reasonable counter example for refactoring. Information and tips, where possible, are corroborated with different sources."
+author: "Mikey Sleevi"
 image:
-    url: 'https://docs.astro.build/assets/rose.webp'
-    alt: 'The Astro logo on a dark background with a pink glow.'
+  url: "https://docs.astro.build/assets/rose.webp"
+  alt: "The Astro logo on a dark background with a pink glow."
 tags: ["golang", "context", "concurrency", "code-architecture", "best-practice"]
 ---
 
@@ -85,7 +85,7 @@ Now we can push the responsibility of context management onto the caller. So the
 ## Beware of chaining `Context`
 
 > Recently, I recalled a useful pattern that’s cropped up a few times at work. API handlers (think http.Handler), include a context.Context tied to the connectivity of the caller. If the client disconnects, the context closes, signaling to the handler that it can fail early and clean itself up. Importantly, the handler function returning also cancels the context.
-> 
+>
 > But what if you want to do an out-of-band operation after the request is complete? [3](https://rodaine.com/2020/07/break-context-cancellation-chain/)
 
 Chaining context refers to passing the same context to multiple handlers. In the vast majority of scenarios, chaining context is a preferred approach. Often when you spawn goroutines as part of a request, event or background job, you want to cancel all the goroutines with their respective close. But what if you want something to live beyond the close or cancel? Let's look at the following problematic example.
@@ -132,9 +132,9 @@ In the above code, we are trying to create a number of subscription background p
 **Solution**
 
 ```go
-type Subscription struct { 
+type Subscription struct {
   cancel context.CancelFunc
-  /* ... */ 
+  /* ... */
 }
 
 type Consumer struct { /* ... */ }
@@ -206,7 +206,7 @@ func HandleRequest(ctx context.Context) {
 
 In a rather contrived example, the context is unable to cancel the incoming request. So the parent is never notified that a function completed through the necessary channel.
 
-**Solution** 
+**Solution**
 
 Instead, we should approach it like this.
 
@@ -230,7 +230,7 @@ func HandleRequest(ctx context.Context) {
 
 > You use `context.Background` when you know that you need an empty context, like in main where you are just starting and you use `context.TODO` when you don’t know what context to use or haven’t wired things up. [5](https://blog.meain.io/2024/golang-context/)
 
-One of the biggest reasons that this comes up is that people find helpful articles that explain how to use something, but the articles uses `context.Background()` as a placeholder. Authors often do this so they can focus on the library or tooling instead of the context management surrounding the library and tooling. So let's talk about why you should avoid it. To start `context.Background()` has some interesting properties. 
+One of the biggest reasons that this comes up is that people find helpful articles that explain how to use something, but the articles uses `context.Background()` as a placeholder. Authors often do this so they can focus on the library or tooling instead of the context management surrounding the library and tooling. So let's talk about why you should avoid it. To start `context.Background()` has some interesting properties.
 
 1. It is never cancelled
 2. It has no values
@@ -243,13 +243,13 @@ func RequestHandler(w http.ResponseWriter, r *http.Request) (interface{}, error)
   /* Initialize request... */
   ctx := r.Context()
 
-  for i := 0; i < 10; i++ {		
+  for i := 0; i < 10; i++ {
     if err := sem.Acquire(context.Background(), 1); err != nil { // If the client disconnects, this may block forever.
       return err
     }
 
     go func(i int) {
-      defer sem.Release(1)			
+      defer sem.Release(1)
       handle(ctx, i) // Cancellation can no longer interrupt semaphore pressure.
     }(i)
   }
@@ -278,13 +278,13 @@ func RequestHandler(w http.ResponseWriter, r *http.Request) (interface{}, error)
   ctx, cancel := context.WithCancel(reqCtx)
   defer cancel()
 
-  for i := 0; i < 10; i++ {		
+  for i := 0; i < 10; i++ {
     if err := sem.Acquire(ctx, 1); err != nil { // The request and semaphore acquisition are correctly bound togheter
       return err
     }
 
     go func(i int) {
-      defer sem.Release(1)			
+      defer sem.Release(1)
       handle(ctx, i)
     }(i)
   }
@@ -299,14 +299,14 @@ func handle(ctx context.Context, i int) {
 
 We have added some unnecessary child context that is derived from the request context. This is used as an example to demonstrate how you would construct the necessary context in order to avoid the use of `context.Background()`. The primary change is the removal of `context.Background()` in the semaphore acquisition. For the vast majority of scenarios, using the background context is incorrect, whenever you see it, ask yourself if it falls into one of the following scenarios.
 
-* You are constructing a top-level context for your program in somewhere like `main()`
-* You are building background goroutines that are intended to be decoupled from a request lifecycle
+- You are constructing a top-level context for your program in somewhere like `main()`
+- You are building background goroutines that are intended to be decoupled from a request lifecycle
 
 There are additional scenarios that involve breaking the chain of context, but these can be mostly be avoided with `context.WithoutCancel`. [3](https://rodaine.com/2020/07/break-context-cancellation-chain/)
 
 ## Minimize `Context` stores
 
-In general, storing values in `Context` is a generally accepted pattern in Golang. However, what to store is the problem. Let's start with a very important ground rule. 
+In general, storing values in `Context` is a generally accepted pattern in Golang. However, what to store is the problem. Let's start with a very important ground rule.
 
 > Never store values in `Context` that are not created and destroyed during the lifetime of the request. [6](https://www.calhoun.io/pitfalls-of-context-values-and-how-to-avoid-or-mitigate-them/)
 
@@ -356,7 +356,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-This is a common pattern, we have assumed that the memcached client is request bound, and so as a result, since we have ownership of the associated request data, we are closing these resources after the termination of our handler. The obvious problem is that we will close the shared client for every request at the end of our handler function. 
+This is a common pattern, we have assumed that the memcached client is request bound, and so as a result, since we have ownership of the associated request data, we are closing these resources after the termination of our handler. The obvious problem is that we will close the shared client for every request at the end of our handler function.
 
 **Solution**
 
@@ -439,7 +439,7 @@ func WithUser(ctx context.Context, user *User) context.Context {
 }
 
 func GetUser(ctx context.Context) *User {
-  user, ok := ctx.Value(userCtxKey).(*User) 
+  user, ok := ctx.Value(userCtxKey).(*User)
   if !ok {
     return nil
   }
