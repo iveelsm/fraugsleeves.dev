@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
+  <!-- Placeholder 404 illustration - replace with your custom image -->
+  <rect width="400" height="300" fill="none"/>
+  <circle cx="200" cy="150" r="80" stroke="currentColor" stroke-width="2" opacity="0.3"/>
+  <text x="200" y="160" text-anchor="middle" font-family="monospace" font-size="24" fill="currentColor" opacity="0.5">
+    Your image here
+  </text>
+</svg>
