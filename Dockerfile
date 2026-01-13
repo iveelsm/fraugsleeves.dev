@@ -6,6 +6,9 @@ RUN npm ci
 
 COPY . .
 
+ARG SITE_URL=https://fraugsleeves.dev
+ENV SITE_URL=${SITE_URL}
+
 RUN npm run build
 
 FROM nginx:alpine AS production
