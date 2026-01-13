@@ -11,10 +11,34 @@
 	margin: 0 auto;
 	padding: 0 var(--space-xl);
 	display: flex;
-	justify-content: flex-end;
+	justify-content: space-between;
 	align-items: center;
 	gap: var(--space-md);
 	height: var(--toolbar-height);
+}
+
+.toolbar-right {
+	display: flex;
+	align-items: center;
+	gap: var(--space-md);
+}
+
+.toolbar-logo {
+	display: flex;
+	align-items: center;
+	flex-shrink: 0;
+}
+
+.logo-image {
+	height: 32px;
+	width: auto;
+	/* Invert the black SVG to match toolbar text color */
+	filter: invert(0.7);
+	transition: filter var(--transition-fast);
+}
+
+.toolbar-logo:hover .logo-image {
+	filter: invert(1);
 }
 
 .toolbar-links {
@@ -55,7 +79,10 @@
 @media (max-width: 640px) {
 	.toolbar-content {
 		padding: 0 var(--space-md);
-		justify-content: center;
+	}
+
+	.logo-image {
+		height: 24px;
 	}
 
 	.toolbar-links {

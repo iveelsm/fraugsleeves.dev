@@ -40,7 +40,7 @@
 .search-input-wrapper {
 	display: flex;
 	align-items: center;
-	background: rgba(255, 255, 255, 0.1);
+	background: var(--color-toolbar-hover-bg);
 	border-radius: var(--radius-sm);
 	padding: 0 var(--space-sm);
 	gap: var(--space-sm);
@@ -94,7 +94,7 @@
 
 .search-clear:hover {
 	color: var(--color-toolbar-text-active);
-	background-color: rgba(255, 255, 255, 0.1);
+	background-color: var(--color-toolbar-hover-bg);
 }
 
 /* Search Dropdown */
@@ -110,7 +110,7 @@
 	border-radius: var(--radius-md);
 	box-shadow:
 		var(--shadow-md),
-		0 10px 40px rgba(0, 0, 0, 0.15);
+		0 10px 40px oklch(0% 0 0 / 0.15);
 	z-index: 300;
 	opacity: 0;
 	visibility: hidden;
