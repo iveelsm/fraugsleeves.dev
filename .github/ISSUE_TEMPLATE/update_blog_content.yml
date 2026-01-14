@@ -1,0 +1,29 @@
+name: "Update Blog Content"
+description: "Report incorrect or outdated blog content."
+labels: [content]
+title: "[Content Update]: "
+body:
+  - type: input
+    id: incorrect
+    attributes:
+      label: "What is the incorrect statement?"
+      description: "Paste or describe the incorrect or outdated statement from the blog."
+      placeholder: "The blog says..."
+    validations:
+      required: true
+  - type: input
+    id: corrected
+    attributes:
+      label: "What is the corrected statement?"
+      description: "Provide the correct or updated statement."
+      placeholder: "It should say..."
+    validations:
+      required: true
+  - type: input
+    id: credit
+    attributes:
+      label: "Who should we credit with the change?"
+      description: "Name, username, or other identifier for attribution."
+      placeholder: "@githubuser, Jane Doe, etc."
+    validations:
+      required: false
