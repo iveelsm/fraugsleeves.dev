@@ -22,61 +22,84 @@ This article started as something I would share with teams to help guide their u
 6. Prefer type-safe access to `Context` values
 7. goroutines should be associated with a `Context` and must be properly terminated
 
-Each tip will come with some counter-examples for each point, a brief description of the problem and solutions for each type. Where possible, additional references are provided to help convince readers that this is not the only place where these items are highlighted. Many of the examples presented throughout this article are reduced versions from real production codebases that I have worked on over the years and as a result, these have all caused real bugs over the years.
+Each tip will come with some counter-examples for each point, a brief description of the problem and solutions for each type. Where possible, references are provided to help convince the inquisitive reader. The majority of the examples come from reduced versions found in real production codebases. The problems the exhibit have caused many production bugs and led to initial investigation for the knowledge behind this article.
 
 ## Never wrap `Context` in a struct, always pass it explicitly
 
-This one is rather obvious if you have read the documentation. In fact, the documentation explicitly states this as part of the `context` package.
+This one is rather obvious if you have read the documentation, as this is stated as part of the `context` package.
 
 > Do not store Contexts inside a struct type; instead, pass a Context explicitly to each function that needs it. [1](https://pkg.go.dev/context)
 
-We have a tendency as software engineers to bundle related things together, as such one of the tools we reach for in Go to achieve this is a struct. However, most engineers are keenly aware of the issues related to changing the lifecycle of a shared object, and `Context` is one of those shared objects. It may not seem like it at first glance, but as your codebase grows, you come to realize that `context` management becomes a large piece of the concurrency and lifecycle management story. Here is a common anti-pattern structure with using `context` within structs. [2](https://go.dev/blog/context-and-structs)
+We have a tendency as software engineers to bundle related things together. One of the tools we reach for in Go to achieve this bundling is a struct. The problem with bundling `Context` is that you conflate different object lifecycles. It may not seem like it at a glance, but `Context` is a shared object. And as a shared object, it often has a different lifecycle than any struct that gets created. As your codebase grows, you come to realize that `context` management becomes a large piece of the concurrency and lifecycle management story. So, here is a common anti-pattern structure with using `Context` within structs. [2](https://go.dev/blog/context-and-structs)
 
 ```go
 // An example of problematic context management through struct wrapping.
 
-// Worker fetches and adds works to a remote work orchestration server.
-type Worker struct {
-  ctx context.Context
+// BatchProducer handles batch connection to a database server
+type 	BatchProducer struct {
+  client *batch.Client
+  ctx    context.Context
 }
 
-func New(ctx context.Context) *Worker {
-  return &Worker{ctx: ctx}
+func NewBatchProducer(ctx context.Context, opts []batch.Option) (*BatchProducer, error) {
+  /* Initial setup... */
+
+  client, err := batch.New(ctx, opts...)
+  if err != nil {
+    return nil, fmt.Errorf("error creating batch client; %w", err)
+  }
+
+  return &BatchProducer{
+    batch: client,
+    ctx:   ctx, // ctx is incorrectly passed into a long lived struct
+  }, nil
 }
 
-func (w *Worker) Fetch() (*Work, error) {
-  _ = w.ctx // A shared w.ctx is used for cancellation, deadlines, and metadata.
+func (bp *BatchProducer) OnRecordSucceeded(metadata any) {
+  md, ok := metadata.(*Metadata)
+  bp.client.Ack(bp.ctx, md.Delivery, md.Queue)
 }
 
-func (w *Worker) Process(work *Work) error {
-  _ = w.ctx // A shared w.ctx is used for cancellation, deadlines, and metadata.
+func (bp *BatchProducer) OnRecordRejected(metadata any) {
+  md, ok := metadata.(*Metadata)
+  bp.client.Nack(bp.ctx, md.Delivery, md.Queue, false)
 }
 ```
 
 **Problem**
 
-> The `(*Worker).Fetch` and `(*Worker).Process` method both use a context stored in Worker. This prevents the callers of Fetch and Process (which may themselves have different contexts) from specifying a deadline, requesting cancellation, and attaching metadata on a per-call basis. For example: the user is unable to provide a deadline just for `(*Worker).Fetch`, or cancel just the `(*Worker).Process` call. The caller’s lifetime is intermingled with a shared context, and the context is scoped to the lifetime where the `Worker` is created.
-
-In the example above, who controls the `ctx` for each worker? What happens when that shared `ctx` is cancelled? This is directly tied to the point around "chaining context". When the `ctx` is passed in a struct, it becomes ambiguous as to who owns the lifetime. Instead you should do something like the following.
+In the example above, who controls the `ctx` for each `BatchProducer`? What happens when that shared `ctx` is cancelled? 
+The `(*BatchProducer).OnRecordSucceeded` and `(*BatchProducer).OnRecordRejected` method both use a context stored in `BatchProducer`. This prevents the callers of `OnRecordSucceed` and `OnRecordRejected` (which may themselves have different contexts) from specifying a deadline, requesting cancellation, and attaching metadata on a per-call basis. This is directly tied to the point around "chaining context". When the `ctx` is passed in a struct, it becomes ambiguous as to who owns the lifetime. Instead you should do something like the following.
 
 **Solution**
 
 ```go
-// Worker fetches and adds works to a remote work orchestration server.
-type Worker struct { /* … */ }
-
-type Work struct { /* … */ }
-
-func New() *Worker {
-  return &Worker{}
+// BatchProducer handles batch connection to a database server
+type 	BatchProducer struct {
+  client    *batch.Client
 }
 
-func (w *Worker) Fetch(ctx context.Context) (*Work, error) {
-  _ = ctx // A per-call ctx is used for cancellation, deadlines, and metadata.
+func NewBatchProducer(ctx context.Context, opts []batch.Option) (*BatchProducer, error) {
+  /* Initial setup... */
+
+  client, err := batch.New(ctx, opts...)
+  if err != nil {
+    return nil, fmt.Errorf("error creating batch client; %w", err)
+  }
+
+  return &BatchProducer{
+    batch: client,
+  }, nil
 }
 
-func (w *Worker) Process(ctx context.Context, work *Work) error {
-  _ = ctx // A per-call ctx is used for cancellation, deadlines, and metadata.
+func (bp *BatchProducer) OnRecordSucceeded(ctx context.Context, metadata any) {
+  md, ok := metadata.(*Metadata)
+  bp.client.Ack(ctx, md.Delivery, md.Queue)
+}
+
+func (bp *BatchProducer) OnRecordRejected(ctx context.Context, metadata any) {
+  md, ok := metadata.(*Metadata)
+  bp.client.Nack(ctx, md.Delivery, md.Queue, false)
 }
 ```
 
@@ -84,11 +107,13 @@ Now we can push the responsibility of context management onto the caller. So the
 
 ## Beware of chaining `Context`
 
+Chaining context refers to passing the same context to multiple handlers. In the vast majority of scenarios, chaining context is a preferred approach. Often when you spawn goroutines as part of a request, event or background job, you want to cancel all the goroutines with their respective close. But what if you want something to live beyond the close or cancel?
+
 > Recently, I recalled a useful pattern that’s cropped up a few times at work. API handlers (think http.Handler), include a context.Context tied to the connectivity of the caller. If the client disconnects, the context closes, signaling to the handler that it can fail early and clean itself up. Importantly, the handler function returning also cancels the context.
 >
 > But what if you want to do an out-of-band operation after the request is complete? [3](https://rodaine.com/2020/07/break-context-cancellation-chain/)
 
-Chaining context refers to passing the same context to multiple handlers. In the vast majority of scenarios, chaining context is a preferred approach. Often when you spawn goroutines as part of a request, event or background job, you want to cancel all the goroutines with their respective close. But what if you want something to live beyond the close or cancel? Let's look at the following problematic example.
+ Let's look at the following problematic example.
 
 ```go
 // An example of problematic context chaining.
@@ -132,10 +157,7 @@ In the above code, we are trying to create a number of subscription background p
 **Solution**
 
 ```go
-type Subscription struct {
-  cancel context.CancelFunc
-  /* ... */
-}
+type Subscription struct { /* ... */ }
 
 type Consumer struct { /* ... */ }
 
@@ -149,9 +171,7 @@ func createAlertSubscribers(ctx context.Context, consumers []Consumer) ([]*Subsc
       return nil, err
     }
 
-    rootCtx := context.Background()
-    consumerCtx, cancel := context.WithCancel(rootCtx) // Context is separated from the request lifecycle
-    sub.cancel = cancel
+    consumerCtx := context.WithoutCancel(ctx) // Context is separated from the request lifecycle
 
     go subscribeToConsumer(consumerCtx, sub, &consumer) // Each goroutine gets its own child context
     subs = append(subs, sub)
@@ -181,56 +201,63 @@ We have now refactored the goroutine to clearly indicate that it is a background
 I wouldn't advocate for requiring `Context` to always be the first argument in every function, there are plenty of places for reasonably small, pure functions in Go that have no need for knowledge of a request lifecycle. With that being said, the vast majority of your call path should have `Context` propagated throughout it. Here's an example of problematic propagation.
 
 ```go
-// Bad: function needs a context, but it isn't passed
-func FetchData() string {
-    // Tries to create a background context instead of using the parent
-    ctx := context.Background()
+func RetrieveData(ctx context.Context) string {
+  /* Retrieve data from a database... */
+}
 
-    select {
-    case <-time.After(2 * time.Second):
-        return "data"
-    case <-ctx.Done(): // never triggered from parent
-        return "cancelled"
-    }
+func BusinessLogicHandler() string {
+  /* Initial setup... */
+  ctx := context.TODO() // Placeholder context, since we weren't passed it.
+  data := RetrieveData(ctx)
+  return data
 }
 
 // Caller has a real request-scoped context
 func HandleRequest(ctx context.Context) {
-    // Calls FetchData which ignores the parent context
-    data := FetchData()
-    fmt.Println("Received:", data)
+  /* Initial setup... */
+  data := BusinessLogicHandler() //
+
+  /* Post business logic return */
 }
 ```
 
 **Problem**
 
-In a rather contrived example, the context is unable to cancel the incoming request. So the parent is never notified that a function completed through the necessary channel.
+In this example, we have a chain of requests that start with a simple request handler that fails to pass the request `Context` to the downstream business logic. This is a common pattern where since the middle section of the business logic does not need to be aware of the request, the author incorrectly assumes that the rest of the call chain does not. Then when we get to our I/O patterns like a database connection, the `Context` becomes relevant again, but we don't have the original request `Context` to pass. So we have to apply a placeholder.
 
 **Solution**
 
 Instead, we should approach it like this.
 
 ```go
-func FetchData(ctx context.Context) string {
-    select {
-    case <-time.After(2 * time.Second):
-        return "data"
-    case <-ctx.Done():
-        return "cancelled"
-    }
+func RetrieveData(ctx context.Context) string {
+  /* Retrieve data from a database... */
 }
 
+func BusinessLogicHandler(ctx context.Context) string {
+  /* Initial setup... */
+  data := RetrieveData(ctx)
+  return data
+}
+
+// Caller has a real request-scoped context
 func HandleRequest(ctx context.Context) {
-    data := FetchData(ctx)
-    fmt.Println("Received:", data)
+  /* Initial setup... */
+  data := BusinessLogicHandler() //
+
+  /* Post business logic return */
 }
 ```
 
+This seems contrived, but as call chains grow, the likelihood of losing an argument to a function along the way gets higher. With three functions these seems relatively simple, but what happens when the critical path starts to become tens of functions?
+
 ## Avoid using `context.Background()`
+
+One of the biggest reasons that this comes up is that people find helpful articles that explain how to use something, but the articles uses `context.Background()` as a placeholder. Authors often do this so they can focus on the library or tooling instead of the context management surrounding the library and tooling. So let's talk about why you should avoid it.
 
 > You use `context.Background` when you know that you need an empty context, like in main where you are just starting and you use `context.TODO` when you don’t know what context to use or haven’t wired things up. [5](https://blog.meain.io/2024/golang-context/)
 
-One of the biggest reasons that this comes up is that people find helpful articles that explain how to use something, but the articles uses `context.Background()` as a placeholder. Authors often do this so they can focus on the library or tooling instead of the context management surrounding the library and tooling. So let's talk about why you should avoid it. To start `context.Background()` has some interesting properties.
+`context.Background()` has some interesting properties.
 
 1. It is never cancelled
 2. It has no values
