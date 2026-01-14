@@ -3,7 +3,6 @@
 [![build](https://github.com/iveelsm/fraugsleeves.dev/actions/workflows/build.yml/badge.svg)](https://github.com/iveelsm/fraugsleeves.dev/actions/workflows/build.yml?branch=main)
 [![deploy](https://github.com/iveelsm/fraugsleeves.dev/actions/workflows/deploy.yml/badge.svg)](https://github.com/iveelsm/fraugsleeves.dev/actions/workflows/deploy.yml?branch=main)
 
-
 # fraugsleeves.dev
 
 Personal Blog for Mikey Sleevi
