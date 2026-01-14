@@ -15,7 +15,7 @@ interface Props {
 	nofollow?: boolean;
 }
 
-const siteUrl = import.meta.env.SITE || "https://fraugsleeves.dev";
+const siteUrl = "https://fraugsleeves.dev";
 const defaultTitle = "fraugsleeves.dev";
 const defaultDescription =
 	"An exposition of wayfinding within software development - Personal blog by Mikey Sleevi";
@@ -31,7 +31,10 @@ const {
 } = Astro.props;
 
 const fullTitle = title === defaultTitle ? title : `${title} | ${defaultTitle}`;
-const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
+
+const pathname = Astro.url.pathname;
+const normalizedPath = pathname === "/" ? "/" : pathname.replace(/\/$/, "");
+const canonicalUrl = `${siteUrl}${normalizedPath}`;
 ---
 
 <SEO
