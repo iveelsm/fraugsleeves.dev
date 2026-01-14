@@ -4,9 +4,23 @@ import "../styles/wayfinders.css";
 import NavigableLayout from "./navigable.astro";
 const { frontmatter } = Astro.props;
 const { minutesRead } = frontmatter;
+
+const article = {
+	publishedTime: frontmatter.pubDate
+		? new Date(frontmatter.pubDate).toISOString()
+		: undefined,
+	authors: frontmatter.author ? [frontmatter.author] : undefined,
+	tags: frontmatter.tags,
+};
 ---
 
-<NavigableLayout title={frontmatter.title} class="wayfinder-layout">
+<NavigableLayout
+	title={frontmatter.title}
+	description={frontmatter.description}
+	image={frontmatter.image}
+	article={article}
+	class="wayfinder-layout"
+>
 	<header class="post-header-fixed">
 		<div class="post-header-box">
 			<div class="post-header-content">

@@ -15,7 +15,8 @@
 	"dependencies": {
 		"@astrojs/sitemap": "^3.6.1",
 		"astro": "^5.9.2",
-		"astro-pagefind": "^1.8.5"
+		"astro-pagefind": "^1.8.5",
+		"astro-seo": "^1.1.0"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.18.0",
