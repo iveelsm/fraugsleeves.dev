@@ -1,7 +1,7 @@
 name: Fly Deploy Staging
 
 on:
-    pull_request:
+    pull_request_target:
         branches:
             - main
 
@@ -10,10 +10,11 @@ jobs:
         name: Deploy to Staging
         runs-on: ubuntu-latest
         concurrency: deploy-staging-group
+        if: github.actor == 'dependabot[bot]' || github.actor == 'iveelsm'
         steps:
             - uses: actions/checkout@v4
             - uses: superfly/flyctl-actions/setup-flyctl@master
             - name: Deploy to Staging
               run: flyctl deploy --remote-only --config fly.staging.toml --build-arg SITE_URL=https://staging.fraugsleeves.dev
               env:
-                  FLY_API_TOKEN: ${{ secrets.FLY_STAGING_API_TOKEN }}
+                FLY_API_TOKEN: ${{ secrets.FLY_STAGING_API_TOKEN }}
