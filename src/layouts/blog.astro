@@ -5,9 +5,23 @@ import NavigableLayout from "./navigable.astro";
 import TableOfContents from "../components/toc.astro";
 const { frontmatter, headings } = Astro.props;
 const { minutesRead } = frontmatter;
+
+const article = {
+	publishedTime: frontmatter.pubDate
+		? new Date(frontmatter.pubDate).toISOString()
+		: undefined,
+	authors: frontmatter.author ? [frontmatter.author] : undefined,
+	tags: frontmatter.tags,
+};
 ---
 
-<NavigableLayout title={frontmatter.title} class="blog-layout">
+<NavigableLayout
+	title={frontmatter.title}
+	description={frontmatter.description}
+	image={frontmatter.image}
+	article={article}
+	class="blog-layout"
+>
 	<!-- Fixed Header with Post Info -->
 	<header class="post-header-fixed">
 		<div class="post-header-box">

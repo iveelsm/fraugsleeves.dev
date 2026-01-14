@@ -1,0 +1,82 @@
+---
+import { SEO } from "astro-seo";
+
+interface Props {
+	title?: string;
+	description?: string;
+	image?: string;
+	article?: {
+		publishedTime?: string;
+		modifiedTime?: string;
+		authors?: string[];
+		tags?: string[];
+	};
+	noindex?: boolean;
+	nofollow?: boolean;
+}
+
+const siteUrl = import.meta.env.SITE || "https://fraugsleeves.dev";
+const defaultTitle = "fraugsleeves.dev";
+const defaultDescription =
+	"An exposition of wayfinding within software development - Personal blog by Mikey Sleevi";
+const defaultImage = `${siteUrl}/og-image.png`;
+
+const {
+	title = defaultTitle,
+	description = defaultDescription,
+	image = defaultImage,
+	article,
+	noindex = false,
+	nofollow = false,
+} = Astro.props;
+
+const fullTitle = title === defaultTitle ? title : `${title} | ${defaultTitle}`;
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
+---
+
+<SEO
+	title={fullTitle}
+	description={description}
+	canonical={canonicalUrl}
+	noindex={noindex}
+	nofollow={nofollow}
+	openGraph={{
+		basic: {
+			title: title,
+			type: article ? "article" : "website",
+			image: image,
+			url: canonicalUrl,
+		},
+		optional: {
+			description: description,
+			siteName: defaultTitle,
+			locale: "en_US",
+		},
+		image: {
+			alt: title,
+		},
+		article: article
+			? {
+					publishedTime: article.publishedTime,
+					modifiedTime: article.modifiedTime,
+					authors: article.authors,
+					tags: article.tags,
+				}
+			: undefined,
+	}}
+	twitter={{
+		card: "summary_large_image",
+		site: "@fraugsleeves",
+		creator: "@fraugsleeves",
+		title: title,
+		description: description,
+		image: image,
+		imageAlt: title,
+	}}
+	extend={{
+		meta: [
+			{ name: "author", content: "Mikey Sleevi" },
+			{ name: "generator", content: Astro.generator },
+		],
+	}}
+/>
