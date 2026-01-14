@@ -68,7 +68,7 @@ func (bp *BatchProducer) OnRecordRejected(metadata any) {
 
 **Problem**
 
-In the example above, who controls the `ctx` for each `BatchProducer`? What happens when that shared `ctx` is cancelled? 
+In the example above, who controls the `ctx` for each `BatchProducer`? What happens when that shared `ctx` is cancelled?
 The `(*BatchProducer).OnRecordSucceeded` and `(*BatchProducer).OnRecordRejected` method both use a context stored in `BatchProducer`. This prevents the callers of `OnRecordSucceed` and `OnRecordRejected` (which may themselves have different contexts) from specifying a deadline, requesting cancellation, and attaching metadata on a per-call basis. This is directly tied to the point around "chaining context". When the `ctx` is passed in a struct, it becomes ambiguous as to who owns the lifetime. Instead you should do something like the following.
 
 **Solution**
@@ -113,7 +113,7 @@ Chaining context refers to passing the same context to multiple handlers. In the
 >
 > But what if you want to do an out-of-band operation after the request is complete? [3](https://rodaine.com/2020/07/break-context-cancellation-chain/)
 
- Let's look at the following problematic example.
+Let's look at the following problematic example.
 
 ```go
 // An example of problematic context chaining.
