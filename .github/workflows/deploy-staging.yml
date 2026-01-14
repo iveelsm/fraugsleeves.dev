@@ -1,7 +1,7 @@
 name: Fly Deploy Staging
 
 on:
-    pull_request:
+    pull_request_target:
         branches:
             - main
 
@@ -10,6 +10,7 @@ jobs:
         name: Deploy to Staging
         runs-on: ubuntu-latest
         concurrency: deploy-staging-group
+        if: github.actor == 'dependabot[bot]' || github.actor == 'iveelsm'
         steps:
             - uses: actions/checkout@v4
             - uses: superfly/flyctl-actions/setup-flyctl@master
