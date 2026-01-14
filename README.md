@@ -1,3 +1,8 @@
+![typescript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![astro](https://img.shields.io/badge/astro-%232C2052.svg?style=for-the-badge&logo=astro&logoColor=white)
+[![build](https://github.com/iveelsm/fraugsleeves.dev/actions/workflows/build.yml/badge.svg)](https://github.com/iveelsm/fraugsleeves.dev/actions/workflows/build.yml?branch=main)
+[![deploy](https://github.com/iveelsm/fraugsleeves.dev/actions/workflows/deploy.yml/badge.svg)](https://github.com/iveelsm/fraugsleeves.dev/actions/workflows/deploy.yml?branch=main)
+
 # fraugsleeves.dev
 
 Personal Blog for Mikey Sleevi
