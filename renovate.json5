@@ -1,0 +1,12 @@
+{
+	extends: ["config:recommended"],
+	minimumReleaseAge: "14 days",
+	dependencyDashboard: true,
+	packageRules: [
+		{
+			groupName: "all npm patch dependencies",
+			matchDatasources: ["npm"],
+			matchUpdateTypes: ["patch"],
+		},
+	],
+}
