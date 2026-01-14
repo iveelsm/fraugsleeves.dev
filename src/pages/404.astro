@@ -1,6 +1,7 @@
 ---
 import Navigation from "../components/navigation.astro";
 import Footer from "../components/footer.astro";
+import SEO from "../components/seo.astro";
 import "../styles/global.css";
 import "../styles/404.css";
 ---
@@ -9,7 +10,12 @@ import "../styles/404.css";
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Page not found · fraugsleeves.dev</title>
+		<SEO
+			title="Page not found"
+			description="The page you're looking for doesn't exist."
+			noindex={true}
+			nofollow={true}
+		/>
 	</head>
 	<body>
 		<Navigation />
