@@ -3,6 +3,7 @@
 	"description": "Personal Blog for Mikey Sleevi",
 	"repository": "https://github.com/iveelsm/fraugsleeves.dev",
 	"author": "Mikey Sleevi <development@frogman.simplelogin.com>",
+	"license": "MIT",
 	"version": "0.0.1",
 	"type": "module",
 	"scripts": {
