@@ -338,7 +338,7 @@ This includes things like:
 - Database Connections
 - Global Variables
 
-// Reviewer note: I took a bigger hatchet to this paragraph than most due to the huge run on sentence in the middle of it. I tried to preserve your voice as much as possible while breaking up that sentence, feel free to change this if you do not feel like this section has your voice anymore, if you do you should figure out how to break that run on sentence in your own way.
+// Reviewer note: I took a bigger hatchet to this paragraph than most due to the huge run on sentence in the middle of it. I tried to preserve your voice as much as possible while breaking up that sentence, feel free to revert if you do not feel like this section has your voice anymore, if you do you should figure out how to break that run on sentence in your own way.
 You will see these statements repeated across many explorations of the `context` package, but why is it so important? Mostly semantics, as you develop more in Go you start to recognize `Context` as a request scoped object. So, you start to assume that if the object itself is request scoped, then certainly the properties of the object should also be request scoped. This starts to incorrectly signal to others that shared objects may be safe for some forms of concurrent access, as you assume that the current request is the only one acting on it. Additionally, you can create opportunities for accidental cancellation of shared resources or requests. So let's look at an example.
 // Reviewer note: This will prep the reader in understanding the code here, highly optional recommendation tho *let's look at an example where X is trying to do Y
 
