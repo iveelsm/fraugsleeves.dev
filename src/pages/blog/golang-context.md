@@ -32,7 +32,7 @@ This one is rather obvious if you have read the documentation, as this is stated
 
 > Do not store Contexts inside a struct type; instead, pass a Context explicitly to each function that needs it. [1](https://pkg.go.dev/context)
 
-We have a tendency as software engineers to bundle related things together. One of the tools we reach for in Go to achieve this bundling is a struct. The problem with bundling `Context` is that you conflate different object lifecycles. It may not seem like it at a glance, but `Context` is a shared object. And as a shared object, it often has a different lifecycle than any struct that gets created. As your codebase grows, you come to realize that `context` management becomes a large piece of the concurrency and lifecycle management story. So, here is a common anti-pattern structure with using `Context` within structs. [2](https://go.dev/blog/context-and-structs)
+We have a tendency as software engineers to bundle related things together. One of the tools we reach for in Go to achieve this bundling is a struct. The problem with bundling `Context` is that you conflate different object life cycles. It may not seem like it at a glance, but `Context` is a shared object. And as a shared object, it often has a different lifecycle than any struct that gets created. As your codebase grows, you come to realize that `context` management becomes a large piece of the concurrency and lifecycle management story. So, here is a common anti-pattern structure with using `Context` within structs. [2](https://go.dev/blog/context-and-structs)
 
 ```go
 // Reviewer note: removed redundant note at the top of this snipet
@@ -285,7 +285,7 @@ func handle(ctx context.Context, i int) {
 
 **Problem**
 
-So here we have simple request that operates on some shared resource and the access is controlled through a semaphore. However, since we use `context.Background()` the semaphore acquisition and request handling are not managed with the same lifecycles. If clients disconnects or the upstream terminates the request, the semaphore acquisition will continue unnecessarily. This can lead to complex concurrency bugs or excessive resource contention.
+So here we have simple request that operates on some shared resource and the access is controlled through a semaphore. However, since we use `context.Background()` the semaphore acquisition and request handling are not managed with the same life cycles. If clients disconnects or the upstream terminates the request, the semaphore acquisition will continue unnecessarily. This can lead to complex concurrency bugs or excessive resource contention.
 
 **Solution**
 
@@ -300,7 +300,7 @@ func RequestHandler(w http.ResponseWriter, r *http.Request) (interface{}, error)
   defer cancel()
 
   for i := 0; i < 10; i++ {
-    if err := sem.Acquire(ctx, 1); err != nil { // The request and semaphore acquisition are correctly bound togheter
+    if err := sem.Acquire(ctx, 1); err != nil { // The request and semaphore acquisition are correctly bound together
       return err
     }
 
@@ -346,7 +346,7 @@ You will see these statements repeated across many explorations of the `context`
 // Reviewer note: The specifics about the cache are not needed to make your point.
 func NewCacheClient(nodes []string) (*memcache.Client) { /* ...*/ }
 
-func startapi(ctx context.Context) (error) {
+func startAPI(ctx context.Context) (error) {
   /* Start the HTTP API */
 }
 
@@ -360,7 +360,7 @@ func main() {
 
   apiCtx = context.WithValue(apiCtx, "memcached", memcache)
 
-  if err := startapi(apiCtx); err != nil {
+  if err := startAPI(apiCtx); err != nil {
     return fmt.Errorf("unable to start api; %w", err)
   }
 }
@@ -387,7 +387,7 @@ Instead we should limit our stores to request scoped variables and pass anything
 ```go
 func NewCacheClient(nodes []string) (*memcache.Client) { /* ... */ }
 
-func startapi(ctx context.Context, memcache *memcache.Client) (error) {
+func startAPI(ctx context.Context, memcache *memcache.Client) (error) {
   /* start the HTTP API */
 }
 
@@ -466,7 +466,7 @@ func GetUser(ctx context.Context) *User {
 
 In this example, we have clear approaches for retrieving the value associated with the "user" key on a context. We have appropriate stores as well to maintain the type-safety, and it provides a reasonable escape hatch and observability options for detecting when accesses are occurring that break the contract. We can apply this pattern to any store associated with the context to keep the type safety guarantees.
 
-// Reviewer note: A potential solution you may want to mention on GetUser() is that since it should never have the wrong type, it should panic if the type does not match to give a strong signal that something is missusing the context store. A post on when to use panics has already been done many times, but it might be fun as your next one. A good diving board would be the Google style guide on panics https://google.github.io/styleguide/go/best-practices#program-checks-and-panics
+// Reviewer note: A potential solution you may want to mention on GetUser() is that since it should never have the wrong type, it should panic if the type does not match to give a strong signal that something is misusing the context store. A post on when to use panics has already been done many times, but it might be fun as your next one. A good diving board would be the Google style guide on panics https://google.github.io/styleguide/go/best-practices#program-checks-and-panics
 
 ## goroutines should be associated with a `Context` and must be properly terminated
 
