@@ -10,7 +10,7 @@ image:
 tags: ["golang", "context", "concurrency", "code-architecture", "best-practice"]
 ---
 // Reviewer note: All proposed changes will be made with an accompanying note like this one, it should be easy to remove these by removing all lines starting with `// Reviewer note` to view the final proposed changes.
-// Reviewer note: I took time to check capitalization in comments us uniform, there were one or two places where it differed. Small detail, but it keeps the style uniform in the post.
+// Reviewer note: I took time to check that capitalization in comments was uniform, there were one or two places where it differed. Small detail, but it keeps the style uniform in the post.
 
 # Tips and Tricks for Context Management
 
