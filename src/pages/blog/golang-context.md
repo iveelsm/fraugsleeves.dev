@@ -9,6 +9,8 @@ image:
   alt: "The Astro logo on a dark background with a pink glow."
 tags: ["golang", "context", "concurrency", "code-architecture", "best-practice"]
 ---
+// Reviewer note: All proposed changes will be made with an accompanying note like this one, it should be easy to remove these by removing all lines starting with `// Reviewer note` to view the final proposed changes.
+// Reviewer note: I took time to check capitalization in comments us uniform, there were one or two places where it differed. Small detail, but it keeps the style uniform in the post.
 
 # Tips and Tricks for Context Management
 
@@ -33,35 +35,32 @@ This one is rather obvious if you have read the documentation, as this is stated
 We have a tendency as software engineers to bundle related things together. One of the tools we reach for in Go to achieve this bundling is a struct. The problem with bundling `Context` is that you conflate different object lifecycles. It may not seem like it at a glance, but `Context` is a shared object. And as a shared object, it often has a different lifecycle than any struct that gets created. As your codebase grows, you come to realize that `context` management becomes a large piece of the concurrency and lifecycle management story. So, here is a common anti-pattern structure with using `Context` within structs. [2](https://go.dev/blog/context-and-structs)
 
 ```go
-// An example of problematic context management through struct wrapping.
-
+// Reviewer note: removed redundant note at the top of this snipet
 // BatchProducer handles batch connection to a database server
 type 	BatchProducer struct {
   client *batch.Client
   ctx    context.Context
 }
 
-func NewBatchProducer(ctx context.Context, opts []batch.Option) (*BatchProducer, error) {
+func NewBatchProducer(ctx context.Context, opts []batch.Option) *BatchProducer {
   /* Initial setup... */
-
-  client, err := batch.New(ctx, opts...)
-  if err != nil {
-    return nil, fmt.Errorf("error creating batch client; %w", err)
-  }
+  // Reviewer note: I removed the error check to simplify the snipet of code. I know that it's not the best behavior, but you're highlight
+  client, _ := batch.New(ctx, opts...)
 
   return &BatchProducer{
     batch: client,
     ctx:   ctx, // ctx is incorrectly passed into a long lived struct
-  }, nil
+  }
 }
 
+// Reviewer note: Since the ok var wasn't providing any context to the reader I suggest using a blank identifier
 func (bp *BatchProducer) OnRecordSucceeded(metadata any) {
-  md, ok := metadata.(*Metadata)
+  md, _ := metadata.(*Metadata)
   bp.client.Ack(bp.ctx, md.Delivery, md.Queue)
 }
 
 func (bp *BatchProducer) OnRecordRejected(metadata any) {
-  md, ok := metadata.(*Metadata)
+  md, _ := metadata.(*Metadata)
   bp.client.Nack(bp.ctx, md.Delivery, md.Queue, false)
 }
 ```
@@ -69,7 +68,8 @@ func (bp *BatchProducer) OnRecordRejected(metadata any) {
 **Problem**
 
 In the example above, who controls the `ctx` for each `BatchProducer`? What happens when that shared `ctx` is cancelled?
-The `(*BatchProducer).OnRecordSucceeded` and `(*BatchProducer).OnRecordRejected` method both use a context stored in `BatchProducer`. This prevents the callers of `OnRecordSucceed` and `OnRecordRejected` (which may themselves have different contexts) from specifying a deadline, requesting cancellation, and attaching metadata on a per-call basis. This is directly tied to the point around "chaining context". When the `ctx` is passed in a struct, it becomes ambiguous as to who owns the lifetime. Instead you should do something like the following.
+// Review note, since this is "helpful guide for both the inexperienced and experienced engineer making the transition to using Go" it may help to go into detail about what these issues present as in production for the less experienced devs in this case. I've left an example change, but feel free to rewrite it anyway you like, or not.
+The `(*BatchProducer).OnRecordSucceeded` and `(*BatchProducer).OnRecordRejected` method both use a context stored in `BatchProducer`. This prevents the callers of `OnRecordSucceed` and `OnRecordRejected` (which may themselves have different contexts) from specifying a deadline, requesting cancellation, and attaching metadata on a per-call basis. This creates problems such as incorrect data retrieved, leaking potentially sensitive data, or potential deadlocks. This is directly tied to the point around "chaining context". When the `ctx` is passed in a struct, it becomes ambiguous as to who owns the lifetime. Instead you should do something like the following.
 
 **Solution**
 
@@ -79,26 +79,23 @@ type 	BatchProducer struct {
   client    *batch.Client
 }
 
-func NewBatchProducer(ctx context.Context, opts []batch.Option) (*BatchProducer, error) {
+func NewBatchProducer(ctx context.Context, opts []batch.Option) *BatchProducer {
   /* Initial setup... */
 
-  client, err := batch.New(ctx, opts...)
-  if err != nil {
-    return nil, fmt.Errorf("error creating batch client; %w", err)
-  }
+  client, _ := batch.New(ctx, opts...)
 
   return &BatchProducer{
     batch: client,
-  }, nil
+  }
 }
 
 func (bp *BatchProducer) OnRecordSucceeded(ctx context.Context, metadata any) {
-  md, ok := metadata.(*Metadata)
+  md, _ := metadata.(*Metadata)
   bp.client.Ack(ctx, md.Delivery, md.Queue)
 }
 
 func (bp *BatchProducer) OnRecordRejected(ctx context.Context, metadata any) {
-  md, ok := metadata.(*Metadata)
+  md, _ := metadata.(*Metadata)
   bp.client.Nack(ctx, md.Delivery, md.Queue, false)
 }
 ```
@@ -122,20 +119,18 @@ type Subscription struct { /* ... */ }
 
 type Consumer struct { /* ... */ }
 
-func createAlertSubscribers(ctx context.Context, consumers []Consumer) ([]*Subscription, error) {
+func createAlertSubscribers(ctx context.Context, consumers []Consumer) []*Subscription {
   /* Initial setup... */
 
   var subs []*Subscription
   for _, consumer := range consumers {
-    sub, err := createSubscriber(consumer)
-    if err {
-      return nil, err
-    }
+    sub := createSubscriber(consumer)
+
     go subscribeToConsumer(ctx, sub, &consumer) // Background job bound to request context
     subs = append(subs, sub)
   }
 
-  return subs, nil
+  return subs
 }
 
 func subscribeToConsumer(ctx context.Context, subscription *Subscription, consumer *Consumer) {
@@ -161,23 +156,19 @@ type Subscription struct { /* ... */ }
 
 type Consumer struct { /* ... */ }
 
-func createAlertSubscribers(ctx context.Context, consumers []Consumer) ([]*Subscription, error) {
+func createAlertSubscribers(ctx context.Context, consumers []Consumer) []*Subscription {
   /* Initial setup... */
 
   var subs []*Subscription
   for _, consumer := range consumers {
     sub, err := createSubscriber(consumer)
-    if err != nil {
-      return nil, err
-    }
-
     consumerCtx := context.WithoutCancel(ctx) // Context is separated from the request lifecycle
 
     go subscribeToConsumer(consumerCtx, sub, &consumer) // Each goroutine gets its own child context
     subs = append(subs, sub)
   }
 
-  return subs, nil
+  return subs
 }
 
 func subscribeToConsumer(ctx context.Context, sub *Subscription, consumer *Consumer) {
@@ -200,6 +191,7 @@ We have now refactored the goroutine to clearly indicate that it is a background
 
 I wouldn't advocate for requiring `Context` to always be the first argument in every function, there are plenty of places for reasonably small, pure functions in Go that have no need for knowledge of a request lifecycle. With that being said, the vast majority of your call path should have `Context` propagated throughout it. Here's an example of problematic propagation.
 
+// Reviewer note: This is personal preference, but changing the ordering of these declarations may help with readablity. I suggest the following order, HandleRequest(), BusinessLogicHandler(), then RetrieveData()j
 ```go
 func RetrieveData(ctx context.Context) string {
   /* Retrieve data from a database... */
@@ -215,7 +207,7 @@ func BusinessLogicHandler() string {
 // Caller has a real request-scoped context
 func HandleRequest(ctx context.Context) {
   /* Initial setup... */
-  data := BusinessLogicHandler() //
+  data := BusinessLogicHandler() // Note that the request context was not passed here.
 
   /* Post business logic return */
 }
@@ -229,6 +221,7 @@ In this example, we have a chain of requests that start with a simple request ha
 
 Instead, we should approach it like this.
 
+// Reviewer note: see note above about reordering
 ```go
 func RetrieveData(ctx context.Context) string {
   /* Retrieve data from a database... */
@@ -257,7 +250,8 @@ One of the biggest reasons that this comes up is that people find helpful articl
 
 > You use `context.Background` when you know that you need an empty context, like in main where you are just starting and you use `context.TODO` when you don’t know what context to use or haven’t wired things up. [5](https://blog.meain.io/2024/golang-context/)
 
-`context.Background()` has some interesting properties.
+// Reviewer note: Saw that you pulled these directly from the godoc on context, you may want to link that here asa reference, https://pkg.go.dev/golang.org/x/net/context#Background
+`context.Background()` has some interesting properties. 
 
 1. It is never cancelled
 2. It has no values
@@ -340,29 +334,29 @@ In general, storing values in `Context` is a generally accepted pattern in Golan
 This includes things like:
 
 - Loggers
+// Reviewer note: Yep I've seen DB connections and it is very nasty (Brent, The LLM Boy wonder)
 - Database Connections
 - Global Variables
 
-You will see these statement repeated across many explorations of the `context` package, but why is it so important? Most of the reason is about semantics, as you develop more in Go, you start to recognize `Context` as a request scoped object, so you start to assume that if the object itself is request scoped, certainly the properties of the object should also be request scoped. This starts to incorrectly signal to others that shared objects may be safe for some forms of concurrent access, as you assume that the current request is the only one acting on it. You could additionally create opportunities for accidental cancellation of shared resources or requests. So let's look at an example.
+// Reviewer note: I took a bigger hatchet to this paragraph than most due to the huge run on sentence in the middle of it. I tried to preserve your voice as much as possible while breaking up that sentence, feel free to change this if you do not feel like this section has your voice anymore, if you do you should figure out how to break that run on sentence in your own way.
+You will see these statements repeated across many explorations of the `context` package, but why is it so important? Mostly semantics, as you develop more in Go you start to recognize `Context` as a request scoped object. So, you start to assume that if the object itself is request scoped, then certainly the properties of the object should also be request scoped. This starts to incorrectly signal to others that shared objects may be safe for some forms of concurrent access, as you assume that the current request is the only one acting on it. Additionally, you can create opportunities for accidental cancellation of shared resources or requests. So let's look at an example.
+// Reviewer note: This will prep the reader in understanding the code here, highly optional recommendation tho *let's look at an example where X is trying to do Y
 
 ```go
-func NewCacheClient(nodes []string) (*memcache.Client) {
-  client := memcache.New(nodes)
-  client.Timeout = 1000 * time.Millisecond
-  client.MaxIdleConns = 1024
-  return client
-}
+// Reviewer note: The specifics about the cache are not needed to make your point.
+func NewCacheClient(nodes []string) (*memcache.Client) { /* ...*/ }
 
 func startapi(ctx context.Context) (error) {
-  /* start the HTTP API */
+  /* Start the HTTP API */
 }
 
 func main() {
   /* Parse configuration, setup and retrieve nodes... */
+  // Reviewer note: I would put a note here acknowledging the previous section stating that this a proper use of context.Background
   rootCtx := context.Background()
   apiCtx, cancel := context.WithCancel(rootCtx)
 
-  memcache, err := NewCacheClient(nodes)
+  memcache, _ := NewCacheClient(nodes)
 
   apiCtx = context.WithValue(apiCtx, "memcached", memcache)
 
@@ -384,18 +378,14 @@ func handler(w http.ResponseWriter, r *http.Request) {
 ```
 
 This is a common pattern, we have assumed that the memcached client is request bound, and so as a result, since we have ownership of the associated request data, we are closing these resources after the termination of our handler. The obvious problem is that we will close the shared client for every request at the end of our handler function.
+// Reviewer note: Great example, gets straight to the heart of the issue. This is really good writing, so have a gold star!
 
 **Solution**
 
 Instead we should limit our stores to request scoped variables and pass anything that has a different lifecycle explicitly into the functions that need them.
 
 ```go
-func NewCacheClient(nodes []string) (*memcache.Client) {
-  client := memcache.New(nodes)
-  client.Timeout = 1000 * time.Millisecond
-  client.MaxIdleConns = 1024
-  return client
-}
+func NewCacheClient(nodes []string) (*memcache.Client) { /* ... */ }
 
 func startapi(ctx context.Context, memcache *memcache.Client) (error) {
   /* start the HTTP API */
@@ -406,7 +396,7 @@ func main() {
   rootCtx := context.Background()
   apiCtx, cancel := context.WithCancel(rootCtx)
 
-  memcache, err := NewCacheClient(nodes)
+  memcache, _ := NewCacheClient(nodes)
 
   if err := startAPI(apiCtx, memcache); err != nil {
     log.Fatalf("unable to start API: %v", err)
@@ -474,7 +464,9 @@ func GetUser(ctx context.Context) *User {
 }
 ```
 
-In this example, we have clear approaches for retrieving the value associated with the "user" key on a context. We have appropriate stores as well to maintain the type-safety and it provides a reasonable escapte hatch and observability options for detecting when accesses are occurring that break the contract. We can apply this pattern to any store associated with the context to keep the type safety guarantees.
+In this example, we have clear approaches for retrieving the value associated with the "user" key on a context. We have appropriate stores as well to maintain the type-safety, and it provides a reasonable escape hatch and observability options for detecting when accesses are occurring that break the contract. We can apply this pattern to any store associated with the context to keep the type safety guarantees.
+
+// Reviewer note: A potential solution you may want to mention on GetUser() is that since it should never have the wrong type, it should panic if the type does not match to give a strong signal that something is missusing the context store. A post on when to use panics has already been done many times, but it might be fun as your next one. A good diving board would be the Google style guide on panics https://google.github.io/styleguide/go/best-practices#program-checks-and-panics
 
 ## goroutines should be associated with a `Context` and must be properly terminated
 
