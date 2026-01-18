@@ -7,6 +7,8 @@ const blog = defineCollection({
 		title: z.string(),
 		description: z.string(),
 		pubDate: z.coerce.date(),
+		author: z.string().optional(),
+		editors: z.array(z.string()).optional(),
 		tags: z.array(z.string()).optional(),
 	}),
 });
@@ -17,6 +19,9 @@ const wayfinders = defineCollection({
 		title: z.string(),
 		description: z.string(),
 		pubDate: z.coerce.date(),
+		author: z.string().optional(),
+		editors: z.array(z.string()).optional(),
+		tags: z.array(z.string()).optional(),
 	}),
 });
 

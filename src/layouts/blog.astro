@@ -37,13 +37,27 @@ const article = {
 							}</span
 						>
 						<span class="meta-separator">·</span>
-						<span class="post-author">{frontmatter.author}</span>
-						<span class="meta-separator">·</span>
 						<span class="reading-time">{minutesRead}</span>
 					</div>
 				</div>
 				<div class="post-header-collapsible">
 					<p class="post-summary">{frontmatter.description}</p>
+					{
+						frontmatter.author && (
+							<p class="post-author-line">
+								<strong>Author:</strong> {frontmatter.author}
+							</p>
+						)
+					}
+					{
+						frontmatter.editors &&
+							frontmatter.editors.length > 0 && (
+								<p class="post-editors-line">
+									<strong>Editors:</strong>{" "}
+									{frontmatter.editors.join(", ")}
+								</p>
+							)
+					}
 					<ul class="post-tags">
 						{
 							frontmatter.tags.map((tag) => (

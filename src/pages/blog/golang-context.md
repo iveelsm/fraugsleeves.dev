@@ -4,6 +4,7 @@ title: "Tips and Tricks for Context Management in Go"
 pubDate: 2026-01-15
 description: "Seven tips for managing Context in Go projects. The tips range from strong suggestions through best practices all the way to hard requirements. Each tip provides a reasonable example of a problematic use, as well as a reasonable counter example for refactoring. Information and tips, where possible, are corroborated with different sources."
 author: "Mikey Sleevi"
+editors: ["Sam Warfield", "Steve Ruckdashel"]
 image:
   url: "https://docs.astro.build/assets/rose.webp"
   alt: "The Astro logo on a dark background with a pink glow."

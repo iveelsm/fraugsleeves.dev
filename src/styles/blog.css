@@ -74,6 +74,19 @@
 	line-height: var(--leading-normal);
 }
 
+.post-author-line,
+.post-editors-line {
+	font-size: var(--text-sm);
+	color: var(--color-text-muted);
+	margin: 0 0 0.5rem 0;
+	line-height: var(--leading-normal);
+}
+
+.post-author-line strong,
+.post-editors-line strong {
+	color: var(--color-text-subtle);
+}
+
 .post-tags {
 	list-style: none;
 	display: flex;
