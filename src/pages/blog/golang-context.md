@@ -245,7 +245,6 @@ One of the biggest reasons that this comes up is that people find helpful articl
 
 > You use `context.Background` when you know that you need an empty context, like in main where you are just starting and you use `context.TODO` when you don’t know what context to use or haven’t wired things up. [5](https://blog.meain.io/2024/golang-context/)
 
-
 `context.Background()` has some interesting properties. [9](https://pkg.go.dev/golang.org/x/net/context#Background)
 
 1. It is never cancelled
