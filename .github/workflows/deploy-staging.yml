@@ -12,7 +12,7 @@ jobs:
         concurrency: deploy-staging-group
         if: github.actor == 'dependabot[bot]' || github.actor == 'iveelsm'
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v6
             - uses: superfly/flyctl-actions/setup-flyctl@master
             - name: Deploy to Staging
               run: flyctl deploy --no-cache --remote-only --config fly.staging.toml --build-arg SITE_URL=https://staging.fraugsleeves.dev
