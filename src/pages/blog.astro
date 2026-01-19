@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import NavigableLayout from "../layouts/navigable.astro";
 import BlogPostItem from "../components/blogs/blogPostItem.astro";
+import CloseIcon from "../icons/close.svg";
 import "../styles/blog-list.css";
 
 const allBlogs = (await getCollection("blog")).sort(
@@ -20,20 +21,7 @@ const allBlogs = (await getCollection("blog")).sort(
 				aria-label="Clear filter"
 				id="filter-clear"
 			>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="14"
-					height="14"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-				>
-					<line x1="18" y1="6" x2="6" y2="18"></line>
-					<line x1="6" y1="6" x2="18" y2="18"></line>
-				</svg>
+				<CloseIcon width={14} height={14} />
 			</a>
 		</div>
 

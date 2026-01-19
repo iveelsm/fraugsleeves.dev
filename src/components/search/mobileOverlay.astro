@@ -1,4 +1,6 @@
 ---
+import SearchIcon from "../../icons/search.svg";
+import CloseIcon from "../../icons/close.svg";
 ---
 <div class="search-overlay" id="search-overlay">
 	<div class="search-overlay-container">
@@ -10,39 +12,12 @@
 				type="button"
 				aria-label="Close search"
 			>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="24"
-					height="24"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-				>
-					<line x1="18" y1="6" x2="6" y2="18"></line>
-					<line x1="6" y1="6" x2="18" y2="18"></line>
-				</svg>
+				<CloseIcon width={24} height={24} />
 			</button>
 		</div>
 		<div class="search-overlay-form">
 			<div class="search-overlay-input-wrapper">
-				<svg
-					class="search-overlay-icon"
-					xmlns="http://www.w3.org/2000/svg"
-					width="20"
-					height="20"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-				>
-					<circle cx="11" cy="11" r="8"></circle>
-					<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-				</svg>
+				<SearchIcon class="search-overlay-icon" width={20} height={20} />
 				<input
 					type="text"
 					class="search-overlay-input"
