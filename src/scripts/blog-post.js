@@ -3,8 +3,8 @@
  */
 function initHeaderCollapse() {
 	const header = document.querySelector(".post-header-fixed");
-	const collapseThreshold = 10; // Collapse summary/tags after small scroll
-	const hideThreshold = window.innerHeight / 2; // Fully hide after half window
+	const collapseThreshold = 5; // Collapse summary/tags after minimal scroll
+	const hideThreshold = window.innerHeight / 4; // Fully hide after quarter window
 
 	const handleScroll = () => {
 		if (window.scrollY > hideThreshold) {

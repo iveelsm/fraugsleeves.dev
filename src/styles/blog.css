@@ -388,6 +388,11 @@
 		padding: var(--space-md);
 	}
 
+	/* Hide table of contents completely on mobile */
+	.toc-sidebar {
+		display: none;
+	}
+
 	.post-content {
 		padding: 1.25rem;
 	}
@@ -402,5 +407,17 @@
 
 	.post-content h3 {
 		font-size: var(--text-lg);
+	}
+
+	/* Keep author, editors, and tags visible on mobile */
+	.post-header-collapsible {
+		max-height: none;
+		opacity: 1;
+	}
+
+	.post-header-fixed.collapsed .post-header-collapsible {
+		max-height: none;
+		opacity: 1;
+		margin-top: 0.75rem;
 	}
 }

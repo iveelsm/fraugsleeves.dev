@@ -76,6 +76,104 @@
 	font-weight: var(--font-semibold);
 }
 
+/* ===========================================
+   Mobile Navigation
+   =========================================== */
+
+/* Mobile toolbar elements - hidden on desktop */
+.toolbar-mobile {
+	display: none;
+}
+
+/* Hamburger button */
+.hamburger-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: transparent;
+	border: none;
+	color: var(--color-toolbar-text);
+	padding: var(--space-sm);
+	border-radius: var(--radius-sm);
+	cursor: pointer;
+	transition: all var(--transition-fast);
+}
+
+.hamburger-btn:hover {
+	color: var(--color-toolbar-text-active);
+	background-color: var(--color-toolbar-hover-bg);
+}
+
+.hamburger-btn .close-icon {
+	display: none;
+}
+
+.hamburger-btn.active .hamburger-icon {
+	display: none;
+}
+
+.hamburger-btn.active .close-icon {
+	display: block;
+}
+
+/* Mobile navigation overlay */
+.mobile-nav-overlay {
+	position: fixed;
+	top: var(--toolbar-height);
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: var(--color-toolbar-bg);
+	z-index: 199;
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY(-10px);
+	transition: all var(--transition-normal);
+}
+
+.mobile-nav-overlay.active {
+	opacity: 1;
+	visibility: visible;
+	transform: translateY(0);
+}
+
+.mobile-nav-content {
+	padding: var(--space-lg);
+}
+
+.mobile-nav-links {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-sm);
+}
+
+.mobile-nav-link {
+	display: block;
+	color: var(--color-toolbar-text);
+	text-decoration: none;
+	font-size: var(--text-lg);
+	font-weight: var(--font-medium);
+	padding: var(--space-md) var(--space-lg);
+	border-radius: var(--radius-md);
+	transition: all var(--transition-fast);
+}
+
+.mobile-nav-link:hover {
+	color: var(--color-toolbar-text-active);
+	background-color: var(--color-toolbar-hover-bg);
+}
+
+.mobile-nav-link.active {
+	color: var(--color-toolbar-text-active);
+	background-color: var(--color-toolbar-active-bg);
+	font-weight: var(--font-semibold);
+}
+
+/* Desktop-only elements */
+.toolbar-desktop {
+	display: flex;
+}
+
 @media (max-width: 640px) {
 	.toolbar-content {
 		padding: 0 var(--space-md);
@@ -85,12 +183,20 @@
 		height: 24px;
 	}
 
-	.toolbar-links {
-		gap: var(--space-xs);
+	/* Hide desktop navigation on mobile */
+	.toolbar-desktop {
+		display: none;
 	}
 
-	.toolbar-link {
-		font-size: var(--text-xs);
-		padding: 0.4rem 0.75rem;
+	/* Show mobile elements */
+	.toolbar-mobile {
+		display: flex;
+		align-items: center;
+		gap: var(--space-sm);
+	}
+
+	.mobile-search-wrapper {
+		display: flex;
+		align-items: center;
 	}
 }
