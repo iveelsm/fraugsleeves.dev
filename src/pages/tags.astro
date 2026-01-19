@@ -1,22 +1,11 @@
 ---
-import { getCollection } from "astro:content";
-import NavigableLayout from "../layouts/navigable.astro";
-
 import "../styles/tags.css";
 
-const blogs = await getCollection("blog");
-const allTags = blogs.flatMap((post) => post.data.tags || []);
+import NavigableLayout from "../layouts/navigable.astro";
 
-// Count occurrences of each tag
-const tagCounts = allTags.reduce(
-	(acc, tag) => {
-		acc[tag] = (acc[tag] || 0) + 1;
-		return acc;
-	},
-	{} as Record<string, number>,
-);
+import { getUniqueOccurences } from "../components/tags/getTags";
 
-const uniqueTags = Object.keys(tagCounts).sort();
+const uniqueTags = await getUniqueOccurences();
 ---
 
 <NavigableLayout title="Tags">
@@ -24,17 +13,21 @@ const uniqueTags = Object.keys(tagCounts).sort();
 		<h1 class="tags-title">Tags</h1>
 		<div class="tags-list">
 			{
-				uniqueTags.map((tag) => (
+				Object.keys(uniqueTags).map((tag) => (
 					<a
 						href={`/blog?tag=${encodeURIComponent(tag)}`}
 						class="tag-link"
 					>
 						<span class="tag-name">{tag}</span>
-						<span class="tag-count">{tagCounts[tag]}</span>
+						<span class="tag-count">{uniqueTags[tag]}</span>
 					</a>
 				))
 			}
 		</div>
-		{uniqueTags.length === 0 && <p class="no-tags">No tags found.</p>}
+		{
+			uniqueTags.length === 0 && <p class="no-tags">
+				No tags found.
+			</p>
+		}
 	</div>
 </NavigableLayout>
