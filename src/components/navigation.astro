@@ -138,7 +138,8 @@ function isActive(href: string, exact: boolean): boolean {
 		});
 
 		// Close menu when clicking a link
-		const mobileNavLinks = mobileNavOverlay.querySelectorAll(".mobile-nav-link");
+		const mobileNavLinks =
+			mobileNavOverlay.querySelectorAll(".mobile-nav-link");
 		mobileNavLinks.forEach((link) => {
 			link.addEventListener("click", () => {
 				mobileNavOverlay.classList.remove("active");
@@ -150,7 +151,10 @@ function isActive(href: string, exact: boolean): boolean {
 
 		// Close menu on escape key
 		document.addEventListener("keydown", (e) => {
-			if (e.key === "Escape" && mobileNavOverlay.classList.contains("active")) {
+			if (
+				e.key === "Escape" &&
+				mobileNavOverlay.classList.contains("active")
+			) {
 				mobileNavOverlay.classList.remove("active");
 				hamburgerBtn.classList.remove("active");
 				hamburgerBtn.setAttribute("aria-expanded", "false");
