@@ -27,7 +27,7 @@ const article = {
 	<Header
 		title={frontmatter.title}
 		description={frontmatter.description}
-		date={frontmatter.date}
+		date={new Date(frontmatter.pubDate)}
 		minutesRead={minutesRead}
 		author={frontmatter.author}
 		editors={frontmatter.editors}
@@ -42,31 +42,6 @@ const article = {
 	</div>
 
 	<script>
-		/**
-		 * Initialize header collapse behavior on scroll
-		 */
-		function initHeaderCollapse() {
-			const header = document.querySelector(".post-header-fixed");
-			const collapseThreshold = 5; // Collapse summary/tags after minimal scroll
-			const hideThreshold = window.innerHeight / 4; // Fully hide after quarter window
-
-			const handleScroll = () => {
-				if (window.scrollY > hideThreshold) {
-					header?.classList.add("hidden");
-					header?.classList.add("collapsed");
-				} else if (window.scrollY > collapseThreshold) {
-					header?.classList.remove("hidden");
-					header?.classList.add("collapsed");
-				} else {
-					header?.classList.remove("hidden");
-					header?.classList.remove("collapsed");
-				}
-			};
-
-			window.addEventListener("scroll", handleScroll, { passive: true });
-			handleScroll(); // Check initial state
-		}
-
 		/**
 		 * Initialize scroll spy to highlight active TOC item
 		 */
@@ -116,7 +91,6 @@ const article = {
 		 * Initialize all blog post functionality
 		 */
 		function initBlogPost() {
-			initHeaderCollapse();
 			initScrollSpy();
 		}
 
