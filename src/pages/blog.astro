@@ -58,5 +58,74 @@ const allBlogs = (await getCollection("blog")).sort(
 </NavigableLayout>
 
 <script>
-	import "../scripts/blog-filter.js";
+	/**
+	 * Initialize tag filtering for the blog list
+	 */
+	function initTagFilter() {
+		const params = new URLSearchParams(window.location.search);
+		const tagFilter = params.get("tag");
+
+		const filterHeader = document.getElementById("filter-header");
+		const filterTagName = document.getElementById("filter-tag-name");
+		const postsList = document.getElementById("posts-list");
+		const noPosts = document.getElementById("no-posts");
+		const postItems = document.querySelectorAll(".post-item");
+		const tagLinks = document.querySelectorAll(".post-tag");
+
+		if (!filterHeader || !filterTagName || !postsList || !noPosts) return;
+
+		// Show/hide filter header
+		if (tagFilter) {
+			filterHeader.style.display = "flex";
+			filterTagName.textContent = tagFilter;
+			document.title = `Blog - ${tagFilter}`;
+		} else {
+			filterHeader.style.display = "none";
+			document.title = "Blog";
+		}
+
+		// Filter posts
+		let visibleCount = 0;
+		postItems.forEach((item) => {
+			const tags = JSON.parse(item.getAttribute("data-tags") || "[]");
+			const isVisible = !tagFilter || tags.includes(tagFilter);
+			item.style.display = isVisible ? "" : "none";
+			if (isVisible) visibleCount++;
+		});
+
+		// Show no posts message if needed
+		if (visibleCount === 0) {
+			noPosts.style.display = "block";
+			noPosts.textContent = tagFilter
+				? `No posts found for tag "${tagFilter}".`
+				: "No posts found.";
+			postsList.style.display = "none";
+		} else {
+			noPosts.style.display = "none";
+			postsList.style.display = "";
+		}
+
+		// Update active tag styling
+		tagLinks.forEach((link) => {
+			const tag = link.getAttribute("data-tag");
+			if (tag === tagFilter) {
+				link.classList.add("active");
+			} else {
+				link.classList.remove("active");
+			}
+		});
+	}
+
+	// Run on page load
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", initTagFilter);
+	} else {
+		initTagFilter();
+	}
+
+	// Re-run on Astro page transitions
+	document.addEventListener("astro:page-load", initTagFilter);
+
+	// Handle browser back/forward
+	window.addEventListener("popstate", initTagFilter);
 </script>

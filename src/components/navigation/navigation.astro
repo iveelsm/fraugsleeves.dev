@@ -1,18 +1,13 @@
 ---
 import "../../styles/navigation.css";
 
+import { NAVIGATION_ITEMS } from "../../constants";
+
 import DesktopNavigation from "./desktopNavigation.astro";
 import MobileNavigation from "./mobileNavigation.astro";
 import MobileNavigationOverlay from "./mobileNavigationOverlay.astro";
 
 const currentPath = Astro.url.pathname;
-
-const navItems = [
-	{ href: "/", label: "Home", exact: true },
-	{ href: "/wayfinders", label: "Wayfinders", exact: false },
-	{ href: "/blog", label: "Blog", exact: false },
-	{ href: "/tags", label: "Tags", exact: true },
-];
 ---
 
 <nav class="toolbar">
@@ -24,14 +19,14 @@ const navItems = [
 		<MobileNavigation />
 		<DesktopNavigation
 			currentPath={currentPath}
-			navItems={navItems}
+			navItems={NAVIGATION_ITEMS}
 		/>
 	</div>
 </nav>
 
 <MobileNavigationOverlay
 	currentPath={currentPath}
-	navItems={navItems}
+	navItems={NAVIGATION_ITEMS}
 />
 
 <script>
