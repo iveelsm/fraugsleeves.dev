@@ -1,0 +1,41 @@
+---
+import Search from "../search/search.astro";
+
+import { isActive } from "./isActive";
+
+interface Props {
+	currentPath: string;
+	navItems: {
+		href: string;
+		exact: boolean;
+		label: string;
+	}[];
+}
+
+const { currentPath, navItems } = Astro.props;
+---
+
+<div class="toolbar-right toolbar-desktop">
+	<div class="toolbar-links">
+		{
+			navItems.map((item) => (
+				<a
+					href={item.href}
+					class:list={[
+						"toolbar-link",
+						{
+							active: isActive(
+								currentPath,
+								item.href,
+								item.exact,
+							),
+						},
+					]}
+				>
+					{item.label}
+				</a>
+			))
+		}
+	</div>
+	<Search />
+</div>

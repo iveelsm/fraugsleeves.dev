@@ -1,0 +1,21 @@
+---
+import { getCollection } from "astro:content";
+import Card from "./card.astro";
+
+const wayfinders = (await getCollection("wayfinders")).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<div class="wayfinders-grid">
+	{
+		wayfinders.map((wayfinder) => (
+			<Card
+				title={wayfinder.data.title}
+				description={wayfinder.data.description}
+				date={wayfinder.data.pubDate}
+				href={`/wayfinders/${wayfinder.id}`}
+			/>
+		))
+	}
+</div>

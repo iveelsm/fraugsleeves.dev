@@ -2,7 +2,9 @@
 import "../styles/blog.css";
 
 import NavigableLayout from "./navigable.astro";
-import TableOfContents from "../components/toc.astro";
+import { Header } from "../components/blogs";
+import { Sidebar } from "../components/toc";
+
 const { frontmatter, headings } = Astro.props;
 const { minutesRead } = frontmatter;
 
@@ -22,68 +24,82 @@ const article = {
 	article={article}
 	class="blog-layout"
 >
-	<!-- Fixed Header with Post Info -->
-	<header class="post-header-fixed">
-		<div class="post-header-box">
-			<div class="post-header-content">
-				<div class="post-header-main">
-					<h1 class="post-title" data-pagefind-meta="title">
-						{frontmatter.title}
-					</h1>
-					<div class="post-meta">
-						<span class="post-date"
-							>{
-								new Date(frontmatter.pubDate).toDateString()
-							}</span
-						>
-						<span class="meta-separator">·</span>
-						<span class="reading-time">{minutesRead}</span>
-					</div>
-				</div>
-				<div class="post-header-collapsible">
-					<p class="post-summary">{frontmatter.description}</p>
-					{
-						frontmatter.author && (
-							<p class="post-author-line">
-								<strong>Author:</strong> {frontmatter.author}
-							</p>
-						)
-					}
-					{
-						frontmatter.editors &&
-							frontmatter.editors.length > 0 && (
-								<p class="post-editors-line">
-									<strong>Editors:</strong>{" "}
-									{frontmatter.editors.join(", ")}
-								</p>
-							)
-					}
-					<ul class="post-tags">
-						{
-							frontmatter.tags.map((tag) => (
-								<li class="tag">#{tag}</li>
-							))
-						}
-					</ul>
-				</div>
-			</div>
-		</div>
-	</header>
+	<Header
+		title={frontmatter.title}
+		description={frontmatter.description}
+		date={new Date(frontmatter.pubDate)}
+		minutesRead={minutesRead}
+		author={frontmatter.author}
+		editors={frontmatter.editors}
+		tags={frontmatter.tags}
+	/>
 
-	<!-- Main Content Area with TOC Sidebar -->
 	<div class="blog-container">
-		<aside class="toc-sidebar">
-			<div class="toc-wrapper">
-				<h2 class="toc-title">Table of Contents</h2>
-				<TableOfContents headings={headings} />
-			</div>
-		</aside>
+		<Sidebar headings={headings} />
 		<main class="post-content">
 			<slot />
 		</main>
 	</div>
 
 	<script>
-		import "../scripts/blog-post.js";
+		/**
+		 * Initialize scroll spy to highlight active TOC item
+		 */
+		function initScrollSpy() {
+			const tocLinks = document.querySelectorAll(".article-toc a");
+			const headings = document.querySelectorAll(
+				"main h1[id], main h2[id], main h3[id], main h4[id]",
+			);
+
+			if (headings.length === 0 || tocLinks.length === 0) return;
+
+			const observerOptions = {
+				root: null,
+				rootMargin: "-80px 0px -70% 0px",
+				threshold: 0,
+			};
+
+			let activeId = "";
+
+			const observerCallback = (entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						activeId = entry.target.id;
+						updateActiveLink();
+					}
+				});
+			};
+
+			const updateActiveLink = () => {
+				tocLinks.forEach((link) => {
+					link.classList.remove("active");
+					const href = link.getAttribute("href");
+					if (href === `#${activeId}`) {
+						link.classList.add("active");
+					}
+				});
+			};
+
+			const observer = new IntersectionObserver(
+				observerCallback,
+				observerOptions,
+			);
+			headings.forEach((heading) => observer.observe(heading));
+		}
+
+		/**
+		 * Initialize all blog post functionality
+		 */
+		function initBlogPost() {
+			initScrollSpy();
+		}
+
+		if (document.readyState === "loading") {
+			document.addEventListener("DOMContentLoaded", initBlogPost);
+		} else {
+			initBlogPost();
+		}
+
+		document.addEventListener("astro:page-load", initBlogPost);
 	</script>
 </NavigableLayout>

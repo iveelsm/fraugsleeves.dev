@@ -1,0 +1,21 @@
+---
+import Search from "../search/search.astro";
+import HamburgerIcon from "../../icons/hamburger.svg";
+import CloseIcon from "../../icons/close.svg";
+---
+
+<div class="toolbar-mobile">
+	<div class="mobile-search-wrapper">
+		<Search />
+	</div>
+	<button
+		class="hamburger-btn"
+		id="hamburger-btn"
+		type="button"
+		aria-label="Open menu"
+		aria-expanded="false"
+	>
+		<HamburgerIcon class="hamburger-icon" width={24} height={24} />
+		<CloseIcon class="close-icon" width={24} height={24} />
+	</button>
+</div>

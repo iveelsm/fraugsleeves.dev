@@ -1,5 +1,6 @@
 ---
 import { SEO } from "astro-seo";
+import { DEFAULT_DESCRIPTION, DEFAULT_TITLE, SITE_URL } from "../constants";
 
 interface Props {
 	title?: string;
@@ -15,26 +16,24 @@ interface Props {
 	nofollow?: boolean;
 }
 
-const siteUrl = "https://fraugsleeves.dev";
-const defaultTitle = "fraugsleeves.dev";
-const defaultDescription =
-	"An exposition of wayfinding within software development - Personal blog by Mikey Sleevi";
-const defaultImage = `${siteUrl}/og-image.png`;
+const defaultImage = `${SITE_URL}/og-image.png`;
 
 const {
-	title = defaultTitle,
-	description = defaultDescription,
+	title = DEFAULT_TITLE,
+	description = DEFAULT_DESCRIPTION,
 	image = defaultImage,
 	article,
 	noindex = false,
 	nofollow = false,
 } = Astro.props;
 
-const fullTitle = title === defaultTitle ? title : `${title} | ${defaultTitle}`;
+const fullTitle =
+	title === DEFAULT_TITLE ? title : `${title} | ${DEFAULT_TITLE}`;
 
 const pathname = Astro.url.pathname;
 const normalizedPath = pathname === "/" ? "/" : pathname.replace(/\/$/, "");
-const canonicalUrl = `${siteUrl}${normalizedPath}`;
+
+const canonicalUrl = `${SITE_URL}${normalizedPath}`;
 ---
 
 <SEO
@@ -52,7 +51,7 @@ const canonicalUrl = `${siteUrl}${normalizedPath}`;
 		},
 		optional: {
 			description: description,
-			siteName: defaultTitle,
+			siteName: DEFAULT_TITLE,
 			locale: "en_US",
 		},
 		image: {

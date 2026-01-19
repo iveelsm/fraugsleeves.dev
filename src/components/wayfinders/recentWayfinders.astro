@@ -1,0 +1,28 @@
+---
+import { getCollection } from "astro:content";
+
+import Card from "./card.astro";
+
+const allWayfinders = (await getCollection("wayfinders")).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const recentWayfinders = allWayfinders.slice(0, 3);
+---
+
+<section class="wayfinders-section">
+	<h2 class="section-title">Wayfinders</h2>
+	<div class="wayfinders-grid">
+		{
+			recentWayfinders.map((wayfinder) => (
+				<Card
+					title={wayfinder.data.title}
+					description={wayfinder.data.description}
+					date={wayfinder.data.pubDate}
+					href={`/wayfinders/${wayfinder.id}`}
+				/>
+			))
+		}
+	</div>
+	<a href="/wayfinders" class="view-all-link"> View all wayfinders → </a>
+</section>

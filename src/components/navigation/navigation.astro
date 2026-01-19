@@ -1,0 +1,86 @@
+---
+import "../../styles/navigation.css";
+
+import { NAVIGATION_ITEMS } from "../../constants";
+
+import DesktopNavigation from "./desktopNavigation.astro";
+import MobileNavigation from "./mobileNavigation.astro";
+import MobileNavigationOverlay from "./mobileNavigationOverlay.astro";
+
+const currentPath = Astro.url.pathname;
+---
+
+<nav class="toolbar">
+	<div class="toolbar-content">
+		<a href="/" class="toolbar-logo" aria-label="Home">
+			<img src="/logo.svg" alt="Logo" class="logo-image" />
+		</a>
+
+		<MobileNavigation />
+		<DesktopNavigation
+			currentPath={currentPath}
+			navItems={NAVIGATION_ITEMS}
+		/>
+	</div>
+</nav>
+
+<MobileNavigationOverlay
+	currentPath={currentPath}
+	navItems={NAVIGATION_ITEMS}
+/>
+
+<script>
+	function initHamburgerMenu() {
+		const hamburgerBtn = document.getElementById("hamburger-btn");
+		const mobileNavOverlay = document.getElementById("mobile-nav-overlay");
+
+		if (!hamburgerBtn || !mobileNavOverlay) return;
+
+		hamburgerBtn.addEventListener("click", () => {
+			const isOpen = mobileNavOverlay.classList.contains("active");
+
+			if (isOpen) {
+				mobileNavOverlay.classList.remove("active");
+				hamburgerBtn.classList.remove("active");
+				hamburgerBtn.setAttribute("aria-expanded", "false");
+				document.body.style.overflow = "";
+			} else {
+				mobileNavOverlay.classList.add("active");
+				hamburgerBtn.classList.add("active");
+				hamburgerBtn.setAttribute("aria-expanded", "true");
+				document.body.style.overflow = "hidden";
+			}
+		});
+
+		// Close menu when clicking a link
+		const mobileNavLinks =
+			mobileNavOverlay.querySelectorAll(".mobile-nav-link");
+		mobileNavLinks.forEach((link) => {
+			link.addEventListener("click", () => {
+				mobileNavOverlay.classList.remove("active");
+				hamburgerBtn.classList.remove("active");
+				hamburgerBtn.setAttribute("aria-expanded", "false");
+				document.body.style.overflow = "";
+			});
+		});
+
+		// Close menu on escape key
+		document.addEventListener("keydown", (e) => {
+			if (
+				e.key === "Escape" &&
+				mobileNavOverlay.classList.contains("active")
+			) {
+				mobileNavOverlay.classList.remove("active");
+				hamburgerBtn.classList.remove("active");
+				hamburgerBtn.setAttribute("aria-expanded", "false");
+				document.body.style.overflow = "";
+			}
+		});
+	}
+
+	// Initialize on page load
+	initHamburgerMenu();
+
+	// Re-initialize on Astro page transitions
+	document.addEventListener("astro:page-load", initHamburgerMenu);
+</script>

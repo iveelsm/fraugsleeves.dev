@@ -1,0 +1,41 @@
+---
+import SearchIcon from "../../icons/search.svg";
+import CloseIcon from "../../icons/close.svg";
+---
+
+<div class="search-container" id="search-container">
+	<button
+		class="search-toggle"
+		type="button"
+		aria-label="Open search"
+		aria-expanded="false"
+		id="search-toggle"
+	>
+		<SearchIcon width={18} height={18} />
+	</button>
+
+	<!-- Desktop: Inline search input -->
+	<div class="search-input-wrapper search-desktop" id="search-input-wrapper">
+		<SearchIcon class="search-input-icon" width={16} height={16} />
+		<input
+			type="text"
+			class="search-input"
+			id="search-input"
+			placeholder="Search..."
+			autocomplete="off"
+		/>
+		<button
+			class="search-clear"
+			id="search-clear"
+			type="button"
+			aria-label="Close search"
+		>
+			<CloseIcon width={16} height={16} />
+		</button>
+	</div>
+
+	<!-- Desktop: Dropdown results -->
+	<div class="search-dropdown search-desktop" id="search-dropdown">
+		<div class="search-results" id="search-results"></div>
+	</div>
+</div>
