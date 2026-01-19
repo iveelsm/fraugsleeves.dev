@@ -2,8 +2,8 @@
 import "../styles/blog.css";
 
 import NavigableLayout from "./navigable.astro";
-import Header from "../components/blogs/header.astro";
-import Sidebar from "../components/toc/sidebar.astro";
+import { Header } from "../components/blogs";
+import { Sidebar } from "../components/toc";
 
 const { frontmatter, headings } = Astro.props;
 const { minutesRead } = frontmatter;
