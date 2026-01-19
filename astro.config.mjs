@@ -18,6 +18,6 @@ export default defineConfig({
 		remarkPlugins: [remarkReadingTime],
 	},
 	experimental: {
-		svgo: true
-	}
+		svgo: true,
+	},
 });
