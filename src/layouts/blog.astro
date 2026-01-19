@@ -2,7 +2,9 @@
 import "../styles/blog.css";
 
 import NavigableLayout from "./navigable.astro";
-import TableOfContents from "../components/toc.astro";
+import TableOfContents from "../components/toc/toc.astro";
+import Header from "../components/blogs/header.astro";
+
 const { frontmatter, headings } = Astro.props;
 const { minutesRead } = frontmatter;
 
@@ -22,55 +24,17 @@ const article = {
 	article={article}
 	class="blog-layout"
 >
-	<!-- Fixed Header with Post Info -->
-	<header class="post-header-fixed">
-		<div class="post-header-box">
-			<div class="post-header-content">
-				<div class="post-header-main">
-					<h1 class="post-title" data-pagefind-meta="title">
-						{frontmatter.title}
-					</h1>
-					<div class="post-meta">
-						<span class="post-date"
-							>{
-								new Date(frontmatter.pubDate).toDateString()
-							}</span
-						>
-						<span class="meta-separator">·</span>
-						<span class="reading-time">{minutesRead}</span>
-					</div>
-				</div>
-				<div class="post-header-collapsible">
-					<p class="post-summary">{frontmatter.description}</p>
-					{
-						frontmatter.author && (
-							<p class="post-author-line">
-								<strong>Author:</strong> {frontmatter.author}
-							</p>
-						)
-					}
-					{
-						frontmatter.editors &&
-							frontmatter.editors.length > 0 && (
-								<p class="post-editors-line">
-									<strong>Editors:</strong>{" "}
-									{frontmatter.editors.join(", ")}
-								</p>
-							)
-					}
-					<ul class="post-tags">
-						{
-							frontmatter.tags.map((tag) => (
-								<li class="tag">#{tag}</li>
-							))
-						}
-					</ul>
-				</div>
-			</div>
-		</div>
-	</header>
 
-	<!-- Main Content Area with TOC Sidebar -->
+	<Header
+		title={frontmatter.title}
+		description={frontmatter.description}
+		date={frontmatter.date}
+		minutesRead={minutesRead}
+		author={frontmatter.author}
+		editors={frontmatter.editors}
+		tags={frontmatter.tags}
+	/>
+
 	<div class="blog-container">
 		<aside class="toc-sidebar">
 			<div class="toc-wrapper">
@@ -84,6 +48,6 @@ const article = {
 	</div>
 
 	<script>
-		import "../scripts/blog-post.js";
+		import "../components/blogs/blogPost.js";
 	</script>
 </NavigableLayout>

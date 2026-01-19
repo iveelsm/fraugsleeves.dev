@@ -1,12 +1,4 @@
----
-import Entry from "./tocEntry.astro";
-
-export interface Heading {
-	depth: number;
-	slug: string;
-	text: string;
-	children: Heading[];
-}
+import type { Heading } from "./header";
 
 function buildSubtree(
 	parent: Heading,
@@ -43,7 +35,7 @@ function buildSubtree(
 	return increment;
 }
 
-function buildTree(headings: Heading[]): Heading[] {
+export function buildTree(headings: Heading[]): Heading[] {
 	if (!headings) {
 		return [];
 	}
@@ -61,20 +53,4 @@ function buildTree(headings: Heading[]): Heading[] {
 	}
 
 	return toc;
-}
-
-const { headings } = Astro.props;
-const toc = buildTree(headings);
----
-
-{
-	toc && toc.length > 0 && (
-		<nav class="article-toc">
-			<ul>
-				{toc.map((heading) => (
-					<Entry heading={heading} />
-				))}
-			</ul>
-		</nav>
-	)
 }

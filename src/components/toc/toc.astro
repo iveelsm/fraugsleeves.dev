@@ -1,0 +1,18 @@
+---
+import { buildTree } from "./buildTree";
+import Entry from "./tocEntry.astro";
+
+const { headings } = Astro.props;
+const toc = buildTree(headings);
+---
+{
+	toc && toc.length > 0 && (
+		<nav class="article-toc">
+			<ul>
+				{toc.map((heading) => (
+					<Entry heading={heading} />
+				))}
+			</ul>
+		</nav>
+	)
+}

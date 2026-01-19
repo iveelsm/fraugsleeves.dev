@@ -1,12 +1,8 @@
 ---
-import { getCollection } from "astro:content";
-import NavigableLayout from "../layouts/navigable.astro";
-import Card from "../components/card.astro";
 import "../styles/wayfinders-list.css";
 
-const wayfinders = (await getCollection("wayfinders")).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+import NavigableLayout from "../layouts/navigable.astro";
+import WayfindersGrid from "../components/wayfinders/wayfindersGrid.astro";
 ---
 
 <NavigableLayout title="Wayfinders">
@@ -26,17 +22,6 @@ const wayfinders = (await getCollection("wayfinders")).sort(
 			</p>
 		</header>
 
-		<div class="wayfinders-grid">
-			{
-				wayfinders.map((wayfinder) => (
-					<Card
-						title={wayfinder.data.title}
-						description={wayfinder.data.description}
-						date={wayfinder.data.pubDate}
-						href={`/wayfinders/${wayfinder.id}`}
-					/>
-				))
-			}
-		</div>
+		<WayfindersGrid />
 	</div>
 </NavigableLayout>

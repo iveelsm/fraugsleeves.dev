@@ -1,0 +1,60 @@
+---
+
+interface Props {
+	title: string;
+	date: Date;
+	description: string;
+	minutesRead: number;
+	author: string;
+	editors: string[];
+	tags: string[]
+}
+
+const { title, date, description, minutesRead, author, editors, tags } = Astro.props;
+---
+<header class="post-header-fixed">
+	<div class="post-header-box">
+		<div class="post-header-content">
+			<div class="post-header-main">
+				<h1 class="post-title" data-pagefind-meta="title">
+					{title}
+				</h1>
+				<div class="post-meta">
+					<span class="post-date">
+						{ new Date(date).toDateString() }
+					</span>
+					<span class="meta-separator">·</span>
+					<span class="reading-time">{minutesRead}</span>
+				</div>
+			</div>
+			<div class="post-header-collapsible">
+				<p class="post-summary">{description}</p>
+				{
+					author && (
+						<p class="post-author-line">
+							<strong>Author:</strong> {author}
+						</p>
+					)
+				}
+				{
+					editors &&
+						editors.length > 0 && (
+							<p class="post-editors-line">
+								<strong>Editors:</strong>{" "}
+								{editors.join(", ")}
+							</p>
+						)
+				}
+				<ul class="post-tags">
+					{
+						tags.map((tag) => (
+							<li class="tag">
+								#{tag}
+							</li>
+						))
+					}
+				</ul>
+			</div>
+		</div>
+	</div>
+</header>

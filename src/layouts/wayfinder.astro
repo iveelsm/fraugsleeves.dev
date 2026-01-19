@@ -1,7 +1,9 @@
 ---
 import "../styles/wayfinders.css";
 
+import Header from "../components/blogs/header.astro";
 import NavigableLayout from "./navigable.astro";
+
 const { frontmatter } = Astro.props;
 const { minutesRead } = frontmatter;
 
@@ -21,54 +23,15 @@ const article = {
 	article={article}
 	class="wayfinder-layout"
 >
-	<header class="post-header-fixed">
-		<div class="post-header-box">
-			<div class="post-header-content">
-				<div class="post-header-main">
-					<h1 class="post-title" data-pagefind-meta="title">
-						{frontmatter.title}
-					</h1>
-					<div class="post-meta">
-						<span class="post-date"
-							>{
-								new Date(frontmatter.pubDate).toDateString()
-							}</span
-						>
-						<span class="meta-separator">·</span>
-						<span class="reading-time">{minutesRead}</span>
-					</div>
-				</div>
-				<div class="post-header-collapsible">
-					<p class="post-summary">{frontmatter.description}</p>
-					{
-						frontmatter.author && (
-							<p class="post-author-line">
-								<strong>Author:</strong> {frontmatter.author}
-							</p>
-						)
-					}
-					{
-						frontmatter.editors &&
-							frontmatter.editors.length > 0 && (
-								<p class="post-editors-line">
-									<strong>Editors:</strong>{" "}
-									{frontmatter.editors.join(", ")}
-								</p>
-							)
-					}
-					{
-						frontmatter.tags && frontmatter.tags.length > 0 && (
-							<ul class="post-tags">
-								{frontmatter.tags.map((tag) => (
-									<li class="tag">#{tag}</li>
-								))}
-							</ul>
-						)
-					}
-				</div>
-			</div>
-		</div>
-	</header>
+	<Header
+		title={frontmatter.title}
+		description={frontmatter.description}
+		date={frontmatter.date}
+		minutesRead={minutesRead}
+		author={frontmatter.author}
+		editors={frontmatter.editors}
+		tags={frontmatter.tags}
+	/>
 
 	<div class="wayfinder-post">
 		<main>

@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import NavigableLayout from "../layouts/navigable.astro";
-import BlogPostItem from "../components/blog-post-item.astro";
+import BlogPostItem from "../components/blogs/blogPostItem.astro";
 import "../styles/blog-list.css";
 
 const allBlogs = (await getCollection("blog")).sort(
