@@ -198,17 +198,25 @@
 /* Heading Anchor Links */
 .post-content .heading-anchor {
 	position: absolute;
-	left: -1.5em;
-	padding-right: 0.5em;
+	left: -1.75em;
+	top: 50%;
+	transform: translateY(-50%);
+	display: flex;
+	align-items: center;
 	text-decoration: none;
 	opacity: 0;
 	transition: opacity var(--transition-fast);
-	font-weight: var(--font-normal);
 }
 
 .post-content .heading-anchor .anchor-icon {
 	color: var(--color-text-muted);
-	font-size: 0.85em;
+	display: flex;
+	align-items: center;
+}
+
+.post-content .heading-anchor svg {
+	width: 0.8em;
+	height: 0.8em;
 }
 
 .post-content h1:hover .heading-anchor,
