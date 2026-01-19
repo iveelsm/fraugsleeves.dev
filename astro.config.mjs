@@ -17,4 +17,7 @@ export default defineConfig({
 	markdown: {
 		remarkPlugins: [remarkReadingTime],
 	},
+	experimental: {
+		svgo: true
+	}
 });
