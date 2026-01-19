@@ -89,10 +89,45 @@ const article = {
 		}
 
 		/**
+		 * Initialize copyable heading anchor links
+		 */
+		function initHeadingAnchors() {
+			const anchorLinks = document.querySelectorAll(
+				".post-content .heading-anchor",
+			);
+
+			anchorLinks.forEach((anchor) => {
+				anchor.addEventListener("click", async (e) => {
+					e.preventDefault();
+					const href = anchor.getAttribute("href");
+					const url = new URL(href, window.location.href);
+					url.hash = href;
+
+					try {
+						await navigator.clipboard.writeText(url.toString());
+						anchor.classList.add("copied");
+
+						// Update URL without scrolling
+						history.pushState(null, "", href);
+
+						// Remove the copied class after animation
+						setTimeout(() => {
+							anchor.classList.remove("copied");
+						}, 1500);
+						// eslint-disable-next-line  @typescript-eslint/no-unused-vars
+					} catch (_err) {
+						// Fallback: just navigate to the anchor
+						window.location.hash = href;
+					}
+				});
+			});
+		}
+		/**
 		 * Initialize all blog post functionality
 		 */
 		function initBlogPost() {
 			initScrollSpy();
+			initHeadingAnchors();
 		}
 
 		if (document.readyState === "loading") {
