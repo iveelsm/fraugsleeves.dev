@@ -1,5 +1,5 @@
 ---
-import type { Heading } from './header';
+import type { Heading } from "./header";
 
 interface Props {
 	heading: Heading;
@@ -7,6 +7,7 @@ interface Props {
 
 const { heading } = Astro.props;
 ---
+
 <li>
 	<a href={"#" + heading.slug}>
 		{heading.text}

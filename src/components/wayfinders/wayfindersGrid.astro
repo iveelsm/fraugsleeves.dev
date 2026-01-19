@@ -6,6 +6,7 @@ const wayfinders = (await getCollection("wayfinders")).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 ---
+
 <div class="wayfinders-grid">
 	{
 		wayfinders.map((wayfinder) => (

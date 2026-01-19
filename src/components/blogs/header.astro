@@ -1,5 +1,4 @@
 ---
-
 interface Props {
 	title: string;
 	date: Date;
@@ -7,11 +6,13 @@ interface Props {
 	minutesRead: number;
 	author: string;
 	editors: string[];
-	tags: string[]
+	tags: string[];
 }
 
-const { title, date, description, minutesRead, author, editors, tags } = Astro.props;
+const { title, date, description, minutesRead, author, editors, tags } =
+	Astro.props;
 ---
+
 <header class="post-header-fixed">
 	<div class="post-header-box">
 		<div class="post-header-content">
@@ -21,7 +22,7 @@ const { title, date, description, minutesRead, author, editors, tags } = Astro.p
 				</h1>
 				<div class="post-meta">
 					<span class="post-date">
-						{ new Date(date).toDateString() }
+						{new Date(date).toDateString()}
 					</span>
 					<span class="meta-separator">·</span>
 					<span class="reading-time">{minutesRead}</span>
@@ -37,22 +38,14 @@ const { title, date, description, minutesRead, author, editors, tags } = Astro.p
 					)
 				}
 				{
-					editors &&
-						editors.length > 0 && (
-							<p class="post-editors-line">
-								<strong>Editors:</strong>{" "}
-								{editors.join(", ")}
-							</p>
-						)
+					editors && editors.length > 0 && (
+						<p class="post-editors-line">
+							<strong>Editors:</strong> {editors.join(", ")}
+						</p>
+					)
 				}
 				<ul class="post-tags">
-					{
-						tags.map((tag) => (
-							<li class="tag">
-								#{tag}
-							</li>
-						))
-					}
+					{tags.map((tag) => <li class="tag">#{tag}</li>)}
 				</ul>
 			</div>
 		</div>

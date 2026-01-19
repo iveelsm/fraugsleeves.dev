@@ -4,14 +4,15 @@ import { isActive } from "./isActive";
 interface Props {
 	currentPath: string;
 	navItems: {
-		href: string
-		exact: boolean
-		label: string
+		href: string;
+		exact: boolean;
+		label: string;
 	}[];
 }
 
 const { currentPath, navItems } = Astro.props;
 ---
+
 <div class="mobile-nav-overlay" id="mobile-nav-overlay">
 	<div class="mobile-nav-content">
 		<nav class="mobile-nav-links">
@@ -21,7 +22,13 @@ const { currentPath, navItems } = Astro.props;
 						href={item.href}
 						class:list={[
 							"mobile-nav-link",
-							{ active: isActive(currentPath, item.href, item.exact) },
+							{
+								active: isActive(
+									currentPath,
+									item.href,
+									item.exact,
+								),
+							},
 						]}
 					>
 						{item.label}

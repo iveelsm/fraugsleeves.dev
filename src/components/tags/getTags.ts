@@ -6,7 +6,6 @@ export async function getUniqueTags(): Promise<string[]> {
 	return [...new Set(allTags)].sort();
 }
 
-
 export async function getUniqueOccurences(): Promise<Record<string, number>> {
 	const blogs = await getCollection("blog");
 	const allTags = blogs.flatMap((post) => post.data.tags || []);

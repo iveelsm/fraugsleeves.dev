@@ -17,7 +17,7 @@ const {
 	showTags = true,
 } = Astro.props;
 
-import { formatDate } from '../formatDate';
+import { formatDate } from "../formatDate";
 ---
 
 <li class="post-item" data-tags={JSON.stringify(tags)}>
@@ -25,9 +25,7 @@ import { formatDate } from '../formatDate';
 		<span class="post-title">{title}</span>
 		<span class="post-date">{formatDate(date)}</span>
 	</a>
-	{description && <p class="post-description">
-		{description}
-	</p>}
+	{description && <p class="post-description">{description}</p>}
 	{
 		showTags && tags.length > 0 && (
 			<div class="post-tags">

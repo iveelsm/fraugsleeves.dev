@@ -8,10 +8,9 @@ const allBlogs = (await getCollection("blog")).sort(
 
 const recentBlogs = allBlogs.slice(0, 3);
 ---
+
 <section class="posts-section">
-	<h2 class="section-title">
-		Recent Posts
-	</h2>
+	<h2 class="section-title">Recent Posts</h2>
 	<ul class="posts-list">
 		{
 			recentBlogs.map((post) => (
@@ -25,7 +24,5 @@ const recentBlogs = allBlogs.slice(0, 3);
 			))
 		}
 	</ul>
-	<a href="/blog" class="view-all-link">
-		View all posts →
-	</a>
+	<a href="/blog" class="view-all-link"> View all posts → </a>
 </section>

@@ -27,14 +27,11 @@ const {
 	nofollow = false,
 } = Astro.props;
 
-const fullTitle = title === DEFAULT_TITLE
-	? title
-	: `${title} | ${DEFAULT_TITLE}`;
+const fullTitle =
+	title === DEFAULT_TITLE ? title : `${title} | ${DEFAULT_TITLE}`;
 
 const pathname = Astro.url.pathname;
-const normalizedPath = pathname === "/"
-	? "/"
-	: pathname.replace(/\/$/, "");
+const normalizedPath = pathname === "/" ? "/" : pathname.replace(/\/$/, "");
 
 const canonicalUrl = `${SITE_URL}${normalizedPath}`;
 ---

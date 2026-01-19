@@ -13,7 +13,7 @@ function buildSubtree(
 	let increment = 0;
 	let next = offset + 1;
 	while (next < headings.length && headings[offset].depth >= depth) {
-		let current = headings[offset];
+		const current = headings[offset];
 		current.children = [];
 		parent.children = [...parent.children, current];
 

@@ -2,21 +2,21 @@ export const NAVIGATION_ITEMS = [
 	{
 		href: "/",
 		label: "Home",
-		exact: true
+		exact: true,
 	},
 	{
 		href: "/wayfinders",
 		label: "Wayfinders",
-		exact: false
+		exact: false,
 	},
 	{
 		href: "/blog",
 		label: "Blog",
-		exact: false
+		exact: false,
 	},
 	{
 		href: "/tags",
 		label: "Tags",
-		exact: true
+		exact: true,
 	},
 ];

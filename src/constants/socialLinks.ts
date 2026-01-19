@@ -7,7 +7,7 @@ export const SOCIAL_LINKS = [
 	{
 		href: "mailto:blog@frogman.simplelogin.com",
 		icon: Mail,
-		label: "Email"
+		label: "Email",
 	},
 	{
 		href: "https://linkedin.com/in/msleevi",
@@ -17,11 +17,11 @@ export const SOCIAL_LINKS = [
 	{
 		href: "https://github.com/iveelsm",
 		icon: Github,
-		label: "GitHub"
+		label: "GitHub",
 	},
 	{
 		href: "https://gitlab.com/iveelsm",
 		icon: Gitlab,
-		label: "GitLab"
+		label: "GitLab",
 	},
 ];
