@@ -24,10 +24,6 @@ const uniqueTags = await getUniqueOccurences();
 				))
 			}
 		</div>
-		{
-			uniqueTags.length === 0 && <p class="no-tags">
-				No tags found.
-			</p>
-		}
+		{uniqueTags.length === 0 && <p class="no-tags">No tags found.</p>}
 	</div>
 </NavigableLayout>
