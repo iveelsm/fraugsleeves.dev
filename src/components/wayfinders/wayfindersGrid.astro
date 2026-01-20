@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+
 import Card from "./card.astro";
 
 const wayfinders = (await getCollection("wayfinders")).sort(

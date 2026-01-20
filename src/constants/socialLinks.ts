@@ -1,7 +1,7 @@
 import Github from "../icons/github.svg";
 import Gitlab from "../icons/gitlab.svg";
-import Mail from "../icons/mail.svg";
 import LinkedIn from "../icons/linkedin.svg";
+import Mail from "../icons/mail.svg";
 
 export const SOCIAL_LINKS = [
 	{
