@@ -1,6 +1,7 @@
 ---
-import { buildTree } from "./buildTree";
 import Entry from "./tocEntry.astro";
+
+import { buildTree } from "./buildTree";
 
 const { headings } = Astro.props;
 const toc = buildTree(headings);

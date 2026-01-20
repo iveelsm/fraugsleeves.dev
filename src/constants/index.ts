@@ -1,5 +1,5 @@
-import { SOCIAL_LINKS } from "./socialLinks";
 import { NAVIGATION_ITEMS } from "./navigationItems";
+import { SOCIAL_LINKS } from "./socialLinks";
 
 const SITE_URL = "https://fraugsleeves.dev";
 const DEFAULT_TITLE = "fraugsleeves.dev";

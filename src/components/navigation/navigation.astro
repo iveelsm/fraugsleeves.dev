@@ -1,11 +1,11 @@
 ---
 import "../../styles/navigation.css";
 
-import { NAVIGATION_ITEMS } from "../../constants";
-
 import DesktopNavigation from "./desktopNavigation.astro";
 import MobileNavigation from "./mobileNavigation.astro";
 import MobileNavigationOverlay from "./mobileNavigationOverlay.astro";
+
+import { NAVIGATION_ITEMS } from "../../constants";
 
 const currentPath = Astro.url.pathname;
 ---

@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+
 import BlogPostItem from "./blogPostItem.astro";
 
 const allBlogs = (await getCollection("blog")).sort(
