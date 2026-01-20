@@ -97,6 +97,7 @@
 /* Main Blog Container */
 .blog-container {
 	display: flex;
+	align-items: flex-start;
 	max-width: var(--max-width-wide);
 	margin: 0 auto;
 	padding: var(--space-xl);
@@ -105,10 +106,11 @@
 
 /* Floating Table of Contents Sidebar */
 .toc-sidebar {
+	order: -1;
 	flex: 0 0 var(--toc-width);
 	position: sticky;
 	top: 100px;
-	height: fit-content;
+	align-self: flex-start;
 	max-height: calc(100vh - 120px);
 	overflow-y: auto;
 }
