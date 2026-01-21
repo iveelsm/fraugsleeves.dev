@@ -11,11 +11,16 @@ jobs:
         runs-on: ubuntu-latest
         concurrency: deploy-group
         steps:
-            - uses: actions/checkout@v6
-            - uses: superfly/flyctl-actions/setup-flyctl@master
+            - name: Checkout
+              uses: actions/checkout@v6
+
+            - name: Setup Fly
+              uses: superfly/flyctl-actions/setup-flyctl@master
+
             - run: flyctl deploy --no-cache --remote-only
               env:
                   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
             - name: Purge Cloudflare Cache
               run: |
                   curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
