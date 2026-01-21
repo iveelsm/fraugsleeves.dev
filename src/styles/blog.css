@@ -441,4 +441,19 @@
 	.post-content h3 {
 		font-size: var(--text-lg);
 	}
+
+	/* Move heading anchor links to the right on mobile */
+	.post-content .heading-anchor {
+		position: absolute;
+		left: auto;
+		right: 0;
+		opacity: 0.5;
+	}
+
+	.post-content .heading-anchor.copied::after {
+		left: auto;
+		right: 100%;
+		margin-left: 0;
+		margin-right: 0.5em;
+	}
 }
