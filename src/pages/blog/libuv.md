@@ -7,12 +7,10 @@ author: "Mikey Sleevi"
 image:
   url: "https://docs.astro.build/assets/rose.webp"
   alt: "The Astro logo on a dark background with a pink glow."
-tags: ["service-architecture", "microservices", "architectural-patterns"]
+tags: ["node.js", "event-loop", "asynchronous", "c"]
 ---
 
-# How Libuv Works
-
-## Introduction
+# Introduction
 
 Any dive into the inner workings of Node.js [1] cannot be complete without discussing libuv [2]. The first sentence of About Node.js [3] highlights libuv without the reader realizing it.
 
@@ -20,13 +18,13 @@ Any dive into the inner workings of Node.js [1] cannot be complete without discu
 
 Asynchronous, event-driven runtime is one of the core components of Node.js and it one of the many reasons why it has become so popular today [4]. Possibly the single most fundamental, and most discussed piece of Node.js is the **Event Loop** [5]. It is the heart of the Node.js runtime and will be the center piece of any discussion. The Node.js Event Loop has a backbone that exists in a separate library. That library being libuv.
 
-## What is Libuv?
+# What is Libuv?
 
 When you start reading about libuv, you will likely stumble upon the tagline for the library which can be found on Github. That tagline being:
 
 > libuv is a multi-platform support library with a focus on asynchronous I/O [2]
 
-This highlights the core focus of the library, and gives insight into just how important it is for the foundations of Node.js. Libuv arose as an abstraction over libev [6], which itself was modelled after libevent [7]. All of which themselves are abstractions over system calls like `select` , `poll` and `epoll` or event notification interfaces like `kqueue` . 
+This highlights the core focus of the library, and gives insight into just how important it is for the foundations of Node.js. Libuv arose as an abstraction over libev [6], which itself was modelled after libevent [7]. All of which themselves are abstractions over system calls like `select`, `poll` and `epoll` or event notification interfaces like `kqueue` . 
 
 Libuv itself boasts a large set of features, the predominant majority of which I will not be tackling in this article. My primary focus in this article will be to draw attention to what I believe is the main feature for the purposes of Node.js. That being:
 
@@ -34,7 +32,7 @@ Libuv itself boasts a large set of features, the predominant majority of which I
 
 I will, however, have the need to touch on some other features in order to fully explain the event loop. Regardless, the exclusive focus of this article will be to help the reader grasp a full understanding of the event loop provided by libuv. 
 
-## The Event Loop
+# The Event Loop
 
 An event loop, for those unfamiliar with the term, is a pattern that waits for and dispatches events. This pattern is often used as a means of handling requests in a single threaded environment. libuv describes their event loop in the following way:
 
@@ -137,7 +135,7 @@ The second is just an encapsulation of the phases within the event loop. This is
 
 ![Libuv Phases](../../assets/libuv_loop.png)
 
-## Phases of the Event Loop
+# Phases of the Event Loop
 
 ```c
 int uv_run(uv_loop_t* loop, uv_run_mode mode) {
@@ -327,6 +325,7 @@ static void uv__run_closing_handles(uv_loop_t* loop) {
 ```
 
 # Summary
+
 
 # References
 
