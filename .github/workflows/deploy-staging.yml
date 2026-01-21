@@ -14,6 +14,8 @@ jobs:
         steps:
             - name: Checkout
               uses: actions/checkout@v6
+              with:
+                  ref: ${{ github.event.pull_request.head.sha }}
 
             - name: Setup Fly
               uses: superfly/flyctl-actions/setup-flyctl@master
