@@ -1,6 +1,6 @@
 ---
 layout: ../../layouts/blog.astro
-title: "Libuv"
+title: "How ~~Node.js~~ Libuv Works"
 pubDate: 2025-06-12
 description: "A sample document for Microservice "
 author: "Mikey Sleevi"
