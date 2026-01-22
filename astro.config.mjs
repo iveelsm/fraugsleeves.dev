@@ -28,6 +28,10 @@ export default defineConfig({
 	},
 	markdown: {
 		remarkPlugins: [remarkReadingTime],
+		shikiConfig: {
+			// @ts-expect-error - Custom theme with valid Shiki structure
+			theme: (await import("./src/themes/uchu-theme.json")).default,
+		},
 		rehypePlugins: [
 			rehypeSlug,
 			rehypeNumericReferences,
