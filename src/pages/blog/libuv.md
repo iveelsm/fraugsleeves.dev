@@ -83,13 +83,13 @@ While this gives us some insight, it's not as useful without breaking down the t
 ```c
 #define UV_LOOP_PRIVATE_FIELDS
 
-  ...
+  /*...skipped fields */
 
   struct uv__queue pending_queue;
   struct uv__queue watcher_queue;
   uv__io_t** watchers;
 
-  ...
+  /*...skipped fields */
 
   uv_mutex_t wq_mutex;
   uv_async_t wq_async;
@@ -101,39 +101,39 @@ While this gives us some insight, it's not as useful without breaking down the t
   struct uv__queue idle_handles;
   struct uv__queue async_handles;
 
-  ...
+  /*...skipped fields */
 
   struct {
     void* min;
     unsigned int nelts;
   } timer_heap;
 
-  ...
+  /*...skipped fields */
 ```
 
 As you can tell, there are a number of fields not represented here. Because even with the qualifier of Unix focused code, there is significant variety in the compilation targets. This will be a common theme, I will try to focus the code and discussion where I feel there is the most importance. What I do want to call out is the handles, which are prefixed with the phase names that they correspond to. We will explore the use of these data structures as we iterate through the various phases of the event loop. But data alone does not make a program, we need control as well. So what does the execution of the event loop look like?
 
 ```c
 int uv_run(uv_loop_t* loop, uv_run_mode mode) {
-  ...
+  /*...skipped logic */
   
   if (!r)
     uv__update_time(loop);
 
-  ...
+  /*...skipped logic */
 
   while (r != 0 && loop->stop_flag == 0) {
-    ...
+    /*...skipped logic */
 
     uv__run_pending(loop);
     uv__run_idle(loop);
     uv__run_prepare(loop);
 
-    ...
+    /*...skipped logic */
 
     uv__io_poll(loop, timeout);
 
-    ...
+    /*...skipped logic */
 
     uv__run_check(loop);
     uv__run_closing_handles(loop);
@@ -141,10 +141,10 @@ int uv_run(uv_loop_t* loop, uv_run_mode mode) {
     uv__update_time(loop);
     uv__run_timers(loop);
 
-    ...
+    /*...skipped logic */
   }
 
-  ...
+  /*...skipped logic */
 
   return r;
 }
