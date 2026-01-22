@@ -183,7 +183,7 @@
 	flex: 1;
 	min-width: 0;
 	max-width: var(--max-width-content);
-	padding: var(--space-xl);
+	padding: 0 var(--space-xl) var(--space-xl) var(--space-xl);
 }
 
 /* Content Typography */
