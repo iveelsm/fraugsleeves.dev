@@ -83,10 +83,11 @@ const article = {
 
 			// Check if user has scrolled to the bottom of the page
 			const checkIfAtBottom = () => {
-				const scrollTop = window.scrollY || document.documentElement.scrollTop;
+				const scrollTop =
+					window.scrollY || document.documentElement.scrollTop;
 				const scrollHeight = document.documentElement.scrollHeight;
 				const clientHeight = document.documentElement.clientHeight;
-				
+
 				// If we're within 50px of the bottom, highlight the last heading
 				if (scrollTop + clientHeight >= scrollHeight - 50) {
 					const lastHeading = headings[headings.length - 1];
@@ -104,7 +105,9 @@ const article = {
 			headings.forEach((heading) => observer.observe(heading));
 
 			// Add scroll listener to detect bottom of page
-			window.addEventListener("scroll", checkIfAtBottom, { passive: true });
+			window.addEventListener("scroll", checkIfAtBottom, {
+				passive: true,
+			});
 		}
 
 		/**
