@@ -62,23 +62,40 @@ const article = {
 
 			let activeId = "";
 
-			const observerCallback = (entries) => {
-				entries.forEach((entry) => {
-					if (entry.isIntersecting) {
-						activeId = entry.target.id;
-						updateActiveLink();
+			const updateActiveLink = (id) => {
+				tocLinks.forEach((link) => {
+					link.classList.remove("active");
+					const href = link.getAttribute("href");
+					if (href === `#${id}`) {
+						link.classList.add("active");
 					}
 				});
 			};
 
-			const updateActiveLink = () => {
-				tocLinks.forEach((link) => {
-					link.classList.remove("active");
-					const href = link.getAttribute("href");
-					if (href === `#${activeId}`) {
-						link.classList.add("active");
+			const observerCallback = (entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						activeId = entry.target.id;
+						updateActiveLink(activeId);
 					}
 				});
+			};
+
+			// Check if user has scrolled to the bottom of the page
+			const checkIfAtBottom = () => {
+				const scrollTop =
+					window.scrollY || document.documentElement.scrollTop;
+				const scrollHeight = document.documentElement.scrollHeight;
+				const clientHeight = document.documentElement.clientHeight;
+
+				// If we're within 50px of the bottom, highlight the last heading
+				if (scrollTop + clientHeight >= scrollHeight - 50) {
+					const lastHeading = headings[headings.length - 1];
+					if (lastHeading && lastHeading.id !== activeId) {
+						activeId = lastHeading.id;
+						updateActiveLink(activeId);
+					}
+				}
 			};
 
 			const observer = new IntersectionObserver(
@@ -86,6 +103,11 @@ const article = {
 				observerOptions,
 			);
 			headings.forEach((heading) => observer.observe(heading));
+
+			// Add scroll listener to detect bottom of page
+			window.addEventListener("scroll", checkIfAtBottom, {
+				passive: true,
+			});
 		}
 
 		/**
