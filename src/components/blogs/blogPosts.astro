@@ -8,7 +8,7 @@ const allBlogs = (await getCollection("blog")).sort(
 );
 ---
 
-<p id="no-posts" class="no-posts" style="display: none;" />
+<p id="no-posts" class="no-posts" style="display: none;"></p>
 <ul class="posts-list" id="posts-list">
 	{
 		allBlogs.map((post) => (
