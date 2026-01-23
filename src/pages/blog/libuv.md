@@ -156,13 +156,13 @@ As you can see, there is again a suffix indicating the phase that the function c
 
 Node.js only has commonly been referred to as having only four phases, those being the phases associated `setImmediate`, `setTimeout`, I/O polling and closing. This isn't completely correct, but we will be using this approximation as a visual tool for our subsequent diagrams. I find that illustrations tend to help guide the conversation in a structured manner. So as we discuss each phase, I would like to provide two images to guide an understanding. The first is a representation of the event loop itself, this is the graphical equivalent of `uv_loop_s` for the intent of this article. This highlights the core data structures in place, and collapse some of the phases to this approximate four phase set.
 
-
 ![Event Loop](../../assets/libuv_event_loop.png)
 
-As you can see from the diagram, there are several core data structures in play. There are queues, min-heaps and 
-The second is just an encapsulation of the phases within the event loop. This is accurate to the function of Libuv itself. And while Node.js will collapse Pending, Idle, Prepare and I/O Poll into one phase. Libuv supports additionally functionality beyond the scope of just Node.js.
+As you can see from the diagram, there are several core data structures in play. There are queues, min-heaps, linked lists and tables. We will be discussing each of these in detail except for the **tables** and the center queue. For more information on that, you should read the [epoll](./epoll.md) and [promises](./promises.md) post. This diagram is my own personal representation of the Node.js event loop. It applies beyond just the context of libuv and incorporates several other concepts that are vital to Node.js as well. However, this is focused on libuv, so let's isolate that diagram to just what we will be discussing through this post.
 
 ![Libuv Phases](../../assets/libuv_loop.png)
+
+As seen above, some data structures have been removed and we have expanded some of the colored sections to incorporate all the individual phases that comprise it. We will be using this as our guide throughout the remainder of the post, but as you explore more [node.js](/blog?tag=node.js) topics on the blog, keep the overall event diagram loop in mind.
 
 ## Timer
 
