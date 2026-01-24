@@ -16,7 +16,7 @@ Any dive into the inner workings of Node.js [1] cannot be complete without discu
 
 > As an asynchronous event-driven JavaScript runtime, Node.js is designed to build scalable network applications.
 
-The idea of an asynchronous, event-driven runtime is bedrock of Node.js, and it one of the many reasons why it has become so popular today [4]. One of the core pieces of the runtime, and liekly most discussed piece of Node.js is the **event loop** [5]. It is the heart of the Node.js runtime and will be the center piece of this article. The event loop is composed of many pieces, but at it's core is a library called **libuv**. [2] As with any library, the content in this article may drift towards incorrect over time. When I initially produced this content in late 2019, it required several changes to update it for 2025. This article has been drafted with a lens for libuv `v1.x`, specifically around the time of `v1.51.0`.
+The idea of an asynchronous, event-driven runtime is bedrock of Node.js, and it one of the many reasons why it has become so popular today [4]. One of the core pieces of the runtime, and liekly most discussed piece of Node.js is the **event loop** [5]. It is the heart of the Node.js runtime and will be the center piece of this article. The event loop is composed of many pieces, but at it's core is a library called **libuv**. [2] As with any library, the content in this article may drift towards incorrect over time. When I initially produced this content in late 2019, it required several changes to update it for 2025. This article has been drafted with a lens for libuv `v1.x`, specifically around the time of `v1.51.0`. This will provide an incomplete picture, and if the reader finds themselves wanting for more details, I strongly encourage also reading the [documentation the library provides](https://docs.libuv.org/en/v1.x/guide.html).
 
 # What is Libuv?
 
@@ -166,165 +166,391 @@ As seen above, some data structures have been removed and we have expanded some 
 
 ## Timer
 
+The first phase we are going to look at is the timer phase. The timer phase effectively amounts to the execution of timer objects that have a handle time greater than the current loop time. The vast majority of the logic for this idea is contained within the data structure. 
+
+> Heaps where the parent key is greater than or equal to (≥) the child keys are called max-heaps; those where it is less than or equal to (≤) are called min-heaps. Efficient (logarithmic time) algorithms are known for the two operations needed to implement a priority queue on a binary heap:
+> 
+> * inserting an element 
+> * removing the smallest or largest element from a min-heap or max-heap
+>
+> Binary heaps are also commonly employed in the heapsort sorting algorithm, which is an in-place algorithm because binary heaps can be implemented as an implicit data structure, storing keys in an array and using their relative positions within that array to represent child-parent relationships. [21]
+
+
 ![](../../assets/libuv_timer.png)
+
+The execution of the timers, for all intents and purposes, occurs at the beginning of the loop. The timer function definition can be seen below with the major stages being:
+
+1. Determine the timers ready to execute by checking the handle time against the loop time
+2. When a timer is ready to fire, the handle is removed from the heap
+3. Then it is passed to a queue for execution
 
 ```c
 void uv__run_timers(uv_loop_t* loop) {
- struct heap_node* heap_node;
- uv_timer_t* handle;
+  struct heap_node* heap_node;
+  uv_timer_t* handle;
+  struct uv__queue* queue_node;
+  struct uv__queue ready_queue;
 
- for (;;) {
-   heap_node = heap_min(timer_heap(loop));
-   if (heap_node == NULL)
-     break;
+  uv__queue_init(&ready_queue);
 
-   handle = container_of(heap_node, uv_timer_t, heap_node);
-   if (handle->timeout > loop->time)
-     break;
+  for (;;) {
+    heap_node = heap_min(timer_heap(loop));
+    if (heap_node == NULL)
+      break;
 
-   uv_timer_stop(handle);
-   uv_timer_again(handle);
-   handle->timer_cb(handle);
- }
+    handle = container_of(heap_node, uv_timer_t, node.heap);
+    if (handle->timeout > loop->time)
+      break;
+
+    uv_timer_stop(handle);
+    uv__queue_insert_tail(&ready_queue, &handle->node.queue);
+  }
+
+  while (!uv__queue_empty(&ready_queue)) {
+    queue_node = uv__queue_head(&ready_queue);
+    uv__queue_remove(queue_node);
+    uv__queue_init(queue_node);
+    handle = container_of(queue_node, uv_timer_t, node.queue);
+
+    uv_timer_again(handle);
+    handle->timer_cb(handle);
+  }
 }
 ```
+
+We close out the code with that ability to repeat timers, as seen in `setInterval(func, delay)`. This simply adds the handle back to the heap if the repeat functionality is enabled.
 
 ## Pending
 
 ![](../../assets/libuv_pending.png)
 
 ```c
-static int uv__run_pending(uv_loop_t* loop) {
- QUEUE* q;
- QUEUE pq;
- uv__io_t* w;
+static void uv__run_pending(uv_loop_t* loop) {
+  struct uv__queue* q;
+  struct uv__queue pq;
+  uv__io_t* w;
 
- if (QUEUE_EMPTY(&loop->pending_queue))
-   return 0;
+  uv__queue_move(&loop->pending_queue, &pq);
 
- QUEUE_MOVE(&loop->pending_queue, &pq);
-
- while (!QUEUE_EMPTY(&pq)) {
-   q = QUEUE_HEAD(&pq);
-   QUEUE_REMOVE(q);
-   QUEUE_INIT(q);
-   w = QUEUE_DATA(q, uv__io_t, pending_queue);
-   w->cb(loop, w, POLLOUT);
- }
-
- return 1;
+  while (!uv__queue_empty(&pq)) {
+    q = uv__queue_head(&pq);
+    uv__queue_remove(q);
+    uv__queue_init(q);
+    w = uv__queue_data(q, uv__io_t, pending_queue);
+    uv__io_cb(loop, w, POLLOUT);
+  }
 }
 ```
 
-## Idle
+## Idle, Prepare and Check
+
+The idle, prepare and check function the same, and very similarly to the pending phase. They rely on the on a queue data structure for processing events. As a result of the similar nature, we will be discussing them together. Each of the phases represents a different idea however. From the standpoint of Node.js, the check phase is with the `setImmediate()` callback, ad the idle and prepare phase are both unused.
 
 ![](../../assets/libuv_idle.png)
 
-```c
-#define UV_LOOP_WATCHER_DEFINE(name, type)                                                                                                             
- ...
- void uv__run_##name(uv_loop_t* loop) {                                      
-   uv_##name##_t* h;                                                         
-   QUEUE queue;                                                              
-   QUEUE* q;                                                                 
-   QUEUE_MOVE(&loop->name##_handles, &queue);                                
-   while (!QUEUE_EMPTY(&queue)) {                                            
-     q = QUEUE_HEAD(&queue);                                                 
-     h = QUEUE_DATA(q, uv_##name##_t, queue);                                
-     QUEUE_REMOVE(q);                                                        
-     QUEUE_INSERT_TAIL(&loop->name##_handles, q); 
-     h->name##_cb(h);                                                        
-   }                                                                       
- }
-```
-
-## Prepare
-
-![](../../assets/libuv_prepare.png)
+The code for these phases are defined in the same macro. The `UV_LOOP_WATCHER_DEFINE` macro. The majority of it has been truncated to just the `uv_run` related functionality. 
 
 ```c
-#define UV_LOOP_WATCHER_DEFINE(name, type)                                                                                                             
- ...
- void uv__run_##name(uv_loop_t* loop) {                                      
-   uv_##name##_t* h;                                                         
-   QUEUE queue;                                                              
-   QUEUE* q;                                                                 
-   QUEUE_MOVE(&loop->name##_handles, &queue);                                
-   while (!QUEUE_EMPTY(&queue)) {                                            
-     q = QUEUE_HEAD(&queue);                                                 
-     h = QUEUE_DATA(q, uv_##name##_t, queue);                                
-     QUEUE_REMOVE(q);                                                        
-     QUEUE_INSERT_TAIL(&loop->name##_handles, q); 
-     h->name##_cb(h);                                                        
-   }                                                                       
- }
+#define UV_LOOP_WATCHER_DEFINE(name, type)
+ /*... skipped functions */
+  void uv__run_##name(uv_loop_t* loop) {
+    uv_##name##_t* h;
+    struct uv__queue queue;
+    struct uv__queue* q;
+    uv__queue_move(&loop->name##_handles, &queue);
+    while (!uv__queue_empty(&queue)) {
+      q = uv__queue_head(&queue);
+      h = uv__queue_data(q, uv_##name##_t, queue);
+      uv__queue_remove(q);
+      uv__queue_insert_tail(&loop->name##_handles, q);
+      h->name##_cb(h);
+    }
+  } 
 ```
 
 ## I/O Poll
+
+The I/O Poll, or commonly just poll, phase is the most complex of all the phases, the run function alone is over 200 lines. As with the other variants, there are a number of possibilities to look at, we will be focusing on the Linux version which utilizes [epoll](/blogs/epoll). However, we will not be looking at the data structures associated with this phase. The data structures are predominantly inherit to the system calls related to **epoll**.
 
 ![](../../assets/libuv_iopoll.png)
 
 ```c
 void uv__io_poll(uv_loop_t* loop, int timeout) {
- ...
- while (!QUEUE_EMPTY(&loop->watcher_queue)) {
-   ...
-   w = QUEUE_DATA(q, uv__io_t, watcher_queue);
-   ...
-   w->events = w->pevents;
- }
-    ...
-    nfds = epoll_wait(loop->backend_fd, events, ARRAY_SIZE(events), timeout);
-   for (i = 0; i < nfds; i++) {
-     ...
-     w = loop->watchers[fd];
-     ...
-     pe->events &= w->pevents | POLLERR | POLLHUP;
-    ...
-   }
-  ...
+  uv__loop_internal_fields_t* lfields;
+  struct epoll_event events[1024];
+  struct epoll_event prep[256];
+  struct uv__invalidate inv;
+  struct epoll_event* pe;
+  struct epoll_event e;
+  struct uv__iou* ctl;
+  struct uv__iou* iou;
+  int real_timeout;
+  struct uv__queue* q;
+  uv__io_t* w;
+  sigset_t* sigmask;
+  sigset_t sigset;
+  uint64_t base;
+  int have_iou_events;
+  int have_signals;
+  int nevents;
+  int epollfd;
+  int count;
+  int nfds;
+  int fd;
+  int op;
+  int i;
+  int user_timeout;
+  int reset_timeout;
+
+  lfields = uv__get_internal_fields(loop);
+  ctl = &lfields->ctl;
+  iou = &lfields->iou;
+
+  sigmask = NULL;
+  if (loop->flags & UV_LOOP_BLOCK_SIGPROF) {
+    sigemptyset(&sigset);
+    sigaddset(&sigset, SIGPROF);
+    sigmask = &sigset;
+  }
+
+  assert(timeout >= -1);
+  base = loop->time;
+  count = 48; /* Benchmarks suggest this gives the best throughput. */
+  real_timeout = timeout;
+
+  if (lfields->flags & UV_METRICS_IDLE_TIME) {
+    reset_timeout = 1;
+    user_timeout = timeout;
+    timeout = 0;
+  } else {
+    reset_timeout = 0;
+    user_timeout = 0;
+  }
+
+  epollfd = loop->backend_fd;
+
+  memset(&e, 0, sizeof(e));
+
+  while (!uv__queue_empty(&loop->watcher_queue)) {
+    q = uv__queue_head(&loop->watcher_queue);
+    w = uv__queue_data(q, uv__io_t, watcher_queue);
+    uv__queue_remove(q);
+    uv__queue_init(q);
+
+    op = EPOLL_CTL_MOD;
+    if (w->events == 0)
+      op = EPOLL_CTL_ADD;
+
+    w->events = w->pevents;
+    e.events = w->pevents;
+    e.data.fd = w->fd;
+    fd = w->fd;
+
+    if (ctl->ringfd != -1) {
+      uv__epoll_ctl_prep(epollfd, ctl, &prep, op, fd, &e);
+      continue;
+    }
+
+    if (!epoll_ctl(epollfd, op, fd, &e))
+      continue;
+
+    assert(op == EPOLL_CTL_ADD);
+    assert(errno == EEXIST);
+
+    /* File descriptor that's been watched before, update event mask. */
+    if (epoll_ctl(epollfd, EPOLL_CTL_MOD, fd, &e))
+      abort();
+  }
+
+  inv.events = events;
+  inv.prep = &prep;
+  inv.nfds = -1;
+
+  for (;;) {
+    if (loop->nfds == 0)
+      if (iou->in_flight == 0)
+        break;
+
+    /* All event mask mutations should be visible to the kernel before
+     * we enter epoll_pwait().
+     */
+    if (ctl->ringfd != -1)
+      while (*ctl->sqhead != *ctl->sqtail)
+        uv__epoll_ctl_flush(epollfd, ctl, &prep);
+
+    uv__io_poll_prepare(loop, NULL, timeout);
+    nfds = epoll_pwait(epollfd, events, ARRAY_SIZE(events), timeout, sigmask);
+    uv__io_poll_check(loop, NULL);
+
+    if (nfds == -1)
+      assert(errno == EINTR);
+    else if (nfds == 0)
+      /* Unlimited timeout should only return with events or signal. */
+      assert(timeout != -1);
+
+    if (nfds == 0 || nfds == -1) {
+      if (reset_timeout != 0) {
+        timeout = user_timeout;
+        reset_timeout = 0;
+      } else if (nfds == 0) {
+        return;
+      }
+
+      /* Interrupted by a signal. Update timeout and poll again. */
+      goto update_timeout;
+    }
+
+    have_iou_events = 0;
+    have_signals = 0;
+    nevents = 0;
+
+    inv.nfds = nfds;
+    lfields->inv = &inv;
+
+    for (i = 0; i < nfds; i++) {
+      pe = events + i;
+      fd = pe->data.fd;
+
+      /* Skip invalidated events, see uv__platform_invalidate_fd */
+      if (fd == -1)
+        continue;
+
+      if (fd == iou->ringfd) {
+        uv__poll_io_uring(loop, iou);
+        have_iou_events = 1;
+        continue;
+      }
+
+      assert(fd >= 0);
+      assert((unsigned) fd < loop->nwatchers);
+
+      w = loop->watchers[fd];
+
+      if (w == NULL) {
+        /* File descriptor that we've stopped watching, disarm it.
+         *
+         * Ignore all errors because we may be racing with another thread
+         * when the file descriptor is closed.
+         *
+         * Perform EPOLL_CTL_DEL immediately instead of going through
+         * io_uring's submit queue, otherwise the file descriptor may
+         * be closed by the time the kernel starts the operation.
+         */
+        epoll_ctl(epollfd, EPOLL_CTL_DEL, fd, pe);
+        continue;
+      }
+
+      /* Give users only events they're interested in. Prevents spurious
+       * callbacks when previous callback invocation in this loop has stopped
+       * the current watcher. Also, filters out events that users has not
+       * requested us to watch.
+       */
+      pe->events &= w->pevents | POLLERR | POLLHUP;
+
+      /* Work around an epoll quirk where it sometimes reports just the
+       * EPOLLERR or EPOLLHUP event.  In order to force the event loop to
+       * move forward, we merge in the read/write events that the watcher
+       * is interested in; uv__read() and uv__write() will then deal with
+       * the error or hangup in the usual fashion.
+       *
+       * Note to self: happens when epoll reports EPOLLIN|EPOLLHUP, the user
+       * reads the available data, calls uv_read_stop(), then sometime later
+       * calls uv_read_start() again.  By then, libuv has forgotten about the
+       * hangup and the kernel won't report EPOLLIN again because there's
+       * nothing left to read.  If anything, libuv is to blame here.  The
+       * current hack is just a quick bandaid; to properly fix it, libuv
+       * needs to remember the error/hangup event.  We should get that for
+       * free when we switch over to edge-triggered I/O.
+       */
+      if (pe->events == POLLERR || pe->events == POLLHUP)
+        pe->events |=
+          w->pevents & (POLLIN | POLLOUT | UV__POLLRDHUP | UV__POLLPRI);
+
+      if (pe->events != 0) {
+        /* Run signal watchers last.  This also affects child process watchers
+         * because those are implemented in terms of signal watchers.
+         */
+        if (w == &loop->signal_io_watcher) {
+          have_signals = 1;
+        } else {
+          uv__metrics_update_idle_time(loop);
+          uv__io_cb(loop, w, pe->events);
+        }
+
+        nevents++;
+      }
+    }
+
+    uv__metrics_inc_events(loop, nevents);
+    if (reset_timeout != 0) {
+      timeout = user_timeout;
+      reset_timeout = 0;
+      uv__metrics_inc_events_waiting(loop, nevents);
+    }
+
+    if (have_signals != 0) {
+      uv__metrics_update_idle_time(loop);
+      uv__signal_event(loop, &loop->signal_io_watcher, POLLIN);
+    }
+
+    lfields->inv = NULL;
+
+    if (have_iou_events != 0)
+      break;  /* Event loop should cycle now so don't poll again. */
+
+    if (have_signals != 0)
+      break;  /* Event loop should cycle now so don't poll again. */
+
+    if (nevents != 0) {
+      if (nfds == ARRAY_SIZE(events) && --count != 0) {
+        /* Poll for more events but don't block this time. */
+        timeout = 0;
+        continue;
+      }
+      break;
+    }
+
+update_timeout:
+    if (timeout == 0)
+      break;
+
+    if (timeout == -1)
+      continue;
+
+    assert(timeout > 0);
+
+    real_timeout -= (loop->time - base);
+    if (real_timeout <= 0)
+      break;
+
+    timeout = real_timeout;
+  }
+
+  if (ctl->ringfd != -1)
+    while (*ctl->sqhead != *ctl->sqtail)
+      uv__epoll_ctl_flush(epollfd, ctl, &prep);
 }
 ```
 
-## Check
-
-![](../../assets/libuv_check.png)
-
-```c
-#define UV_LOOP_WATCHER_DEFINE(name, type)                                                                                                             
- ...
- void uv__run_##name(uv_loop_t* loop) {                                      
-   uv_##name##_t* h;                                                         
-   QUEUE queue;                                                              
-   QUEUE* q;                                                                 
-   QUEUE_MOVE(&loop->name##_handles, &queue);                                
-   while (!QUEUE_EMPTY(&queue)) {                                            
-     q = QUEUE_HEAD(&queue);                                                 
-     h = QUEUE_DATA(q, uv_##name##_t, queue);                                
-     QUEUE_REMOVE(q);                                                        
-     QUEUE_INSERT_TAIL(&loop->name##_handles, q); 
-     h->name##_cb(h);                                                        
-   }                                                                       
- }
-```
-
 ## Close
+
+The final is the closing handles. 
 
 ![](../../assets/libuv_close.png)
 
 ```c
 static void uv__run_closing_handles(uv_loop_t* loop) {
- uv_handle_t* p;
- uv_handle_t* q;
+  uv_handle_t* p;
+  uv_handle_t* q;
 
- p = loop->closing_handles;
- loop->closing_handles = NULL;
+  p = loop->closing_handles;
+  loop->closing_handles = NULL;
 
- while (p) {
-   q = p->next_closing;
-   uv__finish_close(p);
-   p = q;
- }
+  while (p) {
+    q = p->next_closing;
+    uv__finish_close(p);
+    p = q;
+  }
 }
 ```
 
@@ -353,3 +579,4 @@ static void uv__run_closing_handles(uv_loop_t* loop) {
 18. [https://medium.com/@copyconstruct/nonblocking-i-o-99948ad7c957](https://medium.com/@copyconstruct/nonblocking-i-o-99948ad7c957)
 19. https://en.wikipedia.org/wiki/Reactor_pattern
 20. https://en.wikipedia.org/wiki/Min-max_heap
+21. https://en.wikipedia.org/wiki/Binary_heap
