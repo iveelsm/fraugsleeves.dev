@@ -467,9 +467,37 @@ That simplifies the loop quite a bit as there is a fair bit of epoll management,
 
 ## Close
 
-The final is the closing handles. 
+The final is the closing handles. From the context of Node.js, this is responsible for closing of resources.
+
+> If a socket or handle is closed abruptly (e.g. socket.destroy()), the 'close' event will be emitted in this phase. Otherwise it will be emitted via process.nextTick(). [5]
 
 ![A mostly gray scale image of the original libuv event loop with only the closing linked list and closing phases remaining colored in red, the remaining event loop phases and datastructures are left in gray scale. It's intention is to focus the reader on the fact that this section is focused exclusively on the closing phase.](../../assets/libuv/libuv_close.png "Libuv Closing Handles")
+
+For libuv, this amounts to processing a linked list of events. These individual handles are operating system specific, the data structure associated can be seen below.
+
+```c
+#define UV_HANDLE_FIELDS
+  /* public */
+  void* data;
+  /* read-only */
+  uv_loop_t* loop;
+  uv_handle_type type;
+  /* private */
+  uv_close_cb close_cb;
+  struct uv__queue handle_queue;
+  union {
+    int fd;
+    void* reserved[4];
+  } u;
+  UV_HANDLE_PRIVATE_FIELDS
+
+/* The abstract base class of all handles. */
+struct uv_handle_s {
+  UV_HANDLE_FIELDS
+};
+```
+
+In the general sense, they are file descriptors that need to be closed. These could be network connections, open files, or any number of relevant I/O systems that the operating system is capable of handling. The processing of these events is simple on the surface.
 
 ```c
 static void uv__run_closing_handles(uv_loop_t* loop) {
@@ -487,8 +515,16 @@ static void uv__run_closing_handles(uv_loop_t* loop) {
 }
 ```
 
+That is to say, we get all the closing handles on a loop, and loop through them performing the `uv__finish_close()` function on each. The `uv__finish_close()` is less complex than the `uv__io_cb()` function and only has a few key pieces to handle. These break down into:
+
+1. If events are trapped for a handle, process them in the pending phase
+2. If we are closing a stream, run the `uv__stream_destroy()`
+3. If we are closing a UDP connection, run the `uv__udp_finish_close`
+4. Remove the event from the handle queue
+
 # Summary
 
+This article started as a teach out session around early-2020 for developers interested in starting to develop in Node.js. The goal was to teach the intricacies of the platform in a way that broke down a complex asynchronous event system, into a digestable procedurable based approach. The libuv library maintains 7 distinct phases of processing: timers, pending, idle, prepare, io, check and close. However, Node.js effectively only utilize four of these phases, with a fifth being used for a unique edge case. The libuv library, in my opinion, is a very well written piece of software and has been used as the foundation for many evented systems, not just Node.js. My hope is this gives you the confidence to explore a codebase that forms one of the primary underpinnings of the internet.
 
 # References
 
@@ -496,7 +532,7 @@ static void uv__run_closing_handles(uv_loop_t* loop) {
 2. https://github.com/libuv/libuv
 3. https://nodejs.org/en/about/
 4. https://insights.stackoverflow.com/survey/2020#technology-most-loved-dreaded-and-wanted-other-frameworks-libraries-and-tools
-5. https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/#what-is-the-event-loop
+5. https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick
 6. https://github.com/enki/libev
 7. https://github.com/libevent/libevent
 8.  https://en.wikipedia.org/wiki/Reactor_pattern
