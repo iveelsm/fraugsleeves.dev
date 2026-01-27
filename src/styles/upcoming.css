@@ -1,0 +1,121 @@
+/* ===========================================
+   Upcoming Page Styles
+   =========================================== */
+
+.upcoming-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: calc(100vh - var(--toolbar-height) - 150px);
+	padding: var(--space-xl);
+	text-align: center;
+	gap: var(--space-xl);
+}
+
+@media (min-width: 768px) {
+	.upcoming-container {
+		flex-direction: row;
+		text-align: left;
+		gap: var(--space-2xl);
+		max-width: var(--max-width-wide);
+		margin: 0 auto;
+	}
+}
+
+/* Image Section */
+.upcoming-image {
+	flex-shrink: 0;
+	max-width: 400px;
+	width: 100%;
+}
+
+.upcoming-image img {
+	width: 100%;
+	height: auto;
+	opacity: 0.9;
+}
+
+/* Content Section */
+.upcoming-content {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-lg);
+	max-width: 480px;
+}
+
+.upcoming-title {
+	font-size: clamp(2rem, 8vw, 4rem);
+	font-weight: var(--font-semibold);
+	color: var(--color-text-heading);
+	line-height: 1.1;
+	margin: 0;
+	letter-spacing: -0.02em;
+}
+
+.upcoming-message {
+	font-size: var(--text-xl);
+	color: var(--color-text);
+	margin: 0;
+	line-height: var(--leading-normal);
+}
+
+.upcoming-subtitle {
+	font-size: var(--text-base);
+	color: var(--color-text-muted);
+	margin: 0;
+	line-height: var(--leading-relaxed);
+}
+
+/* Action Buttons */
+.upcoming-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--space-md);
+	margin-top: var(--space-sm);
+}
+
+.upcoming-link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: var(--space-sm) var(--space-lg);
+	font-size: var(--text-base);
+	font-weight: var(--font-medium);
+	text-decoration: none;
+	border-radius: var(--radius-md);
+	transition: all var(--transition-fast);
+}
+
+.upcoming-link.primary {
+	background-color: var(--color-accent);
+	color: var(--uchu-yang);
+}
+
+.upcoming-link.primary:hover {
+	background-color: var(--uchu-blue-6);
+	transform: translateY(-2px);
+	box-shadow: var(--shadow-md);
+}
+
+.upcoming-link.secondary {
+	background-color: var(--color-bg-alt);
+	color: var(--color-text-heading);
+	border: 1px solid var(--color-border);
+}
+
+.upcoming-link.secondary:hover {
+	background-color: var(--uchu-gray-2);
+	border-color: var(--color-border-dark);
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+	.upcoming-image {
+		max-width: 280px;
+	}
+
+	.upcoming-actions {
+		justify-content: center;
+	}
+}

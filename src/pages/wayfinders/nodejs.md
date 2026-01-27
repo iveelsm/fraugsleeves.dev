@@ -32,11 +32,10 @@ The information contained in this posts are not intended for developers who are 
 
 These posts are intended for the seasoned developer who wishes to dive deeper into something they already understand. Below is a list of posts associated with the topics above it will be beneficial to approach them in order, happy wayfinding!
 
-- [How epoll Works]()
-- [How Libuv Works]()
-- [How V8 Works]()
-- [How Orinco Work]()
-- [How Node.js Works]()
+- [How epoll Works](/blog/epoll)
+- [How Libuv Works](/blog/libuv)
+- [How V8 Works](/blog/v8)
+- [How Promises Work](/blog/promises)
 
 References:
 
