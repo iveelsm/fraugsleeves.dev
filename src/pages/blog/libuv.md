@@ -64,6 +64,8 @@ Which falls in line with our definition of an event loop design pattern. In fact
 These are represented both in the internal data structure, as well as the looping code itself. As a note, I find one of the best ways to deeply understand ideas is by looking at code. There is a great deal happening in the libuv codebase, so I will endeavor to summarize as best I can. The majority of the code we will be looking at is written in C. However, I find it's written well enough that most with a programming background should be able to understand the code at a glance. Let's start by looking at a representation of the event loop in libuv. This is one of the primary data structures in the library and is used to create the `loop` which is referenced almost everywhere meaningful within the code.
 
 ```c
+typedef struct uv__loop_s uv__loop_t;
+
 struct uv_loop_s {
   void* data;
   unsigned int active_handles;
@@ -111,7 +113,23 @@ While this gives us some insight, it's not as useful without breaking down the t
   /*...skipped fields */
 ```
 
-As you can tell, there are a number of fields not represented here. Because even with the qualifier of Unix focused code, there is significant variety in the compilation targets. This will be a common theme, I will try to focus the code and discussion where I feel there is the most importance. What I do want to call out is the handles, which are prefixed with the phase names that they correspond to. We will explore the use of these data structures as we iterate through the various phases of the event loop. But data alone does not make a program, we need control as well. So what does the execution of the event loop look like?
+As you can tell, there are a number of fields not represented here. Because even with the qualifier of Unix focused code, there is significant variety in the compilation targets. This will be a common theme, I will try to focus the code and discussion where I feel there is the most importance. What I do want to call out is the handles, which are prefixed with the phase names that they correspond to. There is one outstanding question here though, where is the I/O management? Libuv after all, is fundamentally an I/O management library. The vast majority of the I/O related data structures can be found in `uv__io_t`.
+
+```c
+typedef struct uv__io_s uv__io_t;
+
+struct uv__io_s {
+  uintptr_t bits;
+  struct uv__queue pending_queue;
+  struct uv__queue watcher_queue;
+  unsigned int pevents; /* Pending event mask i.e. mask at next tick. */
+  unsigned int events;  /* Current event mask. */
+  int fd;
+  UV_IO_PRIVATE_PLATFORM_FIELDS
+};
+```
+
+While a large part of the management of I/O will be in a kernel system, we will take this simplified view for now as we progress. We will explore the use of these data structures as we iterate through the various phases of the event loop. But data alone does not make a program, we need control as well. So what does the execution of the event loop look like?
 
 ```c
 int uv_run(uv_loop_t* loop, uv_run_mode mode) {
@@ -150,17 +168,17 @@ int uv_run(uv_loop_t* loop, uv_run_mode mode) {
 }
 ```
 
-As you can see, there is again a suffix indicating the phase that the function corresponds to. I want to call special attention to a particular aspect of the event loop, which is `uv__update_time`. One of the foundational components of the event loop is time. While a large part of the `uv_loop_s` data structure is dedicated to queues for handles, there is a core component called the `timer_heap`. The `timer_heap` is a min-heap [20] data structure. And a key part of the reliable running of timers is the concept of "now", which is controlled, in part through `uv__update_time`. The event loop tries to maintain millisecond level tick precision in order to reliably execute timers. So now that we have somewhat of an understanding of the data and control code associated with the event loop, let's take a deeper look at the individual phases themselves.
+As you can see, there is again a suffix indicating the phase that the function corresponds to. I want to call special attention to a particular aspect of the event loop, which is `uv__update_time`. One of the foundational components of the event loop is time. While a large part of the `uv_loop_t` data structure is dedicated to queues for handles, there is a core component called the `timer_heap`. The `timer_heap` is a min-heap [20] data structure. And a key part of the reliable running of timers is the concept of "now", which is controlled, in part through `uv__update_time`. The event loop tries to maintain millisecond level tick precision in order to reliably execute timers. So now that we have somewhat of an understanding of the data and control code associated with the event loop, let's take a deeper look at the individual phases themselves.
 
 # Phases of the Event Loop
 
-Node.js only has commonly been referred to as having only four phases, those being the phases associated `setImmediate`, `setTimeout`, I/O polling and closing. This isn't completely correct, but we will be using this approximation as a visual tool for our subsequent diagrams. I find that illustrations tend to help guide the conversation in a structured manner. So as we discuss each phase, I would like to provide two images to guide an understanding. The first is a representation of the event loop itself, this is the graphical equivalent of `uv_loop_s` for the intent of this article. This highlights the core data structures in place, and collapse some of the phases to this approximate four phase set.
+Node.js only has commonly been referred to as having only four phases, those being the phases associated `setImmediate`, `setTimeout`, I/O polling and closing. This isn't completely correct, but we will be using this approximation as a visual tool for our subsequent diagrams. I find that illustrations tend to help guide the conversation in a structured manner. So as we discuss each phase, I would like to provide two images to guide an understanding. The first is a representation of the event loop itself, this is the graphical equivalent of `uv_loop_t` for the intent of this article. This highlights the core data structures in place, and collapse some of the phases to this approximate four phase set.
 
-![Event Loop](../../assets/libuv_event_loop.png)
+![A diagram depicting four phases in a circle with various color distributions of yellow, orange, green and red. The phases have associated data structures existing outside the circle with color matching to the requisite pieces. There is an additional queue on the inside of the circle that is has four items, with each color of the outer circle represented](../../assets/libuv/libuv_event_loop.png "The Node.js Event Loop")
 
 As you can see from the diagram, there are several core data structures in play. There are queues, min-heaps, linked lists and tables. We will be discussing each of these in detail except for the **tables** and the center queue. For more information on that, you should read the [epoll](./epoll.md) and [promises](./promises.md) post. This diagram is my own personal representation of the Node.js event loop. It applies beyond just the context of libuv and incorporates several other concepts that are vital to Node.js as well. However, this is focused on libuv, so let's isolate that diagram to just what we will be discussing through this post.
 
-![Libuv Phases](../../assets/libuv_loop.png)
+![A diagram containing the same data structures as the previous, those being linked lists, tables, queues and min-heaps, represented outside the circle. But the circle has been extended to seven phases, but the four colors remain, those being yellow, orange, green and red. The loop has several text elements, one for each box representing one of the phases as well as the associated functions repsonsible for inserting and processing data structure elements.](../../assets/libuv/libuv_loop.png "Libuv Event Loop Definition")
 
 As seen above, some data structures have been removed and we have expanded some of the colored sections to incorporate all the individual phases that comprise it. We will be using this as our guide throughout the remainder of the post, but as you explore more [node.js](/blog?tag=node.js) topics on the blog, keep the overall event diagram loop in mind.
 
@@ -176,7 +194,7 @@ The first phase we are going to look at is the timer phase. The timer phase effe
 > Binary heaps are also commonly employed in the heapsort sorting algorithm, which is an in-place algorithm because binary heaps can be implemented as an implicit data structure, storing keys in an array and using their relative positions within that array to represent child-parent relationships. [21]
 
 
-![](../../assets/libuv_timer.png)
+![A mostly gray scale image of the original libuv event loop with only the timer min-heap and timer phases remaining colored in yellow, the remaining event loop phases and datastructures are left in gray scale. It's intention is to focus the reader on the fact that this section is focused exclusively on the timer phase.](../../assets/libuv/libuv_timer.png "Libuv Timer Min-Heap")
 
 The execution of the timers, for all intents and purposes, occurs at the beginning of the loop. The timer function definition can be seen below with the major stages being:
 
@@ -222,7 +240,15 @@ We close out the code with that ability to repeat timers, as seen in `setInterva
 
 ## Pending
 
-![](../../assets/libuv_pending.png)
+The pending phase is the first of our queue structured phases. For the context of Node.js, it serves a specific purpose.
+
+> This phase executes callbacks for some system operations such as types of TCP errors. For example if a TCP socket receives ECONNREFUSED when attempting to connect, some *nix systems want to wait to report the error. This will be queued to execute in the pending callbacks phase. [22]
+
+Which, for most readers, this phase is not going to be the highlight of your exploration of the event loop. It's purpose is focused and limited. The primary goal from a libuv standpoint is the execution of deferred I/O callbacks that were retrieving in the I/O polling phase. As such, you can see how Node.js arrived at this use for the management of TCP errors.
+
+![A mostly gray scale image of the original libuv event loop with only the pending queue and pending phases remaining colored in orange, the remaining event loop phases and datastructures are left in gray scale. It's intention is to focus the reader on the fact that this section is focused exclusively on the pending phase.](../../assets/libuv/libuv_pending.png "Libuv Pending Queue")
+
+The pending phase is unique in one way though, it doesn't manage handles the same way the other queue phases do. For most queue phases, when a callback is scheduled, there is a permanent data structure in the `uv_loop_t`, but this phase is unique in that it tracks handles within the `uv__io_t` data structure.
 
 ```c
 static void uv__run_pending(uv_loop_t* loop) {
@@ -242,13 +268,15 @@ static void uv__run_pending(uv_loop_t* loop) {
 }
 ```
 
+The code is simplistic from a surface view. Fundamentally, we are retrieving the head of the queue, removing the value, adding data to the `uv_io_t` data structure, then executing the callback. The `uv__io_cb()` function is where a great deal of the complexity lies. We will discuss the management of I/O in greater detail in the **I/O Phase** section.
+
 ## Idle, Prepare and Check
 
-The idle, prepare and check function the same, and very similarly to the pending phase. They rely on the on a queue data structure for processing events. As a result of the similar nature, we will be discussing them together. Each of the phases represents a different idea however. From the standpoint of Node.js, the check phase is with the `setImmediate()` callback, ad the idle and prepare phase are both unused.
+The idle, prepare and check function the same, and very similarly to the pending phase. They rely on the on a queue data structure for processing events. As a result of the similar nature, we will be discussing them together. Each of the phases represents a different idea however. From the standpoint of Node.js, the check phase is associated with the `setImmediate()` callback, and the idle and prepare phase are both unused.
 
-![](../../assets/libuv_idle.png)
+![An image that highlights the Idle, Prepare and Check phases, the check phase being colored in green, and idle and prepare in orange. This highlights the similarlity between the phases as the function exactly the same with different input mechanisms. The rest of the event loop phases and datastructures are left in gray scale.](../../assets/libuv/libuv_idlepreparecheck.png "Libuv Idle, Prepare and Check Phases")
 
-The code for these phases are defined in the same macro. The `UV_LOOP_WATCHER_DEFINE` macro. The majority of it has been truncated to just the `uv_run` related functionality. 
+The code for these phases are defined in the same macro, the `UV_LOOP_WATCHER_DEFINE` macro. The majority of it has been truncated to just the `uv_run` related functionality. 
 
 ```c
 #define UV_LOOP_WATCHER_DEFINE(name, type)
@@ -268,68 +296,21 @@ The code for these phases are defined in the same macro. The `UV_LOOP_WATCHER_DE
   } 
 ```
 
+This code needs very little exploration with it, as it pulls from the head of the queue, retrieves the requisite element data, removes the element from the queue, then processes the callback associated. There is one deviation from the **Pending** phase for the insertion of the tail into the handles queue for the associated `name`. This is the mechanism that the event loop uses for determining if active handles are present for the **Idle** phase, in order to determine if the event loop can sleep or not. The **Idle** phase is a bit special in this sense. It might actually be more accurate to refer to it as the *Spin* phase. As it's primary responsibility is to keep the event loop spinning.
+
 ## I/O Poll
 
 The I/O Poll, or commonly just poll, phase is the most complex of all the phases, the run function alone is over 200 lines. As with the other variants, there are a number of possibilities to look at, we will be focusing on the Linux version which utilizes [epoll](/blogs/epoll). However, we will not be looking at the data structures associated with this phase. The data structures are predominantly inherit to the system calls related to **epoll**.
 
-![](../../assets/libuv_iopoll.png)
+![A mostly gray scale image of the original libuv event loop with only the epoll kernel data structure and I/O queue remaining colored in orange, the remaining event loop phases and datastructures are left in gray scale. It's intention is to focus the reader on the fact that this section is focused exclusively on the I/O polling phases phase.](../../assets/libuv/libuv_iopoll.png "Libuv I/O Polling with epoll")
 
 ```c
 void uv__io_poll(uv_loop_t* loop, int timeout) {
-  uv__loop_internal_fields_t* lfields;
-  struct epoll_event events[1024];
-  struct epoll_event prep[256];
-  struct uv__invalidate inv;
-  struct epoll_event* pe;
-  struct epoll_event e;
-  struct uv__iou* ctl;
-  struct uv__iou* iou;
-  int real_timeout;
-  struct uv__queue* q;
-  uv__io_t* w;
-  sigset_t* sigmask;
-  sigset_t sigset;
-  uint64_t base;
-  int have_iou_events;
-  int have_signals;
-  int nevents;
-  int epollfd;
-  int count;
-  int nfds;
-  int fd;
-  int op;
-  int i;
-  int user_timeout;
-  int reset_timeout;
-
-  lfields = uv__get_internal_fields(loop);
-  ctl = &lfields->ctl;
-  iou = &lfields->iou;
-
-  sigmask = NULL;
-  if (loop->flags & UV_LOOP_BLOCK_SIGPROF) {
-    sigemptyset(&sigset);
-    sigaddset(&sigset, SIGPROF);
-    sigmask = &sigset;
-  }
-
-  assert(timeout >= -1);
-  base = loop->time;
-  count = 48; /* Benchmarks suggest this gives the best throughput. */
-  real_timeout = timeout;
-
-  if (lfields->flags & UV_METRICS_IDLE_TIME) {
-    reset_timeout = 1;
-    user_timeout = timeout;
-    timeout = 0;
-  } else {
-    reset_timeout = 0;
-    user_timeout = 0;
-  }
+  /* ... data structure definitions */
 
   epollfd = loop->backend_fd;
 
-  memset(&e, 0, sizeof(e));
+  /* ... skipped code */
 
   while (!uv__queue_empty(&loop->watcher_queue)) {
     q = uv__queue_head(&loop->watcher_queue);
@@ -351,11 +332,7 @@ void uv__io_poll(uv_loop_t* loop, int timeout) {
       continue;
     }
 
-    if (!epoll_ctl(epollfd, op, fd, &e))
-      continue;
-
-    assert(op == EPOLL_CTL_ADD);
-    assert(errno == EEXIST);
+    /* ... edge cases skipped */
 
     /* File descriptor that's been watched before, update event mask. */
     if (epoll_ctl(epollfd, EPOLL_CTL_MOD, fd, &e))
@@ -382,23 +359,7 @@ void uv__io_poll(uv_loop_t* loop, int timeout) {
     nfds = epoll_pwait(epollfd, events, ARRAY_SIZE(events), timeout, sigmask);
     uv__io_poll_check(loop, NULL);
 
-    if (nfds == -1)
-      assert(errno == EINTR);
-    else if (nfds == 0)
-      /* Unlimited timeout should only return with events or signal. */
-      assert(timeout != -1);
-
-    if (nfds == 0 || nfds == -1) {
-      if (reset_timeout != 0) {
-        timeout = user_timeout;
-        reset_timeout = 0;
-      } else if (nfds == 0) {
-        return;
-      }
-
-      /* Interrupted by a signal. Update timeout and poll again. */
-      goto update_timeout;
-    }
+    /* ... timeout management and error handling */
 
     have_iou_events = 0;
     have_signals = 0;
@@ -481,49 +442,7 @@ void uv__io_poll(uv_loop_t* loop, int timeout) {
       }
     }
 
-    uv__metrics_inc_events(loop, nevents);
-    if (reset_timeout != 0) {
-      timeout = user_timeout;
-      reset_timeout = 0;
-      uv__metrics_inc_events_waiting(loop, nevents);
-    }
-
-    if (have_signals != 0) {
-      uv__metrics_update_idle_time(loop);
-      uv__signal_event(loop, &loop->signal_io_watcher, POLLIN);
-    }
-
-    lfields->inv = NULL;
-
-    if (have_iou_events != 0)
-      break;  /* Event loop should cycle now so don't poll again. */
-
-    if (have_signals != 0)
-      break;  /* Event loop should cycle now so don't poll again. */
-
-    if (nevents != 0) {
-      if (nfds == ARRAY_SIZE(events) && --count != 0) {
-        /* Poll for more events but don't block this time. */
-        timeout = 0;
-        continue;
-      }
-      break;
-    }
-
-update_timeout:
-    if (timeout == 0)
-      break;
-
-    if (timeout == -1)
-      continue;
-
-    assert(timeout > 0);
-
-    real_timeout -= (loop->time - base);
-    if (real_timeout <= 0)
-      break;
-
-    timeout = real_timeout;
+    /* ... signaling and timeout */
   }
 
   if (ctl->ringfd != -1)
@@ -536,7 +455,7 @@ update_timeout:
 
 The final is the closing handles. 
 
-![](../../assets/libuv_close.png)
+![A mostly gray scale image of the original libuv event loop with only the closing linked list and closing phases remaining colored in red, the remaining event loop phases and datastructures are left in gray scale. It's intention is to focus the reader on the fact that this section is focused exclusively on the closing phase.](../../assets/libuv/libuv_close.png "Libuv Closing Handles")
 
 ```c
 static void uv__run_closing_handles(uv_loop_t* loop) {
@@ -580,3 +499,4 @@ static void uv__run_closing_handles(uv_loop_t* loop) {
 19. https://en.wikipedia.org/wiki/Reactor_pattern
 20. https://en.wikipedia.org/wiki/Min-max_heap
 21. https://en.wikipedia.org/wiki/Binary_heap
+22. https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick#pending-callbacks
