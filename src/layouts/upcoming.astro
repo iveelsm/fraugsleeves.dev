@@ -1,11 +1,8 @@
 ---
 import "../styles/upcoming.css";
-import "../styles/global.css";
 
-import Fonts from "../components/fonts.astro";
-import Footer from "../components/footer.astro";
-
-import { Navigation } from "../components/navigation";
+import UpcomingBlog from "../components/blogs/upcomingBlog.astro";
+import Standard from "./standard.astro";
 
 interface Props {
 	title: string;
@@ -14,40 +11,10 @@ interface Props {
 const { title } = Astro.props;
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<Fonts />
-	</head>
-	<body>
-		<Navigation />
-		<div class="main-content">
-			<main class="upcoming-container">
-				<div class="upcoming-image">
-					<img src="/logo.svg" alt="Work in progress illustration" />
-				</div>
-				<div class="upcoming-content">
-					<h1 class="upcoming-title">Coming Soon</h1>
-					<p class="upcoming-message">
-						This page is still a work in progress.
-					</p>
-					<p class="upcoming-subtitle">
-						Check back later for content about <strong
-							>{title}</strong
-						>.
-					</p>
-					<div class="upcoming-actions">
-						<a href="/" class="upcoming-link primary">
-							Take me home
-						</a>
-						<a href="/blog" class="upcoming-link secondary">
-							Browse posts
-						</a>
-					</div>
-				</div>
-			</main>
-		</div>
-		<Footer />
-	</body>
-</html>
+<Standard>
+	<div class="main-content">
+		<main class="upcoming-container">
+			<UpcomingBlog title={title} />
+		</main>
+	</div>
+</Standard>

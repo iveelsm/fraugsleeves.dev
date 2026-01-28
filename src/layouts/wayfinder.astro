@@ -4,6 +4,7 @@ import "../styles/wayfinders.css";
 import NavigableLayout from "./navigable.astro";
 
 import { Header } from "../components/blogs";
+import Searchable from "./searchable.astro";
 
 const { frontmatter } = Astro.props;
 const { minutesRead } = frontmatter;
@@ -17,7 +18,7 @@ const article = {
 };
 ---
 
-<NavigableLayout
+<Searchable
 	title={frontmatter.title}
 	description={frontmatter.description}
 	image={frontmatter.image}
@@ -39,4 +40,4 @@ const article = {
 			<slot />
 		</main>
 	</div>
-</NavigableLayout>
+</Searchable>

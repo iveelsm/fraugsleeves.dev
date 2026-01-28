@@ -1,67 +1,14 @@
 ---
 import "../styles/404.css";
-import "../styles/global.css";
 
-import Fonts from "../components/fonts.astro";
-import Footer from "../components/footer.astro";
-
-import { Navigation } from "../components/navigation";
+import Standard from "../layouts/standard.astro";
+import NotFound from "../components/notFound.astro";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<Fonts />
-	</head>
-	<body>
-		<Navigation />
-		<div class="main-content">
-			<main class="not-found-container">
-				<div class="not-found-image">
-					<img src="/logo.svg" alt="Page not found illustration" />
-				</div>
-				<div class="not-found-content">
-					<h1 class="not-found-title">404</h1>
-					<p class="not-found-message">
-						This is not the page you're looking for.
-					</p>
-					<div class="not-found-actions">
-						<a href="/" class="not-found-link primary">
-							Take me home
-						</a>
-						<a href="/blog" class="not-found-link secondary">
-							Browse posts
-						</a>
-					</div>
-					<div class="not-found-search">
-						<p class="not-found-hint">
-							If you were looking for something specific, try
-							searching:
-						</p>
-						<form
-							action="/blog"
-							method="get"
-							class="not-found-search-form"
-						>
-							<input
-								type="text"
-								name="q"
-								placeholder="Search..."
-								class="not-found-search-input"
-								aria-label="Search"
-							/>
-							<button
-								type="submit"
-								class="not-found-search-button"
-							>
-								Search
-							</button>
-						</form>
-					</div>
-				</div>
-			</main>
-		</div>
-		<Footer />
-	</body>
-</html>
+<Standard class="not-found">
+	<div class="main-content">
+		<main class="not-found-container">
+			<NotFound />
+		</main>
+	</div>
+</Standard>

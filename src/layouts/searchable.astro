@@ -1,0 +1,48 @@
+---
+import "../styles/global.css";
+
+import Fonts from "../components/fonts.astro";
+import SEO from "../components/seo.astro";
+import { DEFAULT_DESCRIPTION, DEFAULT_TITLE, DEFAULT_IMAGE } from "../constants";
+import Body from "./body.astro";
+
+interface Props {
+	title?: string;
+	description?: string;
+	image?: string;
+	article?: {
+		publishedTime?: string;
+		modifiedTime?: string;
+		authors?: string[];
+		tags?: string[];
+	};
+	class?: string;
+}
+
+const {
+	title = DEFAULT_TITLE,
+	description = DEFAULT_DESCRIPTION,
+	image = DEFAULT_IMAGE,
+	article,
+	class: className,
+} = Astro.props;
+---
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<Fonts />
+		<SEO
+			title={title}
+			description={description}
+			image={image}
+			article={article}
+		/>
+		<slot name="head" />
+	</head>
+	<body class={className}>
+		<Body>
+			<slot />
+		</Body>
+	</body><link rel="sitemap" href="/sitemap-index.xml" />
+</html>

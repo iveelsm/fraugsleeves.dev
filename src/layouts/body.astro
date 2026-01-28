@@ -1,0 +1,19 @@
+---
+import "../styles/global.css";
+
+import Footer from "../components/footer.astro";
+
+import { Navigation } from "../components/navigation";
+
+
+const {
+	class: className,
+} = Astro.props;
+---
+
+<body class={className}>
+	<Navigation />
+	<slot />
+	<Footer />
+</body>
+<link rel="sitemap" href="/sitemap-index.xml" />

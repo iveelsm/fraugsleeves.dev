@@ -1,0 +1,46 @@
+---
+import Logo from "../icons/logo.svg";
+---
+	<div class="main-content">
+<div class="not-found-image">
+	<Logo />
+</div>
+<div class="not-found-content">
+	<h1 class="not-found-title">404</h1>
+	<p class="not-found-message">
+		This is not the page you're looking for.
+	</p>
+	<div class="not-found-actions">
+		<a href="/" class="not-found-link primary">
+			Take me home
+		</a>
+		<a href="/blog" class="not-found-link secondary">
+			Browse posts
+		</a>
+	</div>
+	<div class="not-found-search">
+		<p class="not-found-hint">
+			If you were looking for something specific, try
+			searching:
+		</p>
+		<form
+			action="/blog"
+			method="get"
+			class="not-found-search-form"
+		>
+			<input
+				type="text"
+				name="q"
+				placeholder="Search..."
+				class="not-found-search-input"
+				aria-label="Search"
+			/>
+			<button
+				type="submit"
+				class="not-found-search-button"
+			>
+				Search
+			</button>
+		</form>
+	</div>
+</div>
