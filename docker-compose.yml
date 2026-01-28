@@ -3,6 +3,12 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
+            secrets:
+                - NPM_TOKEN
         ports:
             - "4320:80"
         restart: unless-stopped
+
+secrets:
+    NPM_TOKEN:
+        environment: GH_PAT
