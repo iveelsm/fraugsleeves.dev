@@ -1,28 +1,13 @@
 ---
 import "../styles/blog-list.css";
 
-import CloseIcon from "../icons/close.svg";
-
-import Searchable from "../layouts/searchable.astro";
-
-import { BlogPosts } from "../components/blogs";
+import { Searchable } from "../layouts";
+import { BlogPosts, BlogFilterHeader } from "../components/blogs";
 ---
 
 <Searchable title="Blog">
 	<div class="blog-container">
-		<div class="filter-header" id="filter-header" style="display: none;">
-			<span class="filter-label">Filtered by:</span>
-			<span class="filter-tag" id="filter-tag-name"></span>
-			<a
-				href="/blog"
-				class="filter-clear"
-				aria-label="Clear filter"
-				id="filter-clear"
-			>
-				<CloseIcon width={14} height={14} />
-			</a>
-		</div>
-
+		<BlogFilterHeader />
 		<BlogPosts />
 	</div>
 </Searchable>

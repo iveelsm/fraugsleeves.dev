@@ -1,9 +1,8 @@
 ---
 import "../styles/tags.css";
 
-import Searchable from "../layouts/searchable.astro";
-
-import { getUniqueOccurences } from "../components/tags/getTags";
+import { Searchable } from "../layouts";
+import { getUniqueOccurences } from "../components/tags";
 
 const uniqueTags = await getUniqueOccurences();
 ---
