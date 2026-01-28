@@ -13,64 +13,7 @@ import { Searchable } from "../layouts";
 </Searchable>
 
 <script>
-	function initTagFilter() {
-		const params = new URLSearchParams(window.location.search);
-		const tagFilter = params.get("tag");
-
-		const filterHeader = document.getElementById("filter-header");
-		const filterTagName = document.getElementById("filter-tag-name");
-		const postsList = document.getElementById("posts-list");
-		const noPosts = document.getElementById("no-posts");
-		const postItems = document.querySelectorAll<HTMLElement>(".post-item");
-		const tagLinks = document.querySelectorAll(".post-tag");
-
-		if (!filterHeader || !filterTagName || !postsList || !noPosts) {
-			console.warn(
-				`There was no selectors found for the filters, disabling`,
-			);
-			return;
-		}
-
-		if (tagFilter) {
-			filterHeader.style.display = "flex";
-			filterTagName.textContent = tagFilter;
-			document.title = `Blog - ${tagFilter}`;
-		} else {
-			filterHeader.style.display = "none";
-			document.title = "Blog";
-		}
-
-		let visibleCount = 0;
-		postItems.forEach((item) => {
-			const tags = JSON.parse(item.getAttribute("data-tags") || "[]");
-			const isVisible = !tagFilter || tags.includes(tagFilter);
-			item.style.display = isVisible ? "" : "none";
-
-			if (isVisible) {
-				visibleCount++;
-			}
-		});
-
-		if (visibleCount === 0) {
-			noPosts.style.display = "block";
-			noPosts.textContent = tagFilter
-				? `No posts found for tag "${tagFilter}".`
-				: "No posts found.";
-			postsList.style.display = "none";
-		} else {
-			noPosts.style.display = "none";
-			postsList.style.display = "";
-		}
-
-		tagLinks.forEach((link) => {
-			const tag = link.getAttribute("data-tag");
-			if (tag === tagFilter) {
-				link.classList.add("active");
-			} else {
-				link.classList.remove("active");
-			}
-		});
-	}
+	import { initTagFilter } from "../scripts/tagFilters";
 
 	if (document.readyState === "loading") {
 		document.addEventListener("DOMContentLoaded", initTagFilter);
