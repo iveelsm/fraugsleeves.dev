@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 
+import Fonts from "../components/fonts.astro";
 import Footer from "../components/footer.astro";
 import SEO from "../components/seo.astro";
 
@@ -33,6 +34,7 @@ const {
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<Fonts />
 		<SEO
 			title={title}
 			description={description}

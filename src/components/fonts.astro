@@ -1,0 +1,21 @@
+---
+import { readFileSync } from "fs";
+import { createRequire } from "module";
+import { dirname, join } from "path";
+
+let fontsAvailable = false;
+let fontsCss = "";
+
+try {
+	const require = createRequire(import.meta.url);
+	const fontsPackagePath = require.resolve("@iveelsm/fonts/package.json");
+	const fontsDir = dirname(fontsPackagePath);
+	const fontsCssPath = join(fontsDir, "index.css");
+	fontsCss = readFileSync(fontsCssPath, "utf-8");
+	fontsAvailable = true;
+} catch {
+	fontsAvailable = false;
+}
+---
+
+{fontsAvailable && <style is:global set:html={fontsCss} />}

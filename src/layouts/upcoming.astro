@@ -2,8 +2,8 @@
 import "../styles/upcoming.css";
 import "../styles/global.css";
 
+import Fonts from "../components/fonts.astro";
 import Footer from "../components/footer.astro";
-import SEO from "../components/seo.astro";
 
 import { Navigation } from "../components/navigation";
 
@@ -18,12 +18,7 @@ const { title } = Astro.props;
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<SEO
-			title={`Coming Soon: ${title}`}
-			description="This page is still a work in progress. Check back later!"
-			noindex={true}
-			nofollow={true}
-		/>
+		<Fonts />
 	</head>
 	<body>
 		<Navigation />

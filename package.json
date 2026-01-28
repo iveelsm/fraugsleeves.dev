@@ -35,5 +35,8 @@
 		"reading-time": "^1.5.0",
 		"typescript": "^5.9.3",
 		"typescript-eslint": "^8.20.0"
+	},
+	"optionalDependencies": {
+		"@iveelsm/fonts": "^0.0.5"
 	}
 }
