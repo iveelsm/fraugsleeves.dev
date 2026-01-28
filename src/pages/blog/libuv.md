@@ -2,7 +2,7 @@
 layout: ../../layouts/blog.astro
 title: "How Libuv Works"
 pubDate: 2025-06-12
-description: "One of a series of posts around the inner-workings of Node.js, this article seeks to provide a deeper understanding of the event loop provided by the libuv library. It explores the concepts of timers, I/O poll queues, check and closing handlers and how they relate to the four primary phases of Node.js."
+description: "One of a series of posts around the inner workings of Node.js, this article seeks to provide a deeper understanding of the event loop provided by the libuv library. It explores the concepts of timers, I/O poll queues, check and closing handlers and how they relate to the four primary phases of Node.js."
 author: "Mikey Sleevi"
 image:
   url: "https://docs.astro.build/assets/rose.webp"
@@ -16,15 +16,15 @@ Any dive into the inner workings of Node.js [1](https://nodejs.org/en/) cannot b
 
 > As an asynchronous event-driven JavaScript runtime, Node.js is designed to build scalable network applications.
 
-The idea of an asynchronous, event-driven runtime is bedrock of Node.js, and it one of the many reasons why it has become so popular today [4](https://insights.stackoverflow.com/survey/2020#technology-most-loved-dreaded-and-wanted-other-frameworks-libraries-and-tools). One of the core pieces of the runtime, and liekly most discussed piece of Node.js is the **event loop** [5](https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/#what-is-the-event-loop). It is the heart of the Node.js runtime and will be the center piece of this article. The event loop is composed of many pieces, but at it's core is a library called **libuv**. [2](https://github.com/libuv/libuv) As with any library, the content in this article may drift towards incorrect over time. When I initially produced this content in late 2019, it required several changes to update it for 2025. This article has been drafted with a lens for libuv `v1.x`, specifically around the time of `v1.51.0`. This will provide an incomplete picture, and if the reader finds themselves wanting for more details, I strongly encourage also reading the [documentation the library provides](https://docs.libuv.org/en/v1.x/guide.html).
 
+The idea of an asynchronous, event-driven runtime is the bedrock of Node.js, and one of the many reasons why it has become so popular today [4](https://insights.stackoverflow.com/survey/2020#technology-most-loved-dreaded-and-wanted-other-frameworks-libraries-and-tools). One of the core pieces of the runtime, and likely most discussed piece of Node.js is the **event loop** [5](https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/#what-is-the-event-loop). It is the heart of the Node.js runtime and will be the centerpiece of this article. The event loop is composed of many pieces, but at its core is a library called **libuv**. [2](https://github.com/libuv/libuv) As with any library, the content in this article may drift towards incorrect over time. When I initially produced this content in late 2019, it required several changes to update it for 2025. This article has been drafted with a lens for libuv `v1.x`, specifically around the time of `v1.51.0`. This will provide an incomplete picture, and if the reader finds themselves wanting for more details, I strongly encourage also reading the [documentation the library provides](https://docs.libuv.org/en/v1.x/guide.html).
 # What is Libuv?
 
-Libuv arose as an abstraction over libev [6](https://github.com/enki/libev), which itself was modelled after libevent [7](https://github.com/libevent/libevent). All of which themselves are abstractions over system calls like `select`, `poll` and `epoll` or event notification interfaces like `kqueue`. And when you first start looking into libuv, you will likely stumble upon the tagline for the library which can be found on Github. That tagline being:
+Libuv arose as an abstraction over libev [6](https://github.com/enki/libev), which itself was modeled after libevent [7](https://github.com/libevent/libevent). All of which are themselves abstractions over system calls like `select`, `poll` and `epoll`, or event notification interfaces like `kqueue`. When you first start looking into libuv, you will likely stumble upon the tagline for the library, which can be found on Github:
 
 > libuv is a multi-platform support library with a focus on asynchronous I/O [2](https://github.com/libuv/libuv)
 
-To the keen reader, sounds very much like our _asynchronous, event-driven runtime_, we have just replaced _event-driven_ with I/O. But Libuv isn't built just for Node.js. It has a pretty large number of features within the library. Those include:
+To the keen reader, this will sound very much like our _asynchronous, event-driven runtime_, we've just replaced _event-driven_ with I/O. But Libuv isn't built just for Node.js! It has a fairly large number of features within the library (the majority of which I will not be tackling in this article):
 
 - _Full-featured event loop backed by epoll, kqueue, IOCP, event ports._
 - _Asynchronous TCP and UDP sockets_
@@ -36,22 +36,22 @@ To the keen reader, sounds very much like our _asynchronous, event-driven runtim
 - _Child processes_
 - _Thread pool_
 - _Signal handling_
-- _High resolution clock_
+- _High-resolution clock_
 - _Threading and synchronization primitives_
 
-The predominant majority of which I will not be tackling in this article. My primary focus in this article will be to draw attention to what I believe is the main feature for the purposes of Node.js. That being:
+I would like to draw attention to what I believe is the main feature of Node.js:
 
 > Full-featured event loop backed by epoll, kqueue, IOCP, event ports.
 
-There will be discuss of other features in order to fully encapsulate what it means to run an event loop. But, the primary focus of this article will be to help the reader gain a deeper understanding of the **event loop provided by libuv**.
+There will be discussion of other features in order to fully encapsulate what it means to run an event loop, but my primary focus will be to help the reader gain a deeper understanding of the **event loop provided by libuv**.
 
 # The Event Loop
 
-An event loop is a design pattern that focuses around the control flow of events. The loop will perform requests from events by invoking handlers associated with events. This type of design pattern often arises in single threaded environments, but is not limited to it. Node.js is often incorrectly described a single-threaded system and this misnomer arises from the use of the event loop pattern. libuv describes their event loop in the following way:
+An event loop is a design pattern that focuses on the control flow of events. The loop will perform requests from events by invoking handlers associated with those events. This type of design pattern often arises in single-threaded environments, but is not limited to it. Node.js is often incorrectly described a single-threaded system and this misnomer arises from the use of the event loop pattern. libuv describes their event loop in the following way:
 
 > The event loop is the central part of libuv’s functionality. It takes care of polling for I/O and scheduling callbacks to be run based on different sources of events
 
-Which falls in line with our definition of an event loop design pattern. In fact, libuv's is an application of the Reactor Pattern. [8](https://en.wikipedia.org/wiki/Reactor_pattern) And libuv is not the only application of this pattern. Nginx, Netty, Spring, Tokio and Twisted all arose as applications of this pattern. It has proven to be a strong design pattern for I/O handling in particular. Libuv, like an application, puts it's own special twist on the idea. It breaks the event loop into phases. The phases of the libuv event loop are as follows:
+This description agrees with our definition of an event loop design pattern, and is, in fact, libuv's application of the Reactor Pattern. [8](https://en.wikipedia.org/wiki/Reactor_pattern) And libuv is not the only application of this pattern! Nginx, Netty, Spring, Tokio and Twisted all arose as applications of it. It has proven to be a strong design pattern for I/O handling in particular. Libuv puts its own special twist on the idea by breaking the event loop into phases, those being:
 
 - Timer
 - Pending
@@ -61,7 +61,7 @@ Which falls in line with our definition of an event loop design pattern. In fact
 - Check
 - Close
 
-These are represented both in the internal data structure, as well as the looping code itself. As a note, I find one of the best ways to deeply understand ideas is by looking at code. There is a great deal happening in the libuv codebase, so I will endeavor to summarize as best I can. The majority of the code we will be looking at is written in C. However, I find it's written well enough that most with a programming background should be able to understand the code at a glance. Let's start by looking at a representation of the event loop in libuv. This is one of the primary data structures in the library and is used to create the `loop` which is referenced almost everywhere meaningful within the code.
+These phases are represented both in the internal data structure, as well as the looping code itself. As a note, I find one of the best ways to deeply understand ideas to be looking at code. There's a great deal happening in the libuv codebase, so I will endeavor to summarize as best I can. The majority of the code we will be looking at is written in C. (I find it's written well enough that most with a programming background should be able to understand it at a glance.) Let's start by looking at a representation of the event loop in libuv. This is one of the primary data structures in the library and is used to create the `loop` referenced throughout the code.
 
 ```c
 typedef struct uv__loop_s uv__loop_t;
@@ -80,7 +80,7 @@ struct uv_loop_s {
 };
 ```
 
-While this gives us some insight, it's not as useful without breaking down the tail-end of the struct definition, given by `UV_LOOP_PRIVATE_FIELDS`. This is where the interesting pieces of the struct start to come into view. As an additional note, libuv has both Unix and Windows support being multi-platform. I have a strong proclivity for Unix systems, so when we are presented with multiple options for a snippet of code, we will be looking at the Unix variant. This Unix variant for `UV_LOOP_PRIVATE_FIELDS` can be summarized like so.
+While this gives us some insight, it's not as useful without breaking down the tail end of the struct definition, given by `UV_LOOP_PRIVATE_FIELDS`. This is where the interesting pieces of the struct start to come into view. As an additional note, libuv is multi-platform and has both Unix and Windows support. I have a strong proclivity for Unix systems, so when we are presented with multiple options for a snippet of code, I have chosen to look at the Unix variant. This Unix variant for `UV_LOOP_PRIVATE_FIELDS` can be summarized like so:
 
 ```c
 #define UV_LOOP_PRIVATE_FIELDS
@@ -113,7 +113,7 @@ While this gives us some insight, it's not as useful without breaking down the t
   /*...skipped fields */
 ```
 
-As you can tell, there are a number of fields not represented here. Because even with the qualifier of Unix focused code, there is significant variety in the compilation targets. This will be a common theme, I will try to focus the code and discussion where I feel there is the most importance. What I do want to call out is the handles, which are prefixed with the phase names that they correspond to. There is one outstanding question here though, where is the I/O management? Libuv after all, is fundamentally an I/O management library. The vast majority of the I/O related data structures can be found in `uv__io_t`.
+As you can see, there are a number of fields not represented here, because even with the qualifier of Unix-focused code there is significant variety in the compilation targets. What I do want to call out is the handles, which are prefixed with the phase names they correspond to. There is one outstanding question here though, where is the I/O management? Libuv is, after all, fundamentally an I/O management library. The vast majority of the I/O-related data structures can be found in `uv__io_t`.
 
 ```c
 typedef struct uv__io_s uv__io_t;
