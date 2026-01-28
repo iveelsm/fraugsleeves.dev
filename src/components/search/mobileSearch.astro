@@ -1,0 +1,128 @@
+---
+import "../../styles/search.css";
+
+import { SearchIcon } from "../../icons";
+import MobileOverlay from "./mobileOverlay.astro";
+---
+
+<button
+	class="search-toggle"
+	type="button"
+	aria-label="Open search"
+	id="mobile-search-toggle"
+>
+	<SearchIcon width={18} height={18} />
+</button>
+
+<MobileOverlay />
+
+<script is:inline>
+	(function () {
+		let pagefind = null;
+
+		async function loadPagefind() {
+			if (pagefind) return pagefind;
+			try {
+				pagefind = await import("/pagefind/pagefind.js");
+				await pagefind.init();
+				return pagefind;
+			} catch (e) {
+				console.error("Failed to load Pagefind:", e);
+				return null;
+			}
+		}
+
+		async function performSearch(query, resultsContainer) {
+			if (!resultsContainer) return;
+
+			if (!query.trim()) {
+				resultsContainer.innerHTML = "";
+				return;
+			}
+
+			const pf = await loadPagefind();
+			if (!pf) {
+				resultsContainer.innerHTML =
+					'<div class="search-no-results">Search unavailable</div>';
+				return;
+			}
+
+			const search = await pf.search(query);
+
+			if (search.results.length === 0) {
+				resultsContainer.innerHTML =
+					'<div class="search-no-results">No results found</div>';
+				return;
+			}
+
+			const results = await Promise.all(
+				search.results.slice(0, 10).map((r) => r.data()),
+			);
+
+			resultsContainer.innerHTML = results
+				.map(
+					(result) => `
+			<a href="${result.url}" class="search-result">
+				<div class="search-result-title">${result.meta?.title || result.meta?.name || result.title || result.url}</div>
+				<div class="search-result-excerpt">${result.excerpt}</div>
+			</a>
+		`,
+				)
+				.join("");
+		}
+
+		function debounce(fn, delay) {
+			let timeout;
+			return function (...args) {
+				clearTimeout(timeout);
+				timeout = setTimeout(() => fn.apply(this, args), delay);
+			};
+		}
+
+		function initMobileSearch() {
+			const toggle = document.getElementById("mobile-search-toggle");
+			const overlay = document.getElementById("search-overlay");
+			const overlayClose = document.getElementById("search-overlay-close");
+			const overlayInput = document.getElementById("search-overlay-input");
+			const overlayResults = document.getElementById("search-overlay-results");
+
+			if (!toggle || !overlay) return;
+
+			const debouncedSearch = debounce(
+				(query) => performSearch(query, overlayResults),
+				200,
+			);
+
+			function openSearch() {
+				overlay.classList.add("active");
+				document.body.style.overflow = "hidden";
+				setTimeout(() => overlayInput?.focus(), 150);
+			}
+
+			function closeSearch() {
+				overlay.classList.remove("active");
+				document.body.style.overflow = "";
+				if (overlayInput) overlayInput.value = "";
+				if (overlayResults) overlayResults.innerHTML = "";
+			}
+
+			toggle.addEventListener("click", openSearch);
+			overlayClose?.addEventListener("click", closeSearch);
+			overlayInput?.addEventListener("input", (e) =>
+				debouncedSearch(e.target.value),
+			);
+
+			document.addEventListener("keydown", (e) => {
+				if (e.key === "Escape" && overlay.classList.contains("active")) {
+					closeSearch();
+				}
+			});
+		}
+
+		if (document.readyState === "loading") {
+			document.addEventListener("DOMContentLoaded", initMobileSearch);
+		} else {
+			initMobileSearch();
+		}
+	})();
+</script>
