@@ -7,6 +7,9 @@
 # dependencies
 **/node_modules
 
+# npm config (we generate this in Dockerfile)
+**/.npmrc
+
 # logs
 **/npm-debug.log*
 **/yarn-debug.log*

@@ -2,7 +2,12 @@ FROM node:24-alpine AS build
 
 WORKDIR /app
 COPY package.json package-lock.json* ./
-RUN npm ci
+
+RUN --mount=type=secret,id=NPM_TOKEN \
+    echo "@iveelsm:registry=https://npm.pkg.github.com" > .npmrc && \
+    echo "//npm.pkg.github.com/:_authToken=$(cat /run/secrets/NPM_TOKEN)" >> .npmrc && \
+    npm ci && \
+    rm -f .npmrc
 
 COPY . .
 

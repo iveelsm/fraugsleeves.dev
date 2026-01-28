@@ -21,7 +21,7 @@ jobs:
               uses: superfly/flyctl-actions/setup-flyctl@master
 
             - name: Deploy to Staging
-              run: flyctl deploy --no-cache --remote-only --config fly.staging.toml --build-arg SITE_URL=https://staging.fraugsleeves.dev
+              run: flyctl deploy --no-cache --remote-only --config fly.staging.toml --build-arg SITE_URL=https://staging.fraugsleeves.dev --build-secret NPM_TOKEN=${{ secrets.GITHUB_TOKEN }}
               env:
                   FLY_API_TOKEN: ${{ secrets.FLY_STAGING_API_TOKEN }}
 

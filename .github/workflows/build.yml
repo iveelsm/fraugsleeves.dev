@@ -3,53 +3,63 @@ name: Build
 on:
     push:
         branches:
-            - "*"
+          - "*"
     pull_request:
         branches:
-            - main
+          - main
 
 jobs:
     build:
         name: Astro Build
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout
-              uses: actions/checkout@v6
+          - name: Checkout
+            uses: actions/checkout@v6
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v5
-              with:
-                  node-version-file: .nvmrc
-                  cache: npm
+          - name: Setup Node.js
+            uses: actions/setup-node@v5
+            with:
+                node-version-file: .nvmrc
+                cache: npm
 
-            - name: Install dependencies
-              run: npm ci
+          - name: Configure NPM
+            run: |
+              echo "@iveelsm:registry=https://npm.pkg.github.com" >> .npmrc
+              echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
 
-            - name: Build
-              run: npm run build
+          - name: Install dependencies
+            run: npm ci
 
-            - name: Upload build artifact
-              uses: actions/upload-artifact@v6
-              with:
-                  name: dist
-                  path: dist/
-                  retention-days: 1
+          - name: Build
+            run: npm run build
+
+          - name: Upload build artifact
+            uses: actions/upload-artifact@v6
+            with:
+                name: dist
+                path: dist/
+                retention-days: 1
 
     lint:
         name: Lint
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout
-              uses: actions/checkout@v6
+          - name: Checkout
+            uses: actions/checkout@v6
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v5
-              with:
-                  node-version-file: .nvmrc
-                  cache: npm
+          - name: Setup Node.js
+            uses: actions/setup-node@v5
+            with:
+                node-version-file: .nvmrc
+                cache: npm
 
-            - name: Install dependencies
-              run: npm ci
+          - name: Configure NPM
+            run: |
+              echo "@iveelsm:registry=https://npm.pkg.github.com" >> .npmrc
+              echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
 
-            - name: Lint
-              run: npm run lint
+          - name: Install dependencies
+            run: npm ci
+
+          - name: Lint
+            run: npm run lint
