@@ -1,14 +1,7 @@
 ---
-let fontsAvailable = false;
-
 try {
-	// Dynamically import the fonts CSS - Vite will process the @font-face URLs
 	await import("@iveelsm/fonts/src/index.css");
-	fontsAvailable = true;
 } catch {
-	// Package not available - fonts will fall back to system fonts
-	fontsAvailable = false;
+	console.warn(`Fonts package not found`);
 }
 ---
-
-<!-- Fonts loaded via dynamic import above if available -->
