@@ -1,14 +1,13 @@
 ---
 import "../styles/home.css";
 
-import RecentBlogs from "../components/blogs/recentBlogs.astro";
-import RecentWayfinders from "../components/wayfinders/recentWayfinders.astro";
-import NavigableLayout from "../layouts/navigable.astro";
-
+import { RecentBlogs } from "../components/blogs";
+import { RecentWayfinders } from "../components/wayfinders";
 import { DEFAULT_TITLE, SOCIAL_LINKS } from "../constants";
+import { Searchable } from "../layouts/";
 ---
 
-<NavigableLayout title={DEFAULT_TITLE}>
+<Searchable title={DEFAULT_TITLE}>
 	<div class="index-container">
 		<section class="welcome-section">
 			<h1 class="welcome-title">Welcome!</h1>
@@ -35,4 +34,4 @@ import { DEFAULT_TITLE, SOCIAL_LINKS } from "../constants";
 		<RecentWayfinders />
 		<RecentBlogs />
 	</div>
-</NavigableLayout>
+</Searchable>

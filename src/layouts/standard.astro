@@ -1,0 +1,24 @@
+---
+import "../styles/global.css";
+
+import Fonts from "../components/fonts.astro";
+import Body from "./body.astro";
+
+interface Props {
+	class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<Fonts />
+		<slot name="head" />
+	</head>
+	<Body class={className}>
+		<slot />
+	</Body>
+</html>

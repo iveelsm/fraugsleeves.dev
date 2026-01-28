@@ -1,14 +1,13 @@
 ---
 import "../styles/tags.css";
 
-import NavigableLayout from "../layouts/navigable.astro";
-
-import { getUniqueOccurences } from "../components/tags/getTags";
+import { getUniqueOccurences } from "../components/tags";
+import { Searchable } from "../layouts";
 
 const uniqueTags = await getUniqueOccurences();
 ---
 
-<NavigableLayout title="Tags">
+<Searchable title="Tags">
 	<div class="tags-container">
 		<h1 class="tags-title">Tags</h1>
 		<div class="tags-list">
@@ -26,4 +25,4 @@ const uniqueTags = await getUniqueOccurences();
 		</div>
 		{uniqueTags.length === 0 && <p class="no-tags">No tags found.</p>}
 	</div>
-</NavigableLayout>
+</Searchable>

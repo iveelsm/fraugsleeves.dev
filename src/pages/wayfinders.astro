@@ -1,12 +1,11 @@
 ---
 import "../styles/wayfinders-list.css";
 
-import NavigableLayout from "../layouts/navigable.astro";
-
 import { WayfindersGrid } from "../components/wayfinders";
+import { Searchable } from "../layouts";
 ---
 
-<NavigableLayout title="Wayfinders">
+<Searchable title="Wayfinders">
 	<div class="wayfinders-container">
 		<header class="wayfinders-header">
 			<h1 class="wayfinders-title">Wayfinders</h1>
@@ -25,4 +24,4 @@ import { WayfindersGrid } from "../components/wayfinders";
 
 		<WayfindersGrid />
 	</div>
-</NavigableLayout>
+</Searchable>

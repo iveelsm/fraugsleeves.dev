@@ -1,0 +1,23 @@
+---
+import { LogoIcon } from "../../icons";
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<div class="upcoming-image">
+	<LogoIcon />
+</div>
+<div class="upcoming-content">
+	<h1 class="upcoming-title">Coming Soon</h1>
+	<p class="upcoming-message">This page is still a work in progress.</p>
+	<p class="upcoming-subtitle">
+		Check back later for content about <strong>{title}</strong>.
+	</p>
+	<div class="upcoming-actions">
+		<a href="/" class="upcoming-link primary"> Take me home </a>
+		<a href="/blog" class="upcoming-link secondary"> Browse posts </a>
+	</div>
+</div>

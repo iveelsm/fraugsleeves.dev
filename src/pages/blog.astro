@@ -1,36 +1,18 @@
 ---
 import "../styles/blog-list.css";
 
-import CloseIcon from "../icons/close.svg";
-
-import NavigableLayout from "../layouts/navigable.astro";
-
-import { BlogPosts } from "../components/blogs";
+import { BlogPosts, BlogFilterHeader } from "../components/blogs";
+import { Searchable } from "../layouts";
 ---
 
-<NavigableLayout title="Blog">
+<Searchable title="Blog">
 	<div class="blog-container">
-		<div class="filter-header" id="filter-header" style="display: none;">
-			<span class="filter-label">Filtered by:</span>
-			<span class="filter-tag" id="filter-tag-name"></span>
-			<a
-				href="/blog"
-				class="filter-clear"
-				aria-label="Clear filter"
-				id="filter-clear"
-			>
-				<CloseIcon width={14} height={14} />
-			</a>
-		</div>
-
+		<BlogFilterHeader />
 		<BlogPosts />
 	</div>
-</NavigableLayout>
+</Searchable>
 
 <script>
-	/**
-	 * Initialize tag filtering for the blog list
-	 */
 	function initTagFilter() {
 		const params = new URLSearchParams(window.location.search);
 		const tagFilter = params.get("tag");
@@ -39,12 +21,16 @@ import { BlogPosts } from "../components/blogs";
 		const filterTagName = document.getElementById("filter-tag-name");
 		const postsList = document.getElementById("posts-list");
 		const noPosts = document.getElementById("no-posts");
-		const postItems = document.querySelectorAll(".post-item");
+		const postItems = document.querySelectorAll<HTMLElement>(".post-item");
 		const tagLinks = document.querySelectorAll(".post-tag");
 
-		if (!filterHeader || !filterTagName || !postsList || !noPosts) return;
+		if (!filterHeader || !filterTagName || !postsList || !noPosts) {
+			console.warn(
+				`There was no selectors found for the filters, disabling`,
+			);
+			return;
+		}
 
-		// Show/hide filter header
 		if (tagFilter) {
 			filterHeader.style.display = "flex";
 			filterTagName.textContent = tagFilter;
@@ -54,16 +40,17 @@ import { BlogPosts } from "../components/blogs";
 			document.title = "Blog";
 		}
 
-		// Filter posts
 		let visibleCount = 0;
 		postItems.forEach((item) => {
 			const tags = JSON.parse(item.getAttribute("data-tags") || "[]");
 			const isVisible = !tagFilter || tags.includes(tagFilter);
 			item.style.display = isVisible ? "" : "none";
-			if (isVisible) visibleCount++;
+
+			if (isVisible) {
+				visibleCount++;
+			}
 		});
 
-		// Show no posts message if needed
 		if (visibleCount === 0) {
 			noPosts.style.display = "block";
 			noPosts.textContent = tagFilter
@@ -75,7 +62,6 @@ import { BlogPosts } from "../components/blogs";
 			postsList.style.display = "";
 		}
 
-		// Update active tag styling
 		tagLinks.forEach((link) => {
 			const tag = link.getAttribute("data-tag");
 			if (tag === tagFilter) {
@@ -86,16 +72,12 @@ import { BlogPosts } from "../components/blogs";
 		});
 	}
 
-	// Run on page load
 	if (document.readyState === "loading") {
 		document.addEventListener("DOMContentLoaded", initTagFilter);
 	} else {
 		initTagFilter();
 	}
 
-	// Re-run on Astro page transitions
 	document.addEventListener("astro:page-load", initTagFilter);
-
-	// Handle browser back/forward
 	window.addEventListener("popstate", initTagFilter);
 </script>
