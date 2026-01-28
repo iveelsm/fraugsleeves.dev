@@ -19,9 +19,7 @@ try {
 			const fontData = readFileSync(fontPath);
 			const base64 = fontData.toString("base64");
 			const ext = relativePath.split(".").pop();
-			const mimeType = ext === "woff2"
-				? "font/woff2"
-				: "font/woff";
+			const mimeType = ext === "woff2" ? "font/woff2" : "font/woff";
 			return `url("data:${mimeType};base64,${base64}")`;
 		},
 	);
