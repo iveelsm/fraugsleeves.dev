@@ -1,3 +1,4 @@
-import Search from "./search.astro";
+import DesktopSearch from "./desktopSearch.astro";
+import MobileSearch from "./mobileSearch.astro";
 
-export { Search };
+export { DesktopSearch, MobileSearch };
