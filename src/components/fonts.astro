@@ -1,21 +1,14 @@
 ---
-import { readFileSync } from "fs";
-import { createRequire } from "module";
-import { dirname, join } from "path";
-
 let fontsAvailable = false;
-let fontsCss = "";
 
 try {
-	const require = createRequire(import.meta.url);
-	const fontsPackagePath = require.resolve("@iveelsm/fonts/package.json");
-	const fontsDir = dirname(fontsPackagePath);
-	const fontsCssPath = join(fontsDir, "index.css");
-	fontsCss = readFileSync(fontsCssPath, "utf-8");
+	// Dynamically import the fonts CSS - Vite will process the @font-face URLs
+	await import("@iveelsm/fonts/src/index.css");
 	fontsAvailable = true;
 } catch {
+	// Package not available - fonts will fall back to system fonts
 	fontsAvailable = false;
 }
 ---
 
-{fontsAvailable && <style is:global set:html={fontsCss} />}
+<!-- Fonts loaded via dynamic import above if available -->
