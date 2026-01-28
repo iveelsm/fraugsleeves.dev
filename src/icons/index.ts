@@ -15,5 +15,5 @@ export {
 	LinkedIn as LinkedInIcon,
 	Mail as MailIcon,
 	Search as SearchIcon,
-	Logo as LogoIcon
-}
+	Logo as LogoIcon,
+};
