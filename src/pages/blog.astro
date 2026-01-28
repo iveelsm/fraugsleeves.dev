@@ -3,8 +3,9 @@ import "../styles/blog-list.css";
 
 import CloseIcon from "../icons/close.svg";
 
-import { BlogPosts } from "../components/blogs";
 import Searchable from "../layouts/searchable.astro";
+
+import { BlogPosts } from "../components/blogs";
 ---
 
 <Searchable title="Blog">
@@ -39,7 +40,9 @@ import Searchable from "../layouts/searchable.astro";
 		const tagLinks = document.querySelectorAll(".post-tag");
 
 		if (!filterHeader || !filterTagName || !postsList || !noPosts) {
-			console.warn(`There was no selectors found for the filters, disabling`);
+			console.warn(
+				`There was no selectors found for the filters, disabling`,
+			);
 			return;
 		}
 
@@ -56,9 +59,7 @@ import Searchable from "../layouts/searchable.astro";
 		postItems.forEach((item) => {
 			const tags = JSON.parse(item.getAttribute("data-tags") || "[]");
 			const isVisible = !tagFilter || tags.includes(tagFilter);
-			item.style.display = isVisible
-				? ""
-				: "none";
+			item.style.display = isVisible ? "" : "none";
 
 			if (isVisible) {
 				visibleCount++;

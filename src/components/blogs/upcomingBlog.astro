@@ -6,26 +6,18 @@ interface Props {
 
 const { title } = Astro.props;
 ---
+
 <div class="upcoming-image">
 	<Logo />
 </div>
 <div class="upcoming-content">
 	<h1 class="upcoming-title">Coming Soon</h1>
-	<p class="upcoming-message">
-		This page is still a work in progress.
-	</p>
+	<p class="upcoming-message">This page is still a work in progress.</p>
 	<p class="upcoming-subtitle">
-		Check back later for content about <strong
-			>{title}</strong
-		>.
+		Check back later for content about <strong>{title}</strong>.
 	</p>
 	<div class="upcoming-actions">
-		<a href="/" class="upcoming-link primary">
-			Take me home
-		</a>
-		<a href="/blog" class="upcoming-link secondary">
-			Browse posts
-		</a>
+		<a href="/" class="upcoming-link primary"> Take me home </a>
+		<a href="/blog" class="upcoming-link secondary"> Browse posts </a>
 	</div>
 </div>
-

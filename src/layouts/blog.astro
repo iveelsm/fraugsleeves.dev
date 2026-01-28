@@ -1,9 +1,10 @@
 ---
 import "../styles/blog.css";
 
+import Searchable from "./searchable.astro";
+
 import { Header } from "../components/blogs";
 import { Sidebar } from "../components/toc";
-import Searchable from "./searchable.astro";
 
 const { frontmatter, headings } = Astro.props;
 const { minutesRead } = frontmatter;
@@ -80,8 +81,8 @@ const article = {
 			};
 
 			const checkIfAtBottom = () => {
-				const scrollTop = window.scrollY
-					|| document.documentElement.scrollTop;
+				const scrollTop =
+					window.scrollY || document.documentElement.scrollTop;
 				const scrollHeight = document.documentElement.scrollHeight;
 				const clientHeight = document.documentElement.clientHeight;
 
@@ -135,7 +136,6 @@ const article = {
 				});
 			});
 		}
-
 
 		function initBlogPost() {
 			initScrollSpy();

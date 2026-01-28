@@ -3,8 +3,13 @@ import "../styles/global.css";
 
 import Fonts from "../components/fonts.astro";
 import SEO from "../components/seo.astro";
-import { DEFAULT_DESCRIPTION, DEFAULT_TITLE, DEFAULT_IMAGE } from "../constants";
 import Body from "./body.astro";
+
+import {
+	DEFAULT_DESCRIPTION,
+	DEFAULT_TITLE,
+	DEFAULT_IMAGE,
+} from "../constants";
 
 interface Props {
 	title?: string;
@@ -27,6 +32,7 @@ const {
 	class: className,
 } = Astro.props;
 ---
+
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
