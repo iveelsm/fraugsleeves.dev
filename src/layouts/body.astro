@@ -10,7 +10,9 @@ const { class: className } = Astro.props;
 
 <body class={className}>
 	<Navigation />
-	<slot />
+	<div class="main-content">
+		<slot />
+	</div>
 	<Footer />
 </body>
 <link rel="sitemap" href="/sitemap-index.xml" />
