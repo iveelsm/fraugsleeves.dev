@@ -36,8 +36,7 @@ export function initScrollSpy() {
 	};
 
 	const checkIfAtBottom = () => {
-		const scrollTop =
-			window.scrollY || document.documentElement.scrollTop;
+		const scrollTop = window.scrollY || document.documentElement.scrollTop;
 		const scrollHeight = document.documentElement.scrollHeight;
 		const clientHeight = document.documentElement.clientHeight;
 
@@ -59,4 +58,3 @@ export function initScrollSpy() {
 		passive: true,
 	});
 }
-

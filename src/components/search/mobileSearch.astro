@@ -1,8 +1,9 @@
 ---
 import "../../styles/search.css";
 
-import { SearchIcon } from "../../icons";
 import MobileOverlay from "./mobileOverlay.astro";
+
+import { SearchIcon } from "../../icons";
 ---
 
 <button
@@ -82,9 +83,15 @@ import MobileOverlay from "./mobileOverlay.astro";
 		function initMobileSearch() {
 			const toggle = document.getElementById("mobile-search-toggle");
 			const overlay = document.getElementById("search-overlay");
-			const overlayClose = document.getElementById("search-overlay-close");
-			const overlayInput = document.getElementById("search-overlay-input");
-			const overlayResults = document.getElementById("search-overlay-results");
+			const overlayClose = document.getElementById(
+				"search-overlay-close",
+			);
+			const overlayInput = document.getElementById(
+				"search-overlay-input",
+			);
+			const overlayResults = document.getElementById(
+				"search-overlay-results",
+			);
 
 			if (!toggle || !overlay) return;
 
@@ -113,7 +120,10 @@ import MobileOverlay from "./mobileOverlay.astro";
 			);
 
 			document.addEventListener("keydown", (e) => {
-				if (e.key === "Escape" && overlay.classList.contains("active")) {
+				if (
+					e.key === "Escape" &&
+					overlay.classList.contains("active")
+				) {
 					closeSearch();
 				}
 			});

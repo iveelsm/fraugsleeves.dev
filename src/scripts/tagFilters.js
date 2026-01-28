@@ -10,9 +10,7 @@ export function initTagFilter() {
 	const tagLinks = document.querySelectorAll(".post-tag");
 
 	if (!filterHeader || !filterTagName || !postsList || !noPosts) {
-		console.warn(
-			`There was no selectors found for the filters, disabling`,
-		);
+		console.warn(`There was no selectors found for the filters, disabling`);
 		return;
 	}
 
@@ -56,4 +54,3 @@ export function initTagFilter() {
 		}
 	});
 }
-
