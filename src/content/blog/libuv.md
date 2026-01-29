@@ -4,6 +4,7 @@ title: "How Libuv Works"
 pubDate: 2025-06-12
 description: "One of a series of posts around the inner workings of Node.js, this article seeks to provide a deeper understanding of the event loop provided by the libuv library. It explores the concepts of timers, I/O poll queues, check and closing handlers and how they relate to the four primary phases of Node.js."
 author: "Mikey Sleevi"
+editors: ["David Gitlen"]
 image:
   url: "https://docs.astro.build/assets/rose.webp"
   alt: "The Astro logo on a dark background with a pink glow."
