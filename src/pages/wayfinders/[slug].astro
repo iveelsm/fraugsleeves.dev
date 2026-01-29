@@ -1,0 +1,23 @@
+---
+import type { GetStaticPaths } from "astro";
+import { getCollection, render, type CollectionEntry } from "astro:content";
+
+import WayfinderLayout from "../../layouts/wayfinder.astro";
+
+type Props = CollectionEntry<"wayfinders">;
+
+export const getStaticPaths: GetStaticPaths = async () => {
+	const posts = await getCollection("wayfinders");
+	return posts.map((post) => ({
+		params: { slug: post.id },
+		props: post,
+	}));
+};
+
+const post = Astro.props as Props;
+const { Content } = await render(post);
+---
+
+<WayfinderLayout frontmatter={post.data}>
+	<Content />
+</WayfinderLayout>
