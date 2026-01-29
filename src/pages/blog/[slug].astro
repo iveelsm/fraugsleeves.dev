@@ -1,6 +1,7 @@
 ---
 import type { GetStaticPaths } from "astro";
 import { getCollection, render, type CollectionEntry } from "astro:content";
+
 import BlogLayout from "../../layouts/blog.astro";
 
 type Props = CollectionEntry<"blog">;
