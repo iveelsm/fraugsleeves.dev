@@ -1,4 +1,6 @@
 ---
+import { formatText } from "../formatText";
+
 interface Props {
 	title: string;
 	date: Date;
@@ -17,9 +19,11 @@ const { title, date, description, minutesRead, author, editors, tags } =
 	<div class="post-header-box">
 		<div class="post-header-content">
 			<div class="post-header-main">
-				<h1 class="post-title" data-pagefind-meta="title">
-					{title}
-				</h1>
+				<h1
+					class="post-title"
+					data-pagefind-meta="title"
+					set:html={formatText(title)}
+				/>
 				<div class="post-meta">
 					<span class="post-date">
 						{new Date(date).toDateString()}

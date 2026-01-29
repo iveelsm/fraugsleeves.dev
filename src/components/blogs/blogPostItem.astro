@@ -18,11 +18,12 @@ const {
 } = Astro.props;
 
 import { formatDate } from "../formatDate";
+import { formatText } from "../formatText";
 ---
 
 <li class="post-item" data-tags={JSON.stringify(tags)}>
 	<a href={href} class="post-link">
-		<span class="post-title">{title}</span>
+		<span class="post-title" set:html={formatText(title)} />
 		<span class="post-date">{formatDate(date)}</span>
 	</a>
 	{description && <p class="post-description">{description}</p>}
