@@ -1,4 +1,7 @@
-/* Blog Layout Styles */
+/* ===========================================
+   Post Layout Styles (Individual Blog Post)
+   =========================================== */
+@import "./base.css";
 
 /* Post Header */
 .post-header-fixed {

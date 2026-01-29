@@ -1,6 +1,7 @@
 /* ===========================================
    Wayfinders List Page Styles
    =========================================== */
+@import "./base.css";
 
 .wayfinders-container {
 	max-width: var(--max-width-container);

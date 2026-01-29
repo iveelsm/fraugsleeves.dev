@@ -1,4 +1,7 @@
-/* Wayfinder Layout Styles */
+/* ===========================================
+   Wayfinder Layout Styles (Individual Wayfinder)
+   =========================================== */
+@import "./base.css";
 
 /* Fixed Header */
 .post-header-fixed {

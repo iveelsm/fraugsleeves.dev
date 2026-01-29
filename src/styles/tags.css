@@ -1,6 +1,7 @@
 /* ===========================================
    Tags Page Specific Styles
    =========================================== */
+@import "./base.css";
 
 .tags-container {
 	max-width: var(--max-width-container);
