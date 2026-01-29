@@ -1,6 +1,7 @@
 /* ===========================================
    Navigation Component Styles
    =========================================== */
+
 @import "./base.css";
 
 .toolbar {
@@ -37,7 +38,6 @@
 .logo-image {
 	height: 32px;
 	width: auto;
-	/* Invert the black SVG to match toolbar text color */
 	filter: invert(0.7);
 	transition: filter var(--transition-fast);
 }
@@ -54,7 +54,6 @@
 		opacity var(--transition-fast);
 }
 
-/* When search is expanded, shift links left */
 .toolbar-content:has(.search-container.expanded) .toolbar-links {
 	transform: translateX(-20px);
 	opacity: 0.7;
@@ -81,16 +80,10 @@
 	font-weight: var(--font-semibold);
 }
 
-/* ===========================================
-   Mobile Navigation
-   =========================================== */
-
-/* Mobile toolbar elements - hidden on desktop */
 .toolbar-mobile {
 	display: none;
 }
 
-/* Hamburger button */
 .hamburger-btn {
 	display: flex;
 	align-items: center;
@@ -121,7 +114,6 @@
 	display: block;
 }
 
-/* Mobile navigation overlay */
 .mobile-nav-overlay {
 	position: fixed;
 	top: var(--toolbar-height);
@@ -174,7 +166,6 @@
 	font-weight: var(--font-semibold);
 }
 
-/* Desktop-only elements */
 .toolbar-desktop {
 	display: flex;
 }
@@ -188,12 +179,10 @@
 		height: 24px;
 	}
 
-	/* Hide desktop navigation on mobile */
 	.toolbar-desktop {
 		display: none;
 	}
 
-	/* Show mobile elements */
 	.toolbar-mobile {
 		display: flex;
 		align-items: center;

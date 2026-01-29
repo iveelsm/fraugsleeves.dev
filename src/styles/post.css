@@ -3,13 +3,11 @@
    =========================================== */
 @import "./base.css";
 
-/* Post Header */
 .post-header-fixed {
 	background: transparent;
 	padding: var(--space-md) var(--space-lg);
 }
 
-/* Header Box */
 .post-header-box {
 	max-width: var(--max-width-container);
 	margin: 0 auto;
@@ -33,19 +31,20 @@
 	gap: var(--space-sm) var(--space-lg);
 }
 
-.post-title {
+.post-header-main .post-title {
+	font-family: var(--font-serif);
 	font-size: var(--text-2xl);
-	font-weight: var(--font-semibold);
+	font-weight: var(--font-medium);
 	color: var(--color-text-heading);
 	line-height: var(--leading-tight);
 	margin: 0;
 }
 
 .post-meta {
-	font-size: var(--text-sm);
+	font-size: var(--text-code);
 	color: var(--color-text-subtle);
 	display: flex;
-	align-items: center;
+	align-items: right;
 	gap: var(--space-sm);
 	flex-shrink: 0;
 }
@@ -69,7 +68,7 @@
 
 .post-author-line,
 .post-editors-line {
-	font-size: var(--text-sm);
+	font-size: var(--text-code);
 	color: var(--color-text-muted);
 	margin: 0 0 0.5rem 0;
 	line-height: var(--leading-normal);
@@ -99,7 +98,6 @@
 	white-space: nowrap;
 }
 
-/* Main Blog Container */
 .blog-container {
 	display: flex;
 	align-items: flex-start;
@@ -109,7 +107,6 @@
 	gap: var(--space-2xl);
 }
 
-/* Floating Table of Contents Sidebar */
 .toc-sidebar {
 	order: -1;
 	flex: 0 0 var(--toc-width);
@@ -121,7 +118,7 @@
 }
 
 .toc-wrapper {
-	background: var(--color-bg-alt);
+	background: var(--uchu-gray-1);
 	border: 1px solid var(--color-border-dark);
 	border-radius: var(--radius-lg);
 	padding: var(--space-md);
@@ -131,8 +128,9 @@
 }
 
 .toc-title {
+	font-family: var(--font-serif);
 	font-size: var(--text-sm);
-	font-weight: var(--font-semibold);
+	font-weight: var(--font-medium);
 	color: var(--color-tag-text);
 	margin-bottom: 0.75rem;
 	padding-bottom: var(--space-sm);
@@ -160,8 +158,9 @@
 .article-toc a {
 	display: block;
 	text-decoration: none;
-	color: var(--color-text-muted);
-	font-size: var(--text-sm);
+	color: var(--color-text);
+	font-family: var(--font-serif);
+	font-size: var(--text-code);
 	padding: 0.35rem var(--space-sm);
 	border-radius: var(--radius-sm);
 	transition: all var(--transition-fast);
@@ -173,7 +172,6 @@
 	background-color: var(--color-bg-alt);
 }
 
-/* Active TOC Item */
 .article-toc a.active {
 	font-weight: var(--font-semibold);
 	color: var(--color-accent);
@@ -181,15 +179,14 @@
 	border-left: 2px solid var(--color-accent);
 }
 
-/* Main Post Content */
 .post-content {
 	flex: 1;
 	min-width: 0;
 	max-width: var(--max-width-content);
 	padding: 0 var(--space-xl) var(--space-xl) var(--space-xl);
+	font-family: var(--font-mono);
 }
 
-/* Content Typography */
 .post-content h1,
 .post-content h2,
 .post-content h3,
@@ -202,7 +199,6 @@
 	position: relative;
 }
 
-/* Heading Anchor Links */
 .post-content .heading-anchor {
 	position: absolute;
 	left: -1.75em;
@@ -271,21 +267,29 @@
 }
 
 .post-content h1 {
+	font-family: var(--font-serif);
 	font-size: var(--text-3xl);
+	font-weight: var(--font-medium);
 }
 
 .post-content h2 {
+	font-family: var(--font-serif);
 	font-size: var(--text-2xl);
+	font-weight: var(--font-medium);
 	border-bottom: 1px solid var(--color-border);
 	padding-bottom: var(--space-xs);
 }
 
 .post-content h3 {
+	font-family: var(--font-serif);
 	font-size: var(--text-xl);
+	font-weight: var(--font-medium);
 }
 
 .post-content h4 {
+	font-family: var(--font-serif);
 	font-size: var(--text-lg);
+	font-weight: var(--font-medium);
 }
 
 .post-content p {
@@ -307,7 +311,7 @@
 	padding: 0.2em 0.4em;
 	border-radius: var(--radius-sm);
 	font-family: var(--font-mono);
-	font-size: 0.95em;
+	font-size: var(--text-code);
 }
 
 .post-content pre {
@@ -315,7 +319,8 @@
 	padding: var(--space-md);
 	overflow-x: auto;
 	border-radius: var(--radius-md);
-	font-size: 0.95em;
+	font-family: var(--font-mono);
+	font-size: var(--text-code);
 	margin: var(--space-lg) 0;
 }
 
@@ -335,12 +340,12 @@
 }
 
 .post-content blockquote {
+	font-family: var(--font-mono);
 	border-left: 3px solid var(--color-accent);
 	margin: var(--space-lg) 0;
 	padding: var(--space-sm) var(--space-md);
 	background: var(--color-bg-alt);
 	color: var(--color-text-muted);
-	font-style: italic;
 	border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
 
@@ -428,7 +433,6 @@
 		padding: var(--space-md);
 	}
 
-	/* Hide table of contents completely on mobile */
 	.toc-sidebar {
 		display: none;
 	}
@@ -449,7 +453,6 @@
 		font-size: var(--text-lg);
 	}
 
-	/* Move heading anchor links to the right on mobile */
 	.post-content .heading-anchor {
 		position: absolute;
 		left: auto;

@@ -24,7 +24,6 @@
 	}
 }
 
-/* Image Section */
 .upcoming-image {
 	flex-shrink: 0;
 	max-width: 400px;
@@ -37,7 +36,6 @@
 	opacity: 0.9;
 }
 
-/* Content Section */
 .upcoming-content {
 	display: flex;
 	flex-direction: column;
@@ -110,7 +108,6 @@
 	border-color: var(--color-border-dark);
 }
 
-/* Responsive adjustments */
 @media (max-width: 767px) {
 	.upcoming-image {
 		max-width: 280px;

@@ -2,11 +2,7 @@
    CSS Variables / Design Tokens
    =========================================== */
 
-/* ===========================================
-   uchu.style Expanded Color Palette
-   =========================================== */
 :root {
-	/* uchu gray (1-9 scale) */
 	--uchu-gray-1: oklch(95.57% 0.003 286.35);
 	--uchu-gray-2: oklch(92.04% 0.002 197.12);
 	--uchu-gray-3: oklch(88.28% 0.003 286.34);
@@ -17,7 +13,6 @@
 	--uchu-gray-8: oklch(63.12% 0.004 219.55);
 	--uchu-gray-9: oklch(56.82% 0.004 247.89);
 
-	/* uchu red (1-9 scale) */
 	--uchu-red-1: oklch(88.98% 0.052 3.28);
 	--uchu-red-2: oklch(78.78% 0.109 4.54);
 	--uchu-red-3: oklch(69.86% 0.162 7.82);
@@ -28,7 +23,6 @@
 	--uchu-red-8: oklch(45.8% 0.177 17.7);
 	--uchu-red-9: oklch(41.17% 0.157 16.58);
 
-	/* uchu pink (1-9 scale) */
 	--uchu-pink-1: oklch(95.8% 0.023 354.27);
 	--uchu-pink-2: oklch(92.14% 0.046 352.31);
 	--uchu-pink-3: oklch(88.9% 0.066 354.39);
@@ -39,7 +33,6 @@
 	--uchu-pink-8: oklch(64.11% 0.084 353.91);
 	--uchu-pink-9: oklch(57.68% 0.074 353.14);
 
-	/* uchu purple (1-9 scale) */
 	--uchu-purple-1: oklch(89.1% 0.046 305.24);
 	--uchu-purple-2: oklch(78.68% 0.091 305);
 	--uchu-purple-3: oklch(68.5% 0.136 303.78);
@@ -50,7 +43,6 @@
 	--uchu-purple-8: oklch(39.46% 0.164 298.29);
 	--uchu-purple-9: oklch(36.01% 0.145 298.35);
 
-	/* uchu blue (1-9 scale) */
 	--uchu-blue-1: oklch(89.66% 0.046 260.67);
 	--uchu-blue-2: oklch(80.17% 0.091 258.88);
 	--uchu-blue-3: oklch(70.94% 0.136 258.06);
@@ -61,7 +53,6 @@
 	--uchu-blue-8: oklch(43.48% 0.17 260.2);
 	--uchu-blue-9: oklch(39.53% 0.15 259.87);
 
-	/* uchu green (1-9 scale) */
 	--uchu-green-1: oklch(93.96% 0.05 148.74);
 	--uchu-green-2: oklch(88.77% 0.096 147.71);
 	--uchu-green-3: oklch(83.74% 0.139 146.57);
@@ -72,7 +63,6 @@
 	--uchu-green-8: oklch(58.83% 0.158 145.05);
 	--uchu-green-9: oklch(52.77% 0.138 145.41);
 
-	/* uchu yellow (1-9 scale) */
 	--uchu-yellow-1: oklch(97.05% 0.039 91.2);
 	--uchu-yellow-2: oklch(95% 0.07 92.39);
 	--uchu-yellow-3: oklch(92.76% 0.098 92.58);
@@ -83,7 +73,6 @@
 	--uchu-yellow-8: oklch(69.14% 0.109 91.04);
 	--uchu-yellow-9: oklch(62.29% 0.097 91.9);
 
-	/* uchu orange (1-9 scale) */
 	--uchu-orange-1: oklch(93.83% 0.037 56.93);
 	--uchu-orange-2: oklch(88.37% 0.073 55.8);
 	--uchu-orange-3: oklch(83.56% 0.108 56.49);
@@ -94,7 +83,6 @@
 	--uchu-orange-8: oklch(58.28% 0.128 52.2);
 	--uchu-orange-9: oklch(52.49% 0.113 51.98);
 
-	/* uchu yin (1-9 scale) */
 	--uchu-yin-1: oklch(91.87% 0.003 264.54);
 	--uchu-yin-2: oklch(84.61% 0.004 286.31);
 	--uchu-yin-3: oklch(76.89% 0.004 247.87);
@@ -105,19 +93,15 @@
 	--uchu-yin-8: oklch(35.02% 0.005 236.66);
 	--uchu-yin-9: oklch(25.11% 0.006 258.36);
 
-	/* uchu yin/yang extremes */
 	--uchu-yin: oklch(14.38% 0.007 256.88);
 	--uchu-yang: oklch(99.4% 0 0);
 
-	/* Typography */
-	--font-mono:
-		"Berkeley Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-	--font-sans:
-		system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	--font-mono: "Berkeley Mono", ui-monospace, SFMono-Regular, Monaco, Consolas, monospace;
+	--font-serif: "EB Garamond", ui-serif, Garamond, Georgia, "Times New Roman", Times, serif;
 
-	/* Font Sizes */
 	--text-xs: 0.8rem;
 	--text-sm: 0.85rem;
+	--text-code: 0.95rem;
 	--text-base: 1rem;
 	--text-lg: 1.1rem;
 	--text-xl: 1.25rem;
@@ -125,17 +109,14 @@
 	--text-3xl: 1.75rem;
 	--text-4xl: 2rem;
 
-	/* Line Heights */
 	--leading-tight: 1.3;
 	--leading-normal: 1.65;
 	--leading-relaxed: 1.75;
 
-	/* Font Weights */
-	--font-normal: 400;
+	--font-normal: 300;
 	--font-medium: 500;
-	--font-semibold: 600;
+	--font-semibold: 700;
 
-	/* Colors - Light Theme (using uchu expanded palette) */
 	--color-bg: var(--uchu-yang);
 	--color-bg-alt: var(--uchu-gray-1);
 	--color-surface: var(--uchu-yang);
@@ -149,19 +130,16 @@
 	--color-accent-bg: var(--uchu-blue-1);
 	--color-code-bg: var(--uchu-gray-2);
 	--color-tag-bg: var(--uchu-gray-3);
-	--color-tag-text: var(--uchu-yin-9);
+	--color-tag-text: var(--uchu-yin);
 
-	/* Colors - Toolbar (using uchu expanded palette) */
 	--color-toolbar-bg: var(--uchu-yin-9);
 	--color-toolbar-text: var(--uchu-gray-5);
 	--color-toolbar-text-active: var(--uchu-yang);
 	--color-toolbar-hover-bg: var(--uchu-yin-8);
 	--color-toolbar-active-bg: var(--uchu-yin-7);
 
-	/* Colors - Dot Pattern */
-	--color-dot: var(--uchu-gray-3);
+	--color-dot: var(--uchu-gray-2);
 
-	/* Spacing */
 	--space-xs: 0.25rem;
 	--space-sm: 0.5rem;
 	--space-md: 1rem;
@@ -169,24 +147,20 @@
 	--space-xl: 2rem;
 	--space-2xl: 3rem;
 
-	/* Layout */
 	--max-width-content: 750px;
 	--max-width-container: 900px;
 	--max-width-wide: 1200px;
 	--toolbar-height: 50px;
 	--toc-width: 250px;
 
-	/* Border Radius */
 	--radius-sm: 4px;
 	--radius-md: 6px;
 	--radius-lg: 8px;
 	--radius-full: 9999px;
 
-	/* Shadows */
 	--shadow-sm: 0 1px 4px oklch(0% 0 0 / 0.06);
 	--shadow-md: 0 2px 8px oklch(0% 0 0 / 0.08);
 
-	/* Transitions */
 	--transition-fast: 0.2s ease;
 	--transition-normal: 0.3s ease;
 }

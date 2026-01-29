@@ -3,14 +3,12 @@
    =========================================== */
 @import "./base.css";
 
-/* Search Container */
 .search-container {
 	display: flex;
 	align-items: center;
 	position: relative;
 }
 
-/* Search Toggle Button (icon only when collapsed) */
 .search-toggle {
 	display: flex;
 	align-items: center;
@@ -41,7 +39,6 @@
 	right: 0;
 }
 
-/* Search Input Wrapper */
 .search-input-wrapper {
 	display: flex;
 	align-items: center;
@@ -102,7 +99,6 @@
 	background-color: var(--color-toolbar-hover-bg);
 }
 
-/* Search Dropdown */
 .search-dropdown {
 	position: absolute;
 	top: calc(100% + var(--space-sm));
@@ -129,7 +125,6 @@
 	transform: translateY(0);
 }
 
-/* Search Results */
 .search-results {
 	padding: var(--space-sm);
 }
@@ -178,9 +173,7 @@
 	font-size: var(--text-sm);
 }
 
-/* Responsive */
 @media (max-width: 640px) {
-	/* Hide desktop search elements on mobile */
 	.search-desktop {
 		display: none !important;
 	}
@@ -194,15 +187,11 @@
 }
 
 @media (min-width: 641px) {
-	/* Hide mobile overlay on desktop */
 	.search-overlay {
 		display: none !important;
 	}
 }
 
-/* ===========================================
-   Mobile Search Overlay
-   =========================================== */
 .search-overlay {
 	position: fixed;
 	inset: 0;

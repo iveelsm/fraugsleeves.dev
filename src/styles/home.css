@@ -9,14 +9,15 @@
 	padding: var(--space-xl);
 }
 
-/* Welcome Section */
 .welcome-section {
 	text-align: center;
+	font-family: var(--font-serif);
 	padding: var(--space-2xl) 0;
 	margin-bottom: var(--space-2xl);
 }
 
 .welcome-title {
+	font-family: var(--font-serif);
 	font-size: var(--text-4xl);
 	font-weight: var(--font-semibold);
 	color: var(--color-text-heading);
@@ -24,7 +25,7 @@
 }
 
 .welcome-text {
-	font-size: var(--text-base);
+	font-size: var(--text-xl);
 	color: var(--color-text-muted);
 	max-width: 600px;
 	margin: 0 auto var(--space-lg);
@@ -37,18 +38,27 @@
 	gap: var(--space-md);
 }
 
-/* Posts Section */
 .posts-section {
+	font-family: var(--font-serif);
 	padding-bottom: var(--space-2xl);
 }
 
-/* Wayfinders Section */
+.posts-list {
+	font-family: var(--font-mono);
+}
+
+.post-link .post-title {
+	font-family: var(--font-serif);
+}
+
 .wayfinders-section {
+	font-family: var(--font-serif);
 	padding-bottom: var(--space-2xl);
 }
 
 .wayfinders-grid {
 	display: grid;
+	font-family: var(--font-mono);
 	grid-template-columns: repeat(3, 1fr);
 	gap: var(--space-md);
 }

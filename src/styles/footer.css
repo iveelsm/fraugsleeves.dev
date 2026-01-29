@@ -32,7 +32,6 @@
 	gap: var(--space-md);
 }
 
-/* Override social-link for footer context */
 .site-footer .social-link {
 	color: var(--color-toolbar-text);
 }

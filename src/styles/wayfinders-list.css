@@ -9,13 +9,13 @@
 	padding: var(--space-xl);
 }
 
-/* Header Section */
 .wayfinders-header {
 	text-align: center;
 	margin-bottom: var(--space-2xl);
 }
 
 .wayfinders-title {
+	font-family: var(--font-serif);
 	font-size: var(--text-3xl);
 	font-weight: var(--font-semibold);
 	color: var(--color-text-heading);
@@ -57,7 +57,6 @@
 	line-height: var(--leading-normal);
 }
 
-/* Wayfinders Grid */
 .wayfinders-grid {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
