@@ -16,8 +16,8 @@ Any dive into the inner workings of Node.js [1](https://nodejs.org/en/) cannot b
 
 > As an asynchronous event-driven JavaScript runtime, Node.js is designed to build scalable network applications.
 
-
 The idea of an asynchronous, event-driven runtime is the bedrock of Node.js, and one of the many reasons why it has become so popular today [4](https://insights.stackoverflow.com/survey/2020#technology-most-loved-dreaded-and-wanted-other-frameworks-libraries-and-tools). One of the core pieces of the runtime, and likely most discussed piece of Node.js is the **event loop** [5](https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/#what-is-the-event-loop). It is the heart of the Node.js runtime and will be the centerpiece of this article. The event loop is composed of many pieces, but at its core is a library called **libuv**. [2](https://github.com/libuv/libuv) As with any library, the content in this article may drift towards incorrect over time. When I initially produced this content in late 2019, it required several changes to update it for 2025. This article has been drafted with a lens for libuv `v1.x`, specifically around the time of `v1.51.0`. This will provide an incomplete picture, and if the reader finds themselves wanting for more details, I strongly encourage also reading the [documentation the library provides](https://docs.libuv.org/en/v1.x/guide.html).
+
 # What is Libuv?
 
 Libuv arose as an abstraction over libev [6](https://github.com/enki/libev), which itself was modeled after libevent [7](https://github.com/libevent/libevent). All of which are themselves abstractions over system calls like `select`, `poll` and `epoll`, or event notification interfaces like `kqueue`. When you first start looking into libuv, you will likely stumble upon the tagline for the library, which can be found on Github:
