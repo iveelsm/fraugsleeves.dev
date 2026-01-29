@@ -1,3 +1,8 @@
+/* ===========================================
+   Navigation Component Styles
+   =========================================== */
+@import "./base.css";
+
 .toolbar {
 	width: 100%;
 	background-color: var(--color-toolbar-bg);
