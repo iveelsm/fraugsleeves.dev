@@ -13,11 +13,11 @@ tags: ["node.js", "event-loop", "asynchronous", "c"]
 
 # Introduction
 
-Any dive into the inner workings of Node.js [[1]](https://nodejs.org/en/) cannot be complete without discussing event loops. The first sentence of About Node.js [[3]](https://nodejs.org/en/about/) highlights this without the reader realizing it.
+Any dive into the inner workings of Node.js [[1]](https://nodejs.org/en/) cannot be complete without discussing event loops. The first sentence of About Node.js highlights this without the reader realizing it.
 
-> As an asynchronous event-driven JavaScript runtime, Node.js is designed to build scalable network applications.
+> As an asynchronous event-driven JavaScript runtime, Node.js is designed to build scalable network applications. [[3]](https://nodejs.org/en/about/)
 
-The idea of an asynchronous, event-driven runtime is the bedrock of Node.js, and one of the many reasons why it has become so popular today [[4]](https://insights.stackoverflow.com/survey/2020#technology-most-loved-dreaded-and-wanted-other-frameworks-libraries-and-tools). One of the core pieces of the runtime, and likely most discussed piece of Node.js is the **event loop** [[5]](https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/#what-is-the-event-loop). It is the heart of the Node.js runtime and will be the centerpiece of this article. The event loop is composed of many pieces, but at its core is a library called **libuv**. [[2]](https://github.com/libuv/libuv) As with any library, the content in this article may drift towards incorrect over time. When I initially produced this content in late 2019, it required several changes to update it for 2025. This article has been drafted with a lens for libuv `v1.x`, specifically around the time of `v1.51.0`. This will provide an incomplete picture, and if the reader finds themselves wanting for more details, I strongly encourage also reading the [documentation the library provides](https://docs.libuv.org/en/v1.x/guide.html).
+The idea of an asynchronous, event-driven runtime is the bedrock of Node.js, and one of the many reasons why it has become so popular today [[4]](https://survey.stackoverflow.co/2025/technology#most-popular-technologies). One of the core pieces of the runtime, and likely most discussed piece of Node.js is the **event loop** [[5]](https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/#what-is-the-event-loop). It is the heart of the Node.js runtime and will be the centerpiece of this article. The event loop is composed of many pieces, but at its core is a library called **libuv**. [[2]](https://github.com/libuv/libuv) As with any library, the content in this article may drift towards incorrect over time. When I initially produced this content in late 2019, it required several changes to update it for 2025. This article has been drafted with a lens for libuv `v1.x`, specifically around the time of `v1.51.0`. This will provide an incomplete picture, and if the reader finds themselves wanting for more details, I strongly encourage also reading the [documentation the library provides](https://docs.libuv.org/en/v1.x/guide.html).
 
 # What is Libuv?
 
@@ -514,7 +514,7 @@ static void uv__run_closing_handles(uv_loop_t* loop) {
 }
 ```
 
-That is to say, we get all the closing handles on a loop, and loop through them performing the `uv__finish_close()` function on each. The `uv__finish_close()` is less complex than the `uv__io_cb()` function and only has a few key pieces to handle. These break down into:
+That is to say, we get all the closing handles on a loop, and loop through them performing the `uv__finish_close()` function on each. The `uv__finish_close()` function and only has a few key pieces to handle. These break down into:
 
 1. If events are trapped for a handle, process them in the pending phase
 2. If we are closing a stream, run the `uv__stream_destroy()`
@@ -523,14 +523,14 @@ That is to say, we get all the closing handles on a loop, and loop through them 
 
 # Summary
 
-This article started as a teach out session around early-2020 for developers interested in starting to develop in Node.js. The goal was to teach the intricacies of the platform in a way that broke down a complex asynchronous event system, into a digestable procedurable based approach. The libuv library maintains 7 distinct phases of processing: timers, pending, idle, prepare, io, check and close. However, Node.js effectively only utilize four of these phases, with a fifth being used for a unique edge case. The libuv library, in my opinion, is a very well written piece of software and has been used as the foundation for many evented systems, not just Node.js. My hope is this gives you the confidence to explore a codebase that forms one of the primary underpinnings of the internet.
+This article started as a teach out session around early-2020 for developers interested in starting to develop in Node.js. The goal was to teach the intricacies of the platform in a way that broke down a complex asynchronous event system, into a digestable procedurable based approach. The libuv library has a great deal more than what was explored here. We only tackled a fraction of the functionality by glimpsing into the core of the code. This core is encompassed by 7 distinct phases of processing: timers, pending, idle, prepare, io, check and close. However, Node.js effectively only utilize four of these phases, with a fifth being used for a unique edge case. The libuv library, in my opinion, is a very well written piece of software and has been used as the foundation for many evented systems, not just Node.js. My hope is this gives you the confidence to explore a codebase that forms one of the primary underpinnings of the internet.
 
 # References
 
 1. https://nodejs.org/en/
 2. https://github.com/libuv/libuv
 3. https://nodejs.org/en/about/
-4. https://insights.stackoverflow.com/survey/2020#technology-most-loved-dreaded-and-wanted-other-frameworks-libraries-and-tools
+4. https://survey.stackoverflow.co/2025/technology#most-popular-technologies
 5. https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick
 6. https://github.com/enki/libev
 7. https://github.com/libevent/libevent
