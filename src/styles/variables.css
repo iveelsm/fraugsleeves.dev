@@ -96,8 +96,12 @@
 	--uchu-yin: oklch(14.38% 0.007 256.88);
 	--uchu-yang: oklch(99.4% 0 0);
 
-	--font-mono: "Berkeley Mono", ui-monospace, SFMono-Regular, Monaco, Consolas, monospace;
-	--font-serif: "EB Garamond", ui-serif, Garamond, Georgia, "Times New Roman", Times, serif;
+	--font-mono:
+		"Berkeley Mono", ui-monospace, SFMono-Regular, Monaco, Consolas,
+		monospace;
+	--font-serif:
+		"EB Garamond", ui-serif, Garamond, Georgia, "Times New Roman", Times,
+		serif;
 
 	--text-xs: 0.8rem;
 	--text-sm: 0.85rem;
