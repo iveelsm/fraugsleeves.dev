@@ -6,6 +6,7 @@ import MobileNavigation from "./mobileNavigation.astro";
 import MobileNavigationOverlay from "./mobileNavigationOverlay.astro";
 
 import { NAVIGATION_ITEMS } from "../../constants";
+import { LogoIcon } from "../../icons";
 
 const currentPath = Astro.url.pathname;
 ---
@@ -13,7 +14,7 @@ const currentPath = Astro.url.pathname;
 <nav class="toolbar">
 	<div class="toolbar-content">
 		<a href="/" class="toolbar-logo" aria-label="Home">
-			<img src="/logo.svg" alt="Logo" class="logo-image" />
+			<LogoIcon class="logo-image" />
 		</a>
 
 		<MobileNavigation />

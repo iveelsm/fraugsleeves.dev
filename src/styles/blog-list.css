@@ -9,7 +9,6 @@
 	padding: var(--space-xl);
 }
 
-/* Filter Header */
 .blog-container .filter-header {
 	display: flex;
 	align-items: center;

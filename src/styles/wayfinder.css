@@ -3,7 +3,6 @@
    =========================================== */
 @import "./base.css";
 
-/* Fixed Header */
 .post-header-fixed {
 	position: sticky;
 	top: var(--toolbar-height);
@@ -15,7 +14,6 @@
 		transform var(--transition-normal);
 }
 
-/* Header Box */
 .post-header-box {
 	max-width: var(--max-width-container);
 	margin: 0 auto;
@@ -60,7 +58,6 @@
 	color: var(--color-border);
 }
 
-/* Collapsible content */
 .post-header-collapsible {
 	overflow: hidden;
 	max-height: 200px;
@@ -109,14 +106,12 @@
 	white-space: nowrap;
 }
 
-/* Main Wayfinder Content */
 .wayfinder-post {
 	max-width: var(--max-width-container);
 	margin: 0 auto;
 	padding: var(--space-xl);
 }
 
-/* Main content styles */
 main {
 	font-size: var(--text-base);
 }
@@ -176,6 +171,7 @@ main pre {
 	padding: var(--space-md);
 	overflow-x: auto;
 	border-radius: var(--radius-md);
+	font-family: var(--font-mono);
 	font-size: 0.95em;
 	margin: var(--space-lg) 0;
 }
@@ -196,7 +192,6 @@ main li {
 	margin-bottom: var(--space-sm);
 }
 
-/* Blockquote */
 main blockquote {
 	border-left: 3px solid var(--color-accent);
 	margin: var(--space-md) 0;
@@ -205,7 +200,6 @@ main blockquote {
 	font-style: italic;
 }
 
-/* Responsive tweaks */
 @media (max-width: 640px) {
 	.wayfinder-post {
 		padding: var(--space-md);

@@ -24,7 +24,6 @@
 	}
 }
 
-/* Image Section */
 .not-found-image {
 	flex-shrink: 0;
 	max-width: 400px;
@@ -37,7 +36,6 @@
 	opacity: 0.9;
 }
 
-/* Content Section */
 .not-found-content {
 	display: flex;
 	flex-direction: column;
@@ -61,7 +59,6 @@
 	line-height: var(--leading-normal);
 }
 
-/* Action Buttons */
 .not-found-actions {
 	display: flex;
 	flex-wrap: wrap;
@@ -103,7 +100,6 @@
 	border-color: var(--color-border-dark);
 }
 
-/* Search Section */
 .not-found-search {
 	margin-top: var(--space-lg);
 	padding-top: var(--space-lg);
@@ -160,7 +156,6 @@
 	background-color: var(--uchu-blue-6);
 }
 
-/* Responsive adjustments */
 @media (max-width: 767px) {
 	.not-found-image {
 		max-width: 280px;
