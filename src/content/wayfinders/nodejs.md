@@ -2,7 +2,8 @@
 layout: ../../layouts/wayfinder.astro
 title: "Node.js Wayfinder"
 pubDate: 2025-06-12
-description: "Wayfinder point for all Node.js exploration topics"
+shortDescription: "Explores Node.js concepts like the compiler, event loop, I/O polling and promises."
+description: "This wayfinder is an exploration of the functional components of Node.js. It helps guide the reader through a variety of different components including the compiler, event loop, I/O polling mechanisms and the nature of Promises. It links to a series of relevant posts across each of the topics and provides a structure for organizing those topics."
 author: "Mikey Sleevi"
 image:
   url: "https://docs.astro.build/assets/rose.webp"
@@ -11,10 +12,6 @@ tags: ["compilers", "garbage-collection", "nodejs", "wayfinder"]
 ---
 
 # Node.js Wayfinder
-
-> Wayfinding encompasses all of the ways in which people orient themselves in physical space and navigate from place to place.[1](<[https://en.wikipedia.org/wiki/Wayfinding](https://en.wikipedia.org/wiki/Wayfinding)>)
-
-Welcome to the first wayfinder in the Zealot Chronicles! Wayfinders are a means of identifying important pieces of a given topic, they will provide a brief summary in addition to links to the various posts that are related to the topic at hand. This wayfinder is concerned with the runtime known as Node.js.
 
 Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine. Although, it is not exclusively limited to the V8 engine, there are several additional engines in the JavaScript runtime space. The vast majority of applications utilize the V8 engine for their runtime, so the current posts contain information for V8 exclusively. This may be expanded in the future to include runtimes like ChakraCore [2](<[https://github.com/nodejs/node-chakracore](https://github.com/nodejs/node-chakracore)>) and SpiderNode [3](<[https://github.com/mozilla/spidernode](https://github.com/mozilla/spidernode)>). In addition, the following posts focus exclusively on Linux and related systems. There are some correlations that can be drawn to other types of \*nix systems. Furthermore, some articles will explore BSD alternatives and will discuss some of the benefits and drawbacks that exist on those systems. That withstanding, the primary focus will be on Linux systems.
 

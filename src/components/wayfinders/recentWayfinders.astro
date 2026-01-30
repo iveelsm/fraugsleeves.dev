@@ -17,7 +17,7 @@ const recentWayfinders = allWayfinders.slice(0, 3);
 			recentWayfinders.map((wayfinder) => (
 				<Card
 					title={wayfinder.data.title}
-					description={wayfinder.data.description}
+					description={wayfinder.data.shortDescription}
 					date={wayfinder.data.pubDate}
 					href={`/wayfinders/${wayfinder.id}`}
 				/>

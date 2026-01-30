@@ -19,6 +19,7 @@ const wayfinders = defineCollection({
 	schema: z.object({
 		title: z.string(),
 		description: z.string(),
+		shortDescription: z.string(),
 		pubDate: z.coerce.date(),
 		author: z.string().optional(),
 		editors: z.array(z.string()).optional(),

@@ -11,7 +11,7 @@ const { minutesRead } = frontmatter;
 const article = {
 	publishedTime: frontmatter.pubDate
 		? new Date(frontmatter.pubDate).toISOString()
-		: undefined,
+		: new Date().toISOString(),
 	authors: frontmatter.author ? [frontmatter.author] : undefined,
 	tags: frontmatter.tags,
 };
@@ -27,7 +27,7 @@ const article = {
 	<Header
 		title={frontmatter.title}
 		description={frontmatter.description}
-		date={frontmatter.date}
+		date={frontmatter.pubDate}
 		minutesRead={minutesRead}
 		author={frontmatter.author}
 		editors={frontmatter.editors}
