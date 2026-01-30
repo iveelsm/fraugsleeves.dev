@@ -1,7 +1,12 @@
 ---
 import { SEO } from "astro-seo";
 
-import { DEFAULT_DESCRIPTION, DEFAULT_IMAGE, DEFAULT_TITLE, SITE_URL } from "../constants";
+import {
+	DEFAULT_DESCRIPTION,
+	DEFAULT_IMAGE,
+	DEFAULT_TITLE,
+	SITE_URL,
+} from "../constants";
 
 interface Props {
 	title?: string;
@@ -26,9 +31,8 @@ const {
 	nofollow = false,
 } = Astro.props;
 
-const fullTitle = title === DEFAULT_TITLE
-		? title
-		: `${title} | ${DEFAULT_TITLE}`;
+const fullTitle =
+	title === DEFAULT_TITLE ? title : `${title} | ${DEFAULT_TITLE}`;
 
 const pathname = Astro.url.pathname;
 const normalizedPath = pathname === "/" ? "/" : pathname.replace(/\/$/, "");

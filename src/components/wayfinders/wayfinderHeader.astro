@@ -7,12 +7,9 @@ interface Props {
 	description: string;
 	minutesRead: number;
 	author: string;
-	editors: string[];
-	tags: string[];
 }
 
-const { title, date, description, minutesRead, author, editors, tags } =
-	Astro.props;
+const { title, date, description, minutesRead, author } = Astro.props;
 ---
 
 <header class="post-header-fixed">
