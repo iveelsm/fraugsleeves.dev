@@ -26,9 +26,9 @@ Each tip will come with some counter-examples for each point, a brief descriptio
 
 This one is rather obvious if you have read the documentation, as this is stated as part of the `context` package.
 
-> Do not store Contexts inside a struct type; instead, pass a Context explicitly to each function that needs it. [1](https://pkg.go.dev/context)
+> Do not store Contexts inside a struct type; instead, pass a Context explicitly to each function that needs it. [[1]](https://pkg.go.dev/context)
 
-We have a tendency as software engineers to bundle related things together. One of the tools we reach for in Go to achieve this bundling is a struct. The problem with bundling `Context` is that you conflate different object life cycles. It may not seem like it at a glance, but `Context` is a shared object. And as a shared object, it often has a different lifecycle than any struct that gets created. As your codebase grows, you come to realize that `context` management becomes a large piece of the concurrency and lifecycle management story. So, here is a common anti-pattern structure with using `Context` within structs. [2](https://go.dev/blog/context-and-structs)
+We have a tendency as software engineers to bundle related things together. One of the tools we reach for in Go to achieve this bundling is a struct. The problem with bundling `Context` is that you conflate different object life cycles. It may not seem like it at a glance, but `Context` is a shared object. And as a shared object, it often has a different lifecycle than any struct that gets created. As your codebase grows, you come to realize that `context` management becomes a large piece of the concurrency and lifecycle management story. So, here is a common anti-pattern structure with using `Context` within structs. [[2]](https://go.dev/blog/context-and-structs)
 
 ```go
 /* An example of problematic context management through struct wrapping. */
@@ -101,7 +101,7 @@ Chaining context refers to passing the same context to multiple handlers. In the
 
 > Recently, I recalled a useful pattern that’s cropped up a few times at work. API handlers (think http.Handler), include a context.Context tied to the connectivity of the caller. If the client disconnects, the context closes, signaling to the handler that it can fail early and clean itself up. Importantly, the handler function returning also cancels the context.
 >
-> But what if you want to do an out-of-band operation after the request is complete? [3](https://rodaine.com/2020/07/break-context-cancellation-chain/)
+> But what if you want to do an out-of-band operation after the request is complete? [[3]](https://rodaine.com/2020/07/break-context-cancellation-chain/)
 
 Let's look at the following problematic example.
 
@@ -180,7 +180,7 @@ We have now refactored the goroutine to clearly indicate that it is a background
 
 ## If you are passed a `Context`, prefer continuing to pass it through the entire call chain
 
-> At Google, we require that Go programmers pass a `Context` parameter as the first argument to every function on the call path between incoming and outgoing requests. This allows Go code developed by many different teams to interoperate well. It provides simple control over timeouts and cancellation and ensures that critical values like security credentials transit Go programs properly. [4](https://go.dev/blog/context#conclusion)
+> At Google, we require that Go programmers pass a `Context` parameter as the first argument to every function on the call path between incoming and outgoing requests. This allows Go code developed by many different teams to interoperate well. It provides simple control over timeouts and cancellation and ensures that critical values like security credentials transit Go programs properly. [[4]](https://go.dev/blog/context#conclusion)
 
 I wouldn't advocate for requiring `Context` to always be the first argument in every function, there are plenty of places for reasonably small, pure functions in Go that have no need for knowledge of a request lifecycle. With that being said, the vast majority of your call path should have `Context` propagated throughout it. Here's an example of problematic propagation.
 
@@ -241,9 +241,9 @@ This seems contrived, but as call chains grow, the likelihood of losing an argum
 
 One of the biggest reasons that this comes up is that people find helpful articles that explain how to use something, but the articles uses `context.Background()` as a placeholder. Authors often do this so they can focus on the library or tooling instead of the context management surrounding the library and tooling. So let's talk about why you should avoid it.
 
-> You use `context.Background` when you know that you need an empty context, like in main where you are just starting and you use `context.TODO` when you don’t know what context to use or haven’t wired things up. [5](https://blog.meain.io/2024/golang-context/)
+> You use `context.Background` when you know that you need an empty context, like in main where you are just starting and you use `context.TODO` when you don’t know what context to use or haven’t wired things up. [[5]](https://blog.meain.io/2024/golang-context/)
 
-`context.Background()` has some interesting properties. [9](https://pkg.go.dev/golang.org/x/net/context#Background)
+`context.Background()` has some interesting properties. [[9]](https://pkg.go.dev/golang.org/x/net/context#Background)
 
 1. It is never cancelled
 2. It has no values
@@ -317,13 +317,13 @@ We have added some unnecessary child context that is derived from the request co
 - You are constructing a top-level context for your program in somewhere like `main()`
 - You are building background goroutines that are intended to be decoupled from a request lifecycle
 
-There are additional scenarios that involve breaking the chain of context, but these can be mostly be avoided with `context.WithoutCancel`. [3](https://rodaine.com/2020/07/break-context-cancellation-chain/)
+There are additional scenarios that involve breaking the chain of context, but these can be mostly be avoided with `context.WithoutCancel`. [[3]](https://rodaine.com/2020/07/break-context-cancellation-chain/)
 
 ## Minimize `Context` stores
 
 In general, storing values in `Context` is a generally accepted pattern in Golang. However, what to store is the problem. Let's start with a very important ground rule.
 
-> Never store values in `Context` that are not created and destroyed during the lifetime of the request. [6](https://www.calhoun.io/pitfalls-of-context-values-and-how-to-avoid-or-mitigate-them/)
+> Never store values in `Context` that are not created and destroyed during the lifetime of the request. [[6]](https://www.calhoun.io/pitfalls-of-context-values-and-how-to-avoid-or-mitigate-them/)
 
 This includes things like:
 
@@ -404,7 +404,7 @@ When `context` is almost inevitably mismanaged, you tend to get memory leaks. Th
 
 ## Prefer type-safe access to `Context` values
 
-> The biggest downside to using `context.WithValue()` and `context.Value()` is that you are actively choosing to give up information and type checking at compile time. You do gain the ability to write more versatile code, but this is a major thing to consider. We use typed parameters in our functions for a reason, so any time we opt to give up information like this it is worth considering whether it is worth the benefits. [6](https://www.calhoun.io/pitfalls-of-context-values-and-how-to-avoid-or-mitigate-them/)
+> The biggest downside to using `context.WithValue()` and `context.Value()` is that you are actively choosing to give up information and type checking at compile time. You do gain the ability to write more versatile code, but this is a major thing to consider. We use typed parameters in our functions for a reason, so any time we opt to give up information like this it is worth considering whether it is worth the benefits. [[6]](https://www.calhoun.io/pitfalls-of-context-values-and-how-to-avoid-or-mitigate-them/)
 
 Type safety is generally valuable when possible. `context` is one of the few functions in Golang ecosystem that makes heavy use of `interface{}`, which effectively amounts to `void *`.
 
@@ -456,13 +456,13 @@ func GetUser(ctx context.Context) *User {
 }
 ```
 
-In this example, we have clear approaches for retrieving the value associated with the "user" key on a context. We have appropriate stores as well to maintain the type-safety, and it provides a reasonable escape hatch and observability options for detecting when accesses are occurring that break the contract. We can apply this pattern to any store associated with the context to keep the type safety guarantees. We can further extend these type safety guarantees through the use of `panic()` when an incorrect type is detected. This type of misuse would fall well within the Google style guide around **When to panic**. [10](https://google.github.io/styleguide/go/best-practices#program-checks-and-panics)
+In this example, we have clear approaches for retrieving the value associated with the "user" key on a context. We have appropriate stores as well to maintain the type-safety, and it provides a reasonable escape hatch and observability options for detecting when accesses are occurring that break the contract. We can apply this pattern to any store associated with the context to keep the type safety guarantees. We can further extend these type safety guarantees through the use of `panic()` when an incorrect type is detected. This type of misuse would fall well within the Google style guide around **When to panic**. [[10]](https://google.github.io/styleguide/go/best-practices#program-checks-and-panics)
 
 ## goroutines should be associated with a `Context` and must be properly terminated
 
-> Contexts in Go are used to manage the lifecycle and cancellation signaling of goroutines and other operations. A root context is usually created, and child contexts can be derived from it. Child contexts inherit cancellation from their parent contexts. If a goroutine is started with a context, but does not properly exit when that context is canceled, it can result in a goroutine leak. The goroutine will persist even though the operation it was handling has been canceled. [7](https://medium.com/@jamal.kaksouri/the-complete-guide-to-context-in-golang-efficient-concurrency-management-43d722f6eaea)
+> Contexts in Go are used to manage the lifecycle and cancellation signaling of goroutines and other operations. A root context is usually created, and child contexts can be derived from it. Child contexts inherit cancellation from their parent contexts. If a goroutine is started with a context, but does not properly exit when that context is canceled, it can result in a goroutine leak. The goroutine will persist even though the operation it was handling has been canceled. [[7]](https://medium.com/@jamal.kaksouri/the-complete-guide-to-context-in-golang-efficient-concurrency-management-43d722f6eaea)
 
-This is one of the most common example of context and memory leaks in Go. [8](https://www.datadoghq.com/blog/go-memory-leaks/#goroutines) It is incredibly easy to mismanage goroutines in Go. These often manifest in complex and difficult to track ways.
+This is one of the most common example of context and memory leaks in Go. [[8]](https://www.datadoghq.com/blog/go-memory-leaks/#goroutines) It is incredibly easy to mismanage goroutines in Go. These often manifest in complex and difficult to track ways.
 
 ```go
 /* An example of improper goroutine handling. */
