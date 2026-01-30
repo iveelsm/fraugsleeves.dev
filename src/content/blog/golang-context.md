@@ -37,7 +37,7 @@ We have a tendency as software engineers to bundle related things together. One 
 /* An example of problematic context management through struct wrapping. */
 
 // BatchProducer handles batch connection to a database server
-type 	BatchProducer struct {
+type BatchProducer struct {
   client *batch.Client
   ctx    context.Context
 }
@@ -71,8 +71,8 @@ In the example above, who controls the `ctx` for each `BatchProducer`? What happ
 
 ```go
 // BatchProducer handles batch connection to a database server
-type 	BatchProducer struct {
-  client    *batch.Client
+type BatchProducer struct {
+  client *batch.Client
 }
 
 func NewBatchProducer(ctx context.Context, opts []batch.Option) *BatchProducer {
