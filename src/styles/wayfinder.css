@@ -4,14 +4,8 @@
 @import "./base.css";
 
 .post-header-fixed {
-	position: sticky;
-	top: var(--toolbar-height);
-	z-index: 100;
 	background: transparent;
 	padding: var(--space-md) var(--space-lg);
-	transition:
-		padding var(--transition-normal),
-		transform var(--transition-normal);
 }
 
 .post-header-box {
@@ -24,7 +18,6 @@
 	box-shadow:
 		0 4px 12px oklch(0% 0 0 / 0.12),
 		0 2px 4px oklch(0% 0 0 / 0.08);
-	transition: all var(--transition-normal);
 }
 
 .post-header-content {
@@ -38,9 +31,10 @@
 	gap: var(--space-sm) var(--space-lg);
 }
 
-.post-title {
+.post-header-main .post-title {
+	font-family: var(--font-serif);
 	font-size: var(--text-2xl);
-	font-weight: var(--font-semibold);
+	font-weight: var(--font-medium);
 	color: var(--color-text-heading);
 	line-height: var(--leading-tight);
 	margin: 0;
