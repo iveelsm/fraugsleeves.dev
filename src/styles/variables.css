@@ -100,8 +100,8 @@
 		"Berkeley Mono", ui-monospace, SFMono-Regular, Monaco, Consolas,
 		monospace;
 	--font-mono-variable:
-		"Berkeley Mono Variable", ui-monospace, SFMono-Regular, Monaco, Consolas,
-		monospace;
+		"Berkeley Mono Variable", ui-monospace, SFMono-Regular, Monaco,
+		Consolas, monospace;
 	--font-serif:
 		"EB Garamond", ui-serif, Garamond, Georgia, "Times New Roman", Times,
 		serif;
