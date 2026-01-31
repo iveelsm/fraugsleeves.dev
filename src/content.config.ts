@@ -9,10 +9,12 @@ const blog = defineCollection({
 		description: z.string(),
 		shortDescription: z.string(),
 		pubDate: z.coerce.date(),
-		image: z.object({
-			url: z.string(),
-			alt: z.string()
-		}).optional(),
+		image: z
+			.object({
+				url: z.string(),
+				alt: z.string(),
+			})
+			.optional(),
 		author: z.string().optional(),
 		editors: z.array(z.string()).optional(),
 		tags: z.array(z.string()).optional(),
@@ -26,10 +28,12 @@ const wayfinders = defineCollection({
 		description: z.string(),
 		shortDescription: z.string(),
 		pubDate: z.coerce.date(),
-		image: z.object({
-			url: z.string(),
-			alt: z.string()
-		}).optional(),
+		image: z
+			.object({
+				url: z.string(),
+				alt: z.string(),
+			})
+			.optional(),
 		author: z.string().optional(),
 		editors: z.array(z.string()).optional(),
 		tags: z.array(z.string()).optional(),

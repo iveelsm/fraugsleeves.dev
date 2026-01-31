@@ -6,7 +6,7 @@ import {
 	DEFAULT_IMAGE,
 	DEFAULT_TITLE,
 	SITE_URL,
-	DEFAULT_ALT
+	DEFAULT_ALT,
 } from "../constants";
 
 interface Props {
@@ -35,9 +35,7 @@ const {
 } = Astro.props;
 
 const pathname = Astro.url.pathname;
-const normalizedPath = pathname === "/"
-	? "/"
-	: pathname.replace(/\/$/, "");
+const normalizedPath = pathname === "/" ? "/" : pathname.replace(/\/$/, "");
 
 const canonicalUrl = `${SITE_URL}${normalizedPath}`;
 ---
@@ -64,14 +62,14 @@ const canonicalUrl = `${SITE_URL}${normalizedPath}`;
 			alt: title,
 		},
 		article: article
-			?   {
+			? {
 					publishedTime: article.publishedTime,
 					modifiedTime: article.modifiedTime || article.publishedTime,
 					authors: article.authors,
 					tags: article.tags,
-					section: "Technology"
+					section: "Technology",
 				}
-			: undefined
+			: undefined,
 	}}
 	twitter={{
 		creator: "@iveelsm",
@@ -79,6 +77,6 @@ const canonicalUrl = `${SITE_URL}${normalizedPath}`;
 		description: description,
 		card: "summary_large_image",
 		image: image,
-		imageAlt: alt
+		imageAlt: alt,
 	}}
 />
