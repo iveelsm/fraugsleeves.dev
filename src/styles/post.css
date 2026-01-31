@@ -340,6 +340,7 @@
 
 .post-content blockquote {
 	font-family: var(--font-mono);
+	font-style: italic;
 	border-left: 3px solid var(--color-accent);
 	margin: var(--space-lg) 0;
 	padding: var(--space-sm) var(--space-md);
