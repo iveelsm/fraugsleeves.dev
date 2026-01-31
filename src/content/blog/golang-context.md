@@ -2,7 +2,8 @@
 layout: ../../layouts/blog.astro
 title: "Tips and Tricks for Context Management in Go"
 pubDate: 2026-01-15
-description: "Seven tips for managing Context in Go projects. The tips range from strong suggestions through best practices all the way to hard requirements. Each tip provides a reasonable example of a problematic use, as well as a reasonable counter example for refactoring. Information and tips, where possible, are corroborated with different sources."
+shortDescription: "Seven tips for managing context in Go projects"
+description: "Seven tips for managing context in Go projects. The tips range from strong suggestions through best practices all the way to hard requirements. Each tip provides a reasonable example of a problematic use, as well as a reasonable counter example for refactoring. Information and tips, where possible, are corroborated with different sources."
 author: "Mikey Sleevi"
 editors: ["Sam Warfield", "Steve Ruckdashel"]
 tags: ["golang", "context", "concurrency", "code-architecture", "best-practice"]

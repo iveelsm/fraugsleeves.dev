@@ -6,17 +6,19 @@ import {
 	DEFAULT_IMAGE,
 	DEFAULT_TITLE,
 	SITE_URL,
+	DEFAULT_ALT
 } from "../constants";
 
 interface Props {
 	title?: string;
 	description?: string;
 	image?: string;
+	alt?: string;
 	article?: {
-		publishedTime?: string;
+		publishedTime: string;
 		modifiedTime?: string;
-		authors?: string[];
-		tags?: string[];
+		authors: string[];
+		tags: string[];
 	};
 	noindex?: boolean;
 	nofollow?: boolean;
@@ -26,22 +28,22 @@ const {
 	title = DEFAULT_TITLE,
 	description = DEFAULT_DESCRIPTION,
 	image = DEFAULT_IMAGE,
+	alt = DEFAULT_ALT,
 	article,
 	noindex = false,
 	nofollow = false,
 } = Astro.props;
 
-const fullTitle =
-	title === DEFAULT_TITLE ? title : `${title} | ${DEFAULT_TITLE}`;
-
 const pathname = Astro.url.pathname;
-const normalizedPath = pathname === "/" ? "/" : pathname.replace(/\/$/, "");
+const normalizedPath = pathname === "/"
+	? "/"
+	: pathname.replace(/\/$/, "");
 
 const canonicalUrl = `${SITE_URL}${normalizedPath}`;
 ---
 
 <SEO
-	title={fullTitle}
+	title={title}
 	description={description}
 	canonical={canonicalUrl}
 	noindex={noindex}
@@ -61,22 +63,20 @@ const canonicalUrl = `${SITE_URL}${normalizedPath}`;
 		image: {
 			alt: title,
 		},
-		article: article
-			? {
-					publishedTime: article.publishedTime,
-					modifiedTime: article.modifiedTime,
-					authors: article.authors,
-					tags: article.tags,
-				}
-			: undefined,
+		article: article && {
+			publishedTime: article.publishedTime,
+			modifiedTime: article.modifiedTime || article.publishedTime,
+			authors: article.authors,
+			tags: article.tags,
+			section: "Technology"
+		}
 	}}
 	twitter={{
-		creator: "@fraugsleeves",
-	}}
-	extend={{
-		meta: [
-			{ name: "author", content: "Mikey Sleevi" },
-			{ name: "generator", content: Astro.generator },
-		],
+		creator: "@iveelsm",
+		title: title,
+		description: description,
+		card: "summary_large_image",
+		image: image,
+		imageAlt: alt
 	}}
 />
