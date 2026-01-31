@@ -5,24 +5,6 @@ import Searchable from "./searchable.astro";
 
 import { BlogHeader } from "../components/blogs";
 import { Sidebar } from "../components/toc";
-import type { MarkdownHeading } from "astro";
-
-interface Props {
-	frontmatter: {
-		title: string;
-		description: string;
-		pubDate: Date;
-		minutesRead: number;
-		author?: string;
-		editors?: string[];
-		tags?: string[];
-		image?: {
-			url: string;
-			alt: string;
-		}
-	};
-	headings?: MarkdownHeading[];
-}
 
 const { frontmatter, headings } = Astro.props;
 const { minutesRead } = frontmatter;
