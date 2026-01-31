@@ -33,8 +33,8 @@
 
 .post-header-main .post-title {
 	font-family: var(--font-serif);
-	font-size: var(--text-2xl);
-	font-weight: var(--font-medium);
+	font-size: var(--text-3xl);
+	font-weight: var(--font-bold);
 	color: var(--color-text-heading);
 	line-height: var(--leading-tight);
 	margin: 0;
@@ -130,7 +130,7 @@
 .toc-title {
 	font-family: var(--font-serif);
 	font-size: var(--text-sm);
-	font-weight: var(--font-medium);
+	font-weight: var(--font-semibold);
 	color: var(--color-tag-text);
 	margin-bottom: 0.75rem;
 	padding-bottom: var(--space-sm);
@@ -173,7 +173,7 @@
 }
 
 .article-toc a.active {
-	font-weight: var(--font-semibold);
+	font-weight: var(--font-bold);
 	color: var(--color-accent);
 	background-color: var(--color-accent-bg);
 	border-left: 2px solid var(--color-accent);
@@ -184,14 +184,15 @@
 	min-width: 0;
 	max-width: var(--max-width-content);
 	padding: 0 var(--space-xl) var(--space-xl) var(--space-xl);
-	font-family: var(--font-mono);
+	font-family: var(--font-mono-variable);
 }
 
 .post-content h1,
 .post-content h2,
 .post-content h3,
 .post-content h4 {
-	font-weight: var(--font-semibold);
+	font-family: var(--font-serif);
+	font-weight: var(--font-bold);
 	margin-top: var(--space-xl);
 	margin-bottom: var(--space-md);
 	color: var(--color-text-heading);
@@ -266,29 +267,21 @@
 }
 
 .post-content h1 {
-	font-family: var(--font-serif);
 	font-size: var(--text-3xl);
-	font-weight: var(--font-medium);
 }
 
 .post-content h2 {
-	font-family: var(--font-serif);
 	font-size: var(--text-2xl);
-	font-weight: var(--font-medium);
 	border-bottom: 1px solid var(--color-border);
 	padding-bottom: var(--space-xs);
 }
 
 .post-content h3 {
-	font-family: var(--font-serif);
 	font-size: var(--text-xl);
-	font-weight: var(--font-medium);
 }
 
 .post-content h4 {
-	font-family: var(--font-serif);
 	font-size: var(--text-lg);
-	font-weight: var(--font-medium);
 }
 
 .post-content p {
@@ -340,6 +333,7 @@
 
 .post-content blockquote {
 	font-family: var(--font-mono);
+	font-style: italic;
 	border-left: 3px solid var(--color-accent);
 	margin: var(--space-lg) 0;
 	padding: var(--space-sm) var(--space-md);
@@ -370,7 +364,7 @@
 
 .post-content th {
 	background: var(--color-code-bg);
-	font-weight: var(--font-semibold);
+	font-weight: var(--font-bold);
 }
 
 /* Responsive Design */
