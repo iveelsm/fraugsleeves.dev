@@ -78,6 +78,7 @@
 
 .post-author-line strong,
 .post-editors-line strong {
+	font-family: var(--font-mono-variable);
 	color: var(--color-text-subtle);
 }
 
@@ -101,7 +102,7 @@
 }
 
 .wayfinder-post {
-	font-family: var(--font-mono-variable);
+	font-family: var(--font-mono);
 	max-width: var(--max-width-container);
 	margin: 0 auto;
 	padding: var(--space-xl);

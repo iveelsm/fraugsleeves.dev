@@ -13,7 +13,7 @@
 }
 
 html {
-	font-family: var(--font-mono-variable);
+	font-family: var(--font-mono);
 	font-size: 16px;
 	font-weight: var(--font-ultralight);
 	line-height: var(--leading-normal);

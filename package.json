@@ -37,6 +37,6 @@
 		"typescript-eslint": "^8.20.0"
 	},
 	"optionalDependencies": {
-		"@iveelsm/fonts": "^0.1.1"
+		"@iveelsm/fonts": "^0.1.2"
 	}
 }
