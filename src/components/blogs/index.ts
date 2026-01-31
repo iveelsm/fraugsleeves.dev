@@ -1,6 +1,6 @@
 import BlogFilterHeader from "./blogFilterHeader.astro";
+import BlogHeader from "./blogHeader.astro";
 import BlogPosts from "./blogPosts.astro";
-import Header from "./header.astro";
 import RecentBlogs from "./recentBlogs.astro";
 
-export { Header, BlogPosts, RecentBlogs, BlogFilterHeader };
+export { BlogHeader, BlogPosts, RecentBlogs, BlogFilterHeader };

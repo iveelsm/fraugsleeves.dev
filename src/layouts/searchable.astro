@@ -3,29 +3,25 @@ import Fonts from "../components/fonts.astro";
 import SEO from "../components/seo.astro";
 import Body from "./body.astro";
 
-import {
-	DEFAULT_DESCRIPTION,
-	DEFAULT_TITLE,
-	DEFAULT_IMAGE,
-} from "../constants";
-
 interface Props {
 	title?: string;
 	description?: string;
 	image?: string;
+	alt?: string;
 	article?: {
-		publishedTime?: string;
+		publishedTime: string;
 		modifiedTime?: string;
-		authors?: string[];
-		tags?: string[];
+		authors: string[];
+		tags: string[];
 	};
 	class?: string;
 }
 
 const {
-	title = DEFAULT_TITLE,
-	description = DEFAULT_DESCRIPTION,
-	image = DEFAULT_IMAGE,
+	title,
+	description,
+	image,
+	alt,
 	article,
 	class: className,
 } = Astro.props;
@@ -40,6 +36,7 @@ const {
 			title={title}
 			description={description}
 			image={image}
+			alt={alt}
 			article={article}
 		/>
 		<slot name="head" />

@@ -3,7 +3,7 @@ import "../styles/post.css";
 
 import Searchable from "./searchable.astro";
 
-import { Header } from "../components/blogs";
+import { BlogHeader } from "../components/blogs";
 import { Sidebar } from "../components/toc";
 
 const { frontmatter, headings } = Astro.props;
@@ -12,27 +12,28 @@ const { minutesRead } = frontmatter;
 const article = {
 	publishedTime: frontmatter.pubDate
 		? new Date(frontmatter.pubDate).toISOString()
-		: undefined,
-	authors: frontmatter.author ? [frontmatter.author] : undefined,
-	tags: frontmatter.tags,
+		: new Date().toISOString(),
+	authors: frontmatter.author ? [frontmatter.author] : [],
+	tags: frontmatter.tags ? frontmatter.tags : [],
 };
 ---
 
 <Searchable
 	title={frontmatter.title}
 	description={frontmatter.description}
-	image={frontmatter.image}
+	image={frontmatter.image?.url}
+	alt={frontmatter.image?.alt}
 	article={article}
 	class="blog-layout"
 >
-	<Header
+	<BlogHeader
 		title={frontmatter.title}
 		description={frontmatter.description}
 		date={new Date(frontmatter.pubDate)}
 		minutesRead={minutesRead}
 		author={frontmatter.author}
 		editors={frontmatter.editors}
-		tags={frontmatter.tags}
+		tags={frontmatter.tags ?? []}
 	/>
 
 	<div class="blog-container">

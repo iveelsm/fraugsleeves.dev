@@ -3,7 +3,7 @@ import "../styles/wayfinder.css";
 
 import Searchable from "./searchable.astro";
 
-import { WayfinderHeader as Header } from "../components/wayfinders";
+import { WayfinderHeader } from "../components/wayfinders";
 
 const { frontmatter } = Astro.props;
 const { minutesRead } = frontmatter;
@@ -24,14 +24,12 @@ const article = {
 	article={article}
 	class="wayfinder-layout"
 >
-	<Header
+	<WayfinderHeader
 		title={frontmatter.title}
 		description={frontmatter.description}
 		date={frontmatter.pubDate}
 		minutesRead={minutesRead}
 		author={frontmatter.author}
-		editors={frontmatter.editors}
-		tags={frontmatter.tags}
 	/>
 
 	<div class="wayfinder-post">
