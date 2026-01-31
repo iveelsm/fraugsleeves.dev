@@ -15,9 +15,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 const post = Astro.props as Props;
-const { Content } = await render(post);
+const { Content, remarkPluginFrontmatter } = await render(post);
 ---
 
-<WayfinderLayout frontmatter={post.data}>
+<WayfinderLayout frontmatter={{ ...post.data, minutesRead: remarkPluginFrontmatter.minutesRead }}>
 	<Content />
 </WayfinderLayout>

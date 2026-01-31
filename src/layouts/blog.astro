@@ -11,11 +11,11 @@ interface Props {
 	frontmatter: {
 		title: string;
 		description: string;
-		pubDate: string;
-		minutesRead?: number;
-		author: string;
-		editors: string[];
-		tags: string[];
+		pubDate: Date;
+		minutesRead: number;
+		author?: string;
+		editors?: string[];
+		tags?: string[];
 		image?: {
 			url: string;
 			alt: string;
@@ -31,8 +31,12 @@ const article = {
 	publishedTime: frontmatter.pubDate
 		? new Date(frontmatter.pubDate).toISOString()
 		: new Date().toISOString(),
-	authors: [frontmatter.author],
-	tags: frontmatter.tags,
+	authors: frontmatter.author
+		? [frontmatter.author]
+		: [],
+	tags: frontmatter.tags
+		? frontmatter.tags
+		: [],
 };
 ---
 
@@ -48,10 +52,10 @@ const article = {
 		title={frontmatter.title}
 		description={frontmatter.description}
 		date={new Date(frontmatter.pubDate)}
-		minutesRead={minutesRead ?? 0}
+		minutesRead={minutesRead}
 		author={frontmatter.author}
 		editors={frontmatter.editors}
-		tags={frontmatter.tags}
+		tags={frontmatter.tags ?? []}
 	/>
 
 	<div class="blog-container">
