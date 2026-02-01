@@ -2,6 +2,7 @@ import Github from "../icons/github.svg";
 import Gitlab from "../icons/gitlab.svg";
 import LinkedIn from "../icons/linkedin.svg";
 import Mail from "../icons/mail.svg";
+import Rss from "../icons/rss.svg";
 
 export const SOCIAL_LINKS = [
 	{
@@ -23,5 +24,10 @@ export const SOCIAL_LINKS = [
 		href: "https://gitlab.com/iveelsm",
 		icon: Gitlab,
 		label: "GitLab",
+	},
+	{
+		href: "/rss.xml",
+		icon: Rss,
+		label: "RSS Feed",
 	},
 ];
