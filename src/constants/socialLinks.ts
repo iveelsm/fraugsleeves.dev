@@ -1,4 +1,10 @@
-import { RSSIcon, GithubIcon, GitlabIcon, LinkedInIcon, MailIcon } from "../icons";
+import {
+	RSSIcon,
+	GithubIcon,
+	GitlabIcon,
+	LinkedInIcon,
+	MailIcon,
+} from "../icons";
 
 export const SOCIAL_LINKS = [
 	{
