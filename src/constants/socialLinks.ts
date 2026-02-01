@@ -1,27 +1,35 @@
-import Github from "../icons/github.svg";
-import Gitlab from "../icons/gitlab.svg";
-import LinkedIn from "../icons/linkedin.svg";
-import Mail from "../icons/mail.svg";
+import {
+	RSSIcon,
+	GithubIcon,
+	GitlabIcon,
+	LinkedInIcon,
+	MailIcon,
+} from "../icons";
 
 export const SOCIAL_LINKS = [
 	{
 		href: "mailto:blog@frogman.simplelogin.com",
-		icon: Mail,
+		icon: MailIcon,
 		label: "Email",
 	},
 	{
 		href: "https://linkedin.com/in/msleevi",
-		icon: LinkedIn,
+		icon: LinkedInIcon,
 		label: "LinkedIn",
 	},
 	{
 		href: "https://github.com/iveelsm",
-		icon: Github,
+		icon: GithubIcon,
 		label: "GitHub",
 	},
 	{
 		href: "https://gitlab.com/iveelsm",
-		icon: Gitlab,
+		icon: GitlabIcon,
 		label: "GitLab",
+	},
+	{
+		href: "/rss.xml",
+		icon: RSSIcon,
+		label: "RSS Feed",
 	},
 ];

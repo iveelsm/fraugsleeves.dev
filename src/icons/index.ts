@@ -5,6 +5,7 @@ import Hamburger from "./hamburger.svg";
 import LinkedIn from "./linkedin.svg";
 import Logo from "./logo.svg";
 import Mail from "./mail.svg";
+import RSS from "./rss.svg";
 import Search from "./search.svg";
 
 export {
@@ -16,4 +17,5 @@ export {
 	Mail as MailIcon,
 	Search as SearchIcon,
 	Logo as LogoIcon,
+	RSS as RSSIcon,
 };

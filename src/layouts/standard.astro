@@ -1,5 +1,6 @@
 ---
 import Fonts from "../components/fonts.astro";
+import Rss from "../components/rss.astro";
 import Body from "./body.astro";
 
 interface Props {
@@ -14,6 +15,7 @@ const { class: className } = Astro.props;
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<Fonts />
+		<Rss />
 		<slot name="head" />
 	</head>
 	<Body class={className}>
