@@ -1,6 +1,7 @@
 ---
 import Fonts from "../components/fonts.astro";
 import SEO from "../components/seo.astro";
+import Rss from "../components/rss.astro";
 import Body from "./body.astro";
 
 interface Props {
@@ -32,6 +33,7 @@ const {
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<Fonts />
+		<Rss />
 		<SEO
 			title={title}
 			description={description}
