@@ -5,14 +5,24 @@ import sitemap from "@astrojs/sitemap";
 import { remarkReadingTime } from "./src/remark-reading-time";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import { fontsIntegration } from "./src/integrations/fonts";
 
 // eslint-disable-next-line
 const site = process.env.SITE_URL || "https://fraugsleeves.dev";
 
+// Filter to only include Berkeley Mono Variable fonts
+const fontFilter = (filename) =>
+	filename.toLowerCase().includes("variable") ||
+	filename.toLowerCase().includes("garamond");
+
 // https://astro.build/config
 export default defineConfig({
 	site,
-	integrations: [pagefind(), sitemap()],
+	integrations: [
+		fontsIntegration({ filter: fontFilter }),
+		pagefind(),
+		sitemap(),
+	],
 	build: {
 		format: "file",
 	},
