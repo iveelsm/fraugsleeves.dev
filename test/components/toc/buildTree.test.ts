@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+
 import { buildTree } from "../../../src/components/toc/buildTree";
 import type { Heading } from "../../../src/components/toc/header";
 import { collectTexts, countHeadings, h } from "./headingUtilties";
