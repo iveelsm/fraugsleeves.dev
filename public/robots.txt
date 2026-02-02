@@ -1,5 +1,8 @@
 # robots.txt for fraugsleeves.dev
 
+User-agent: Yandex
+Disallow: /
+
 User-agent: *
 Allow: /
 Crawl-delay: 10
