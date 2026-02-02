@@ -97,7 +97,7 @@
 	--uchu-yang: oklch(99.4% 0 0);
 
 	--font-mono:
-		"Berkeley Mono Variable", ui-monospace, SFMono-Regular, Monaco, Consolas,
+		"Berkeley Mono", ui-monospace, SFMono-Regular, Monaco, Consolas,
 		monospace;
 	--font-mono-variable:
 		"Berkeley Mono Variable", ui-monospace, SFMono-Regular, Monaco,
@@ -122,10 +122,10 @@
 
 	--font-ultralight: 100;
 	--font-light: 200;
-	--font-regular: 350;
-	--font-medium: 450;
-	--font-semibold: 550;
-	--font-bold: 700;
+	--font-regular: 300;
+	--font-medium: 400;
+	--font-semibold: 600;
+	--font-bold: 800;
 
 	--color-bg: var(--uchu-yang);
 	--color-bg-alt: var(--uchu-gray-1);
