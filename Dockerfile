@@ -19,7 +19,9 @@ RUN npm run build
 FROM nginx:alpine AS production
 
 COPY --from=build /app/dist /usr/share/nginx/html
-COPY deployment/nginx.conf /etc/nginx/conf.d/default.conf
+COPY deployment/nginx.conf /etc/nginx/nginx.conf
+COPY deployment/conf.d/ /etc/nginx/conf.d/
+COPY deployment/includes /etc/nginx/includes/
 
 EXPOSE 80
 
