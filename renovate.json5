@@ -5,8 +5,15 @@
 	packageRules: [
 		{
 			groupName: "all npm patch dependencies",
+			description: "Regular npm patch updates",
 			matchDatasources: ["npm"],
 			matchUpdateTypes: ["patch"],
 		},
+        {
+            description: "Update custom packages when available",
+			groupName: "custom package updates",
+            matchPackageNames: ["@iveelsm/*"],
+            minimumReleaseAge: "0 days",
+        },
 	],
 }
