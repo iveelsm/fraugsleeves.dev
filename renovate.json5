@@ -9,11 +9,11 @@
 			matchDatasources: ["npm"],
 			matchUpdateTypes: ["patch"],
 		},
-        {
-            description: "Update custom packages when available",
+		{
+			description: "Update custom packages when available",
 			groupName: "custom package updates",
-            matchPackageNames: ["@iveelsm/*"],
-            minimumReleaseAge: "0 days",
-        },
+			matchPackageNames: ["@iveelsm/*"],
+			minimumReleaseAge: "0 days",
+		},
 	],
 }
