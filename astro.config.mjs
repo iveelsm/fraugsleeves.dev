@@ -5,7 +5,7 @@ import sitemap from "@astrojs/sitemap";
 import { remarkReadingTime } from "./src/remark-reading-time";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import { fontsIntegration } from "./src/integrations/fonts";
+import { fontsIntegration } from "@iveelsm/astro-font-loader/src/integration";
 
 // eslint-disable-next-line
 const site = process.env.SITE_URL || "https://fraugsleeves.dev";
@@ -19,7 +19,7 @@ const fontFilter = (filename) =>
 export default defineConfig({
 	site,
 	integrations: [
-		fontsIntegration({ filter: fontFilter }),
+		fontsIntegration({ packages: ["@iveelsm/fonts"], filter: fontFilter }),
 		pagefind(),
 		sitemap(),
 	],

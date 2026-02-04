@@ -1,12 +1,14 @@
 ---
-import { getFontsCss } from "../integrations/fonts";
+import { getFontsCss } from "@iveelsm/astro-font-loader/src/css";
+import { getFontsPackageInfo } from "@iveelsm/astro-font-loader/src/fonts";
 
 // Filter to only include Berkeley Mono Variable fonts (matching astro.config.mjs)
 const fontFilter = (filename: string) =>
-	filename.toLowerCase().includes("variable") ||
-	filename.toLowerCase().includes("garamond");
+	filename.toLowerCase().includes("Berkeley Mono Variable") ||
+	filename.toLowerCase().includes("EB Garamond");
 
-const fontsCss = getFontsCss({ filter: fontFilter });
+const fontsPackageInfo = getFontsPackageInfo("@iveelsm/fonts");
+const fontsCss = getFontsCss({ filter: fontFilter }, fontsPackageInfo);
 ---
 
 {fontsCss && <style is:inline set:html={fontsCss} />}
