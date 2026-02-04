@@ -10,8 +10,8 @@
         <title><xsl:value-of select="/rss/channel/title"/> - RSS Feed</title>
         <style>
           @font-face {
-            font-family: 'Berkeley Mono';
-            src: local('Berkeley Mono');
+            font-family: 'Berkeley Mono Variable';
+            src: local('Berkeley Mono Variable');
           }
 
           *,
@@ -36,7 +36,7 @@
           }
 
           html {
-            font-family: 'Berkeley Mono', ui-monospace, SFMono-Regular, Monaco, Consolas, monospace;
+            font-family: 'Berkeley Mono Variable', ui-monospace, SFMono-Regular, Monaco, Consolas, monospace;
             font-size: 16px;
             font-weight: 100;
             line-height: 1.65;

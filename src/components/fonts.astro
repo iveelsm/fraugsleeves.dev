@@ -1,32 +1,12 @@
 ---
-import { readFileSync } from "fs";
-import { dirname, join } from "path";
-import { fileURLToPath } from "url";
+import { getFontsCss, getFontsPackageInfo } from "astro-font-loader";
 
-let fontsCss = "";
+const fontFilter = (filename: string) =>
+	filename.toLowerCase().includes("berkeleymonovariable") ||
+	filename.toLowerCase().includes("ebgaramond");
 
-try {
-	const fontsPackagePath = fileURLToPath(
-		import.meta.resolve("@iveelsm/fonts/package.json"),
-	);
-	const fontsDir = dirname(fontsPackagePath);
-	const fontsCssPath = join(fontsDir, "src", "index.css");
-	const rawCss = readFileSync(fontsCssPath, "utf-8");
-
-	fontsCss = rawCss.replace(
-		/url\(["']?\.\/([^"')]+)["']?\)/g,
-		(_match, relativePath) => {
-			const fontPath = join(fontsDir, "src", relativePath);
-			const fontData = readFileSync(fontPath);
-			const base64 = fontData.toString("base64");
-			const ext = relativePath.split(".").pop();
-			const mimeType = ext === "woff2" ? "font/woff2" : "font/woff";
-			return `url("data:${mimeType};base64,${base64}")`;
-		},
-	);
-} catch {
-	console.warn(`Package not found for custom fonts`);
-}
+const fontsPackageInfo = getFontsPackageInfo("@iveelsm/fonts");
+const fontsCss = getFontsCss({ filter: fontFilter }, fontsPackageInfo);
 ---
 
 {fontsCss && <style is:inline set:html={fontsCss} />}
