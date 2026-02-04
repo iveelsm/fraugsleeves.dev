@@ -1,5 +1,6 @@
 ---
 import Fonts from "../components/fonts.astro";
+import Preload from "../components/preload.astro";
 import Rss from "../components/rss.astro";
 import Body from "./body.astro";
 
@@ -14,6 +15,7 @@ const { class: className } = Astro.props;
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<Preload />
 		<Fonts />
 		<Rss />
 		<slot name="head" />

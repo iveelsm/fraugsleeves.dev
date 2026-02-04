@@ -1,22 +1,19 @@
 ---
-import { getFontsCss, getFontsPackageInfo, getAvailableFonts } from "astro-font-loader";
+import { getFontsPackageInfo, getAvailableFonts } from "astro-font-loader";
 
-const fontFilter = (filename: string) =>
-	filename.toLowerCase().includes("berkeleymonovariable") ||
-	filename.toLowerCase().includes("ebgaramond");
 
 const fontsPackageInfo = getFontsPackageInfo("@iveelsm/fonts");
 let preloadFonts = [];
-let fontsCss = null;
 if (fontsPackageInfo != null) {
 	preloadFonts = getAvailableFonts(fontsPackageInfo.fontsDir)
 		.filter(font => font.filename.toLowerCase().includes("ebgaramond-bold.woff2") ||
 			font.filename.toLowerCase().includes("berkeleymonovariable-regular.woff2") ||
 			font.filename.toLowerCase().includes("berkeleymonovariable-italic.woff2")
 	);
-	fontsCss = getFontsCss({ filter: fontFilter }, fontsPackageInfo);
 }
-
 ---
-
-{ fontsCss && <style is:inline set:html={fontsCss} />}
+{ preloadFonts.length > 0 &&
+		preloadFonts.map((font: any) => {
+			<link rel="preload" href={`/fonts/${font.filename}`} as="font" type="font/woff2" crossorigin>
+		})
+}
