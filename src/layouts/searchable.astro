@@ -1,9 +1,9 @@
 ---
-import Fonts from "../components/fonts.astro";
-import Preload from "../components/preload.astro";
 import Rss from "../components/rss.astro";
 import SEO from "../components/seo.astro";
 import Body from "./body.astro";
+
+import { Font, Preload } from "../components/fonts";
 
 interface Props {
 	title?: string;
@@ -34,7 +34,7 @@ const {
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<Preload />
-		<Fonts />
+		<Font />
 		<Rss />
 		<SEO
 			title={title}

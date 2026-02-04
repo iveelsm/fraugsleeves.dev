@@ -1,8 +1,8 @@
 ---
-import Fonts from "../components/fonts.astro";
-import Preload from "../components/preload.astro";
 import Rss from "../components/rss.astro";
 import Body from "./body.astro";
+
+import { Font, Preload } from "../components/fonts";
 
 interface Props {
 	class?: string;
@@ -16,7 +16,7 @@ const { class: className } = Astro.props;
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<Preload />
-		<Fonts />
+		<Font />
 		<Rss />
 		<slot name="head" />
 	</head>
