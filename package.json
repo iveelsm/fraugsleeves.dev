@@ -13,7 +13,10 @@
 		"lint": "prettier --check . && eslint .",
 		"lint:fix": "prettier --write . && eslint . --fix",
 		"test": "vitest run",
-		"test:watch": "vitest"
+		"test:watch": "vitest",
+		"prelighthouse": "npm run build",
+		"lighthouse": "lhci autorun",
+		"lighthouse:collect": "lhci collect --staticDistDir=./dist"
 	},
 	"dependencies": {
 		"@astrojs/rss": "^4.0.15",
@@ -27,6 +30,7 @@
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.18.0",
+		"@lhci/cli": "^0.14.0",
 		"@typescript-eslint/eslint-plugin": "^8.52.0",
 		"@typescript-eslint/parser": "^8.52.0",
 		"eslint": "^9.39.2",
