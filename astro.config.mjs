@@ -5,7 +5,7 @@ import sitemap from "@astrojs/sitemap";
 import { remarkReadingTime } from "./src/remark-reading-time";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import { fontsIntegration } from "@iveelsm/astro-font-loader/src/integration";
+import { fontsIntegration } from "astro-font-loader";
 
 // eslint-disable-next-line
 const site = process.env.SITE_URL || "https://fraugsleeves.dev";
