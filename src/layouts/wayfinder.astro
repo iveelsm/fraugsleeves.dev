@@ -1,5 +1,6 @@
 ---
 import "../styles/wayfinder.css";
+import "../styles/link-preview.css";
 
 import Searchable from "./searchable.astro";
 
@@ -37,4 +38,21 @@ const article = {
 			<slot />
 		</main>
 	</div>
+
+	<script>
+		import { initLinkPreview, cleanupLinkPreview } from "../scripts/linkPreview";
+
+		function initWayfinder() {
+			initLinkPreview();
+		}
+
+		if (document.readyState === "loading") {
+			document.addEventListener("DOMContentLoaded", initWayfinder);
+		} else {
+			initWayfinder();
+		}
+
+		document.addEventListener("astro:page-load", initWayfinder);
+		document.addEventListener("astro:before-preparation", cleanupLinkPreview);
+	</script>
 </Searchable>
