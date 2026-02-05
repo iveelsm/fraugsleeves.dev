@@ -25,10 +25,6 @@ const { title, date, description, minutesRead, author, editors, tags } =
 					set:html={formatText(title)}
 				/>
 				<div class="post-meta">
-					<span class="post-date">
-						{new Date(date).toDateString()}
-					</span>
-					<span class="meta-separator">·</span>
 					<span class="reading-time">{minutesRead}</span>
 				</div>
 			</div>
@@ -48,6 +44,10 @@ const { title, date, description, minutesRead, author, editors, tags } =
 						</p>
 					)
 				}
+				<span class="post-header-date">
+					<strong>Published:</strong>
+					{new Date(date).toDateString()}
+				</span>
 				<ul class="post-tags">
 					{tags.map((tag) => <li class="tag">#{tag}</li>)}
 				</ul>

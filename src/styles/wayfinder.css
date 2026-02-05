@@ -27,7 +27,7 @@
 .post-header-main {
 	display: flex;
 	flex-wrap: wrap;
-	align-items: baseline;
+	align-items: center;
 	gap: var(--space-sm) var(--space-lg);
 }
 
@@ -41,11 +41,18 @@
 }
 
 .post-meta {
-	font-size: var(--text-sm);
+	font-size: var(--text-code);
 	color: var(--color-text-subtle);
 	display: flex;
-	align-items: center;
-	gap: var(--space-sm);
+	justify-content: right;
+	padding-right: var(--space-lg);
+	flex-grow: 1;
+}
+
+.post-date {
+	font-size: var(--font-base);
+	color: var(--color-text-subtle);
+	white-space: nowrap;
 }
 
 .meta-separator {
@@ -70,7 +77,6 @@
 
 .post-author-line,
 .post-editors-line {
-	font-size: var(--text-sm);
 	color: var(--color-text-muted);
 	margin: 0 0 0.5rem 0;
 	line-height: var(--leading-normal);
@@ -89,6 +95,10 @@
 	gap: var(--space-sm);
 	padding: 0;
 	margin: 0;
+}
+
+.heading-anchor {
+	display: none;
 }
 
 .tag {

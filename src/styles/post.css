@@ -27,8 +27,8 @@
 .post-header-main {
 	display: flex;
 	flex-wrap: wrap;
-	align-items: baseline;
-	gap: var(--space-sm) var(--space-lg);
+	align-items: center;
+	gap: var(--space-2xl);
 }
 
 .post-header-main .post-title {
@@ -44,9 +44,15 @@
 	font-size: var(--text-code);
 	color: var(--color-text-subtle);
 	display: flex;
-	align-items: right;
-	gap: var(--space-sm);
-	flex-shrink: 0;
+	justify-content: right;
+	padding-right: var(--space-lg);
+	flex-grow: 1;
+}
+
+.post-header-date {
+	font-size: var(--font-base);
+	color: var(--color-text-subtle);
+	white-space: nowrap;
 }
 
 .meta-separator {
@@ -68,7 +74,6 @@
 
 .post-author-line,
 .post-editors-line {
-	font-size: var(--text-code);
 	color: var(--color-text-muted);
 	margin: 0 0 0.5rem 0;
 	line-height: var(--leading-normal);
@@ -135,7 +140,7 @@
 
 .toc-title {
 	font-family: var(--font-serif);
-	font-size: var(--text-sm);
+	font-size: var(--text-lg);
 	font-weight: var(--font-semibold);
 	color: var(--color-tag-text);
 	margin-bottom: 0.75rem;
@@ -167,7 +172,7 @@
 	text-decoration: none;
 	color: var(--color-text);
 	font-family: var(--font-serif);
-	font-size: var(--text-code);
+	font-weight: var(--font-semibold);
 	padding: 0.35rem var(--space-sm);
 	border-radius: var(--radius-sm);
 	transition: all var(--transition-fast);
