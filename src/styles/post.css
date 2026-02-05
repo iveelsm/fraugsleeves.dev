@@ -140,7 +140,7 @@
 
 .toc-title {
 	font-family: var(--font-serif);
-	font-size: var(--text-sm);
+	font-size: var(--text-lg);
 	font-weight: var(--font-semibold);
 	color: var(--color-tag-text);
 	margin-bottom: 0.75rem;
