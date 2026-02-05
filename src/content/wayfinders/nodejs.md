@@ -1,7 +1,7 @@
 ---
 layout: ../../layouts/wayfinder.astro
 title: "Node.js Wayfinder"
-pubDate: 2025-06-12
+pubDate: 2026-01-15
 shortDescription: "Explores Node.js concepts like the compiler, event loop, I/O polling and promises."
 description: "This wayfinder is an exploration of the functional components of Node.js. It helps guide the reader through a variety of different components including the compiler, event loop, I/O polling mechanisms and the nature of Promises. It links to a series of relevant posts across each of the topics and provides a structure for organizing those topics."
 author: "Mikey Sleevi"
