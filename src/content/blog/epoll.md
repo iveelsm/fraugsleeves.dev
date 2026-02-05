@@ -17,7 +17,7 @@ This article is going to be focused on taking a tour through some of the mechani
 
 > epoll is a Linux kernel system call for a scalable I/O event notification mechanism (…) Its function is to monitor multiple file descriptors to see whether I/O is possible on any of them.
 
-Which gives us some sense of what we are talking about. But I find that a better way to introduce epoll is to introduce the problem that it solves. 
+Which gives us some sense of what we are talking about. But I find that a better way to introduce epoll is to introduce the problem that it solves.
 
 > The classic Unix way to wait for I/O events on multiple file descriptors is with the select() and poll() system calls. When a process invokes one of those calls, the kernel goes through the list of interesting file descriptors, checks to see if non-blocking I/O is available on any of them, and adds the calling process to a wait queue for each file descriptor that would block. This implementation works reasonably well when the number of file descriptors is small. But if a process is managing thousands of file descriptors, the select() and poll() calls must check every single one of them, and add the calling process to thousands of wait queues. For every single call. Needless to say, this approach does not scale very well. [14](https://lwn.net/Articles/13587/)
 
@@ -123,7 +123,7 @@ The formal definition highlights some additional pieces.
 
 > An inode (index node) is a data structure in a Unix-style file system that describes a file-system object such as a file or a directory. Each inode stores the attributes and disk block locations of the object's data. File-system object attributes may include metadata (times of last change, access, modification), as well as owner and permission data. [5](https://en.wikipedia.org/wiki/Inode)
 
-However, much like the file table, the inode table doesn't exist. It's an abstraction, in reality, it's just references. Each filesystem contains it's own version of the inode table, called a superblock. We won't discuss the intricacies of particular file system superblock management here, we will instead stop at the discussing of the `struct inode`. 
+However, much like the file table, the inode table doesn't exist. It's an abstraction, in reality, it's just references. Each filesystem contains it's own version of the inode table, called a superblock. We won't discuss the intricacies of particular file system superblock management here, we will instead stop at the discussing of the `struct inode`.
 
 ```c
 struct inode {
@@ -363,7 +363,7 @@ foofoo
 
 # Event triggers
 
-Event triggers, or interrupts, for the purposes of this article will not be related to hardware interrupts. We will instead be taking a simplistic view to eliminate some of the complexities associated with event handling in Linux systems. If you are dissatisfied with this simplification, I would strongly encourage exploring [this article on this Linux networking stack](https://blog.packagecloud.io/monitoring-tuning-linux-networking-stack-receiving-data/). We will be taking a drastically simplified view to explain how they function in one direction. 
+Event triggers, or interrupts, for the purposes of this article will not be related to hardware interrupts. We will instead be taking a simplistic view to eliminate some of the complexities associated with event handling in Linux systems. If you are dissatisfied with this simplification, I would strongly encourage exploring [this article on this Linux networking stack](https://blog.packagecloud.io/monitoring-tuning-linux-networking-stack-receiving-data/). We will be taking a drastically simplified view to explain how they function in one direction.
 
 ## Level triggers
 
@@ -375,7 +375,15 @@ Event triggers, or interrupts, for the purposes of this article will not be rela
 
 # select and poll
 
-`select()` and `poll()`, even in the world of `epoll`, still have their place in the Linux ecosystem. `epoll` introduces a fair bit of management overhead, as we will see, and  
+Before we start to talk about **epoll**, we need to discuss it's precursor `select()` and `poll()`. We will start by exploring `select()`.
+
+> select is a system call and application programming interface (API) in Unix-like and POSIX-compliant operating systems for examining the status of file descriptors of open input/output channels. [1](https://en.wikipedia.org/wiki/Select_%28Unix%29)
+
+`select()` is a system call for synchronous I/O multiplexing. Let's break that statement down a bit. We start with the word "synchronous", which is rather obviously counter to the asynchronous nature of Node.js and generally the nature of **epoll**. However, `select()` was one of the very first I/O management system calls, and as such, did not have anywhere near the same scale of problem that computing had today. It was introduced in 4.2BSD Unix in 1983! [26](https://daniel.haxx.se/docs/poll-vs-select.html) The second half of that original statement, **multiplexing**, refers to the idea of taking multiple signals and producing a single signal from them.
+
+> In computing, I/O multiplexing can also be used to refer to the concept of processing multiple input/output events from a single event loop, with system calls like poll and select (Unix). [22](https://en.wikipedia.org/wiki/Multiplexing)
+
+To rephrase our original definition. `select()` is a system call that will handle multiple I/O events and produce one event for processing when called. So, hat does this call end up looking like?
 
 ```c
 int select(
@@ -387,18 +395,200 @@ int select(
 );
 ```
 
+This interface highlights a few interesting ideas. The first is the use of file descriptors, in read, write and exception modes. Read and write make sense, but what's an "exceptional mode". Generally, exceptional modes break down into the following ideas:
+
+- There is out-of-band data on a TCP socket [23](https://www.man7.org/linux/man-pages/man7/tcp.7.html)
+- A pseudoterminal boss in packet mode has seen a state change on the worker [24](https://www.man7.org/linux/man-pages/man2/ioctl_tty.2.html)
+- A cgroup.events file has been modified [25](https://www.man7.org/linux/man-pages/man7/cgroups.7.html)
+
+We won't really discuss those ideas in more detail. I encourage perusing the man pages if you have follow up questions here. However, I feel that's insufficient to describe select in detail. I try to make a habit of exploring code more deeply than just the interface layer, so let's try to break down more clearly what is happening.
+
+```c
+static int do_select(int n, fd_set_bits *fds, struct timespec64 *end_time) {
+
+  /* ...initialization code */
+
+  rcu_read_lock();
+  retval = max_select_fd(n, fds);
+  rcu_read_unlock();
+
+  if (retval < 0)
+    return retval;
+  n = retval;
+
+  /* ...timeout handling */
+
+  retval = 0;
+  for (;;) {
+    unsigned long *rinp, *routp, *rexp, *inp, *outp, *exp;
+    bool can_busy_loop = false;
+
+    inp = fds->in; outp = fds->out; exp = fds->ex;
+    rinp = fds->res_in; routp = fds->res_out; rexp = fds->res_ex;
+
+    for (i = 0; i < n; ++rinp, ++routp, ++rexp) {
+      unsigned long in, out, ex, all_bits, bit = 1, j;
+      unsigned long res_in = 0, res_out = 0, res_ex = 0;
+      __poll_t mask;
+
+      in = *inp++; out = *outp++; ex = *exp++;
+      all_bits = in | out | ex;
+      if (all_bits == 0) {
+        i += BITS_PER_LONG;
+        continue;
+      }
+
+      for (j = 0; j < BITS_PER_LONG; ++j, ++i, bit <<= 1) {
+        struct fd f;
+        if (i >= n)
+          break;
+        if (!(bit & all_bits))
+          continue;
+        mask = EPOLLNVAL;
+        f = fdget(i);
+        if (f.file) {
+          wait_key_set(wait, in, out, bit,
+                 busy_flag);
+          mask = vfs_poll(f.file, wait);
+
+          fdput(f);
+        }
+
+        /* ...flag handling */
+
+        /* got something, stop busy polling */
+        if (retval) {
+          can_busy_loop = false;
+          busy_flag = 0;
+        }
+        /* ...busy handling */
+
+      }
+      if (res_in)
+        *rinp = res_in;
+      if (res_out)
+        *routp = res_out;
+      if (res_ex)
+        *rexp = res_ex;
+      cond_resched();
+    }
+
+    wait->_qproc = NULL;
+    if (retval || timed_out || signal_pending(current))
+      break;
+    if (table.error) {
+      retval = table.error;
+      break;
+    }
+
+    /* ...timeout handling */
+    
+  }
+
+  poll_freewait(&table);
+
+  return retval;
+}
+```
+
+Note, a great deal of the code has been truncated to focus the conversation. As a fun fact, the last time this section of code, that was pulled from the `v6.8` kernel, was touched 5 years ago. There has been [one change since then which you can see here](https://github.com/torvalds/linux/commit/d000e073ca2a08ab70accc28e93dee8d70e89d2f), that change however, makes it harder to talk about the single function, so we will stick with `v6.8`. This function highlights why `select()` has failed to scale. `select()` will fundamentally iterate one by one over the file descriptors passed in and use that to determine if eventing has occurred. It uses the `retval = max_select_fd(n, fds)` to determine the number of file descriptors to loop over, then passed that to the top loop: `for (i = 0; i < n; ++rinp, ++routp, ++rexp) {`. From there, it determines the file descriptor to read, and it determines whether event handling notification is required.
+
+```c
+  /* ...truncated */
+  f = fdget(i);
+  if (f.file) {
+    wait_key_set(wait, in, out, bit,
+            busy_flag);
+    mask = vfs_poll(f.file, wait);
+
+    fdput(f);
+  }
+  /* ...truncated */
+```
+
+How does this compare to it's newer counterpart `poll()`? `poll()` was introduced in SVR3 Unix in 1987. [26](https://daniel.haxx.se/docs/poll-vs-select.html) And it generally functions very similarly to `select()`. It is also a I/O multiplexing mechanism, but it has one major advantage over `select()` it performs far better on sparse file descriptors. The problem with `select()` was that the way you interacted with it was by giving it bitsets. Those bitsets meant that you enumerated file descriptors that you might not actually be interested processing. `poll()` mildly improves upon this by allowing you to pass explicit file descriptors, so the scan over the bitset becomes unnecessary. This is demonstrated in the interface.
+
 ```c
 int poll(
   struct pollfd *fds,
   nfds_t nfds,
   int timeout
 );
+
 struct pollfd {
   int fd;
   short int events;
   short int revents;
 };
 ```
+
+The bitsets are gone, it's just an array of structures that represent the file descriptor we want to watch, the events we want to watch and the requested events. Which is perhaps another important change from the `select()` predecessor, we do not need to repopulate the bitmasks on each call because `poll()` does not destroy the input data like `select()` does. But let's dig in a bit more.
+
+```c
+static int do_poll(struct poll_list *list, struct poll_wqueues *wait, struct timespec64 *end_time) {
+      
+  /* ...initialization */
+
+  /* Optimise the no-wait case */
+  if (end_time && !end_time->tv_sec && !end_time->tv_nsec) {
+    pt->_qproc = NULL;
+    timed_out = 1;
+  }
+
+  /* ... timeout handling */
+
+  for (;;) {
+    struct poll_list *walk;
+    bool can_busy_loop = false;
+
+    for (walk = list; walk != NULL; walk = walk->next) {
+      struct pollfd * pfd, * pfd_end;
+
+      pfd = walk->entries;
+      pfd_end = pfd + walk->len;
+      for (; pfd != pfd_end; pfd++) {
+        /*
+         * Fish for events. If we found one, record it
+         * and kill poll_table->_qproc, so we don't
+         * needlessly register any other waiters after
+         * this. They'll get immediately deregistered
+         * when we break out and return.
+         */
+        if (do_pollfd(pfd, pt, &can_busy_loop,
+                busy_flag)) {
+          count++;
+          pt->_qproc = NULL;
+          /* found something, stop busy polling */
+          busy_flag = 0;
+          can_busy_loop = false;
+        }
+      }
+    }
+    /*
+     * All waiters have already been registered, so don't provide
+     * a poll_table->_qproc to them on the next loop iteration.
+     */
+    pt->_qproc = NULL;
+    if (!count) {
+      count = wait->error;
+      if (signal_pending(current))
+        count = -ERESTARTNOHAND;
+    }
+    if (count || timed_out)
+      break;
+
+    /* ...busy loop handling */
+
+    busy_flag = 0;
+
+    /* ...timeout handling */
+
+  }
+  return count;
+}
+```
+
+This is a lot like the `do_select()` function. We are doing a linear scan of arguments, the only change is that we do not do any bitset management for determining file descriptors to scan. We just iterate over the list we were initially passed. However, both `select()` and `poll()` has the same problem, they are linear in time. This is a serious problem as the number of watched file descriptors start to grow. Which is where **epoll** steps in.
 
 # epoll
 
@@ -466,3 +656,5 @@ int epoll_wait(
 19. https://www.man7.org/linux/man-pages/man2/fork.2.html
 20. https://blog.packagecloud.io/monitoring-tuning-linux-networking-stack-receiving-data/
 21. https://www.kegel.com/c10k.html
+22. https://en.wikipedia.org/wiki/Multiplexing
+23. https://daniel.haxx.se/docs/poll-vs-select.html
