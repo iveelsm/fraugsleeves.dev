@@ -22,10 +22,6 @@ const { title, date, description, minutesRead, author } = Astro.props;
 					set:html={formatText(title)}
 				/>
 				<div class="post-meta">
-					<span class="post-date">
-						{new Date(date).toDateString()}
-					</span>
-					<span class="meta-separator">·</span>
 					<span class="reading-time">{minutesRead}</span>
 				</div>
 			</div>
@@ -38,6 +34,9 @@ const { title, date, description, minutesRead, author } = Astro.props;
 						</p>
 					)
 				}
+				<span class="post-header-date">
+					<strong>Published:</strong> {new Date(date).toDateString()}
+				</span>
 			</div>
 		</div>
 	</div>

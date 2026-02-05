@@ -106,11 +106,11 @@
 		"EB Garamond", ui-serif, Garamond, Georgia, "Times New Roman", Times,
 		serif;
 
-	--text-xs: 0.8rem;
-	--text-sm: 0.85rem;
-	--text-code: 0.95rem;
+	--text-xs: 0.75rem;
+	--text-sm: 0.9rem;
+	--text-code: 1rem;
 	--text-base: 1rem;
-	--text-lg: 1.1rem;
+	--text-lg: 1.115rem;
 	--text-xl: 1.25rem;
 	--text-2xl: 1.5rem;
 	--text-3xl: 1.75rem;
@@ -124,15 +124,15 @@
 	--font-light: 200;
 	--font-regular: 350;
 	--font-medium: 450;
-	--font-semibold: 550;
-	--font-bold: 700;
+	--font-semibold: 600;
+	--font-bold: 800;
 
 	--color-bg: var(--uchu-yang);
 	--color-bg-alt: var(--uchu-gray-1);
 	--color-surface: var(--uchu-yang);
-	--color-text: var(--uchu-yin-7);
+	--color-text: var(--uchu-yin-8);
 	--color-text-heading: var(--uchu-yin);
-	--color-text-muted: var(--uchu-yin-7);
+	--color-text-muted: var(--uchu-yin-8);
 	--color-text-subtle: var(--uchu-yin-8);
 	--color-border: var(--uchu-gray-4);
 	--color-border-dark: var(--uchu-gray-6);

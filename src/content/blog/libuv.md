@@ -1,6 +1,6 @@
 ---
 layout: ../../layouts/blog.astro
-title: "How Libuv Works"
+title: "How libuv works"
 pubDate: 2025-06-12
 shortDescription: "One of a series of posts around the inner workings of Node.js, focused on the event loop provided by libuv"
 description: "One of a series of posts around the inner workings of Node.js, this article seeks to provide a deeper understanding of the event loop provided by the libuv library. It explores the concepts of timers, I/O poll queues, check and closing handlers and how they relate to the four primary phases of Node.js."
@@ -9,7 +9,7 @@ editors: ["David Gitlen"]
 image:
   url: "https://fraugsleeves.dev/images/event_loop_header.png"
   alt: "A diagram containing the data structures representing linked lists, tables, queues and min-heaps, represented outside of a circle with seven boxes. The boxes have four colors those being yellow, orange, green and red. The loop has several text elements, one for each box representing one of the phases as well as the associated functions repsonsible for inserting and processing data structure elements."
-tags: ["node.js", "event-loop", "asynchronous", "c"]
+tags: ["node.js", "event-loop", "asynchronous", "c", "how-it-works"]
 ---
 
 # Introduction
