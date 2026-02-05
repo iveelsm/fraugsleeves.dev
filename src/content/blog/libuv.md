@@ -592,7 +592,7 @@ static void uv__finish_close(uv_handle_t* handle) {
 }
 ```
 
-You can see our prior references to pending for errors, as well as the relatively simple closing handles, queue management, callback mechanisms we have seen previously and case specific handling. 
+You can see our prior references to pending for errors, as well as the relatively simple closing handles, queue management, callback mechanisms we have seen previously and case specific handling.
 
 # Summary
 
@@ -605,8 +605,7 @@ This article, and it's related articles, started as a teach out session around e
 5. [Morning Keynote- Everything You Need to Know About Node.js Event Loop](https://www.youtube.com/watch?v=PNa9OMajw9w)
 6. [All you need to know to really understand the Node.js Event Loop and its Metrics](https://www.dynatrace.com/news/blog/all-you-need-to-know-to-really-understand-the-node-js-event-loop-and-its-metrics/#disqus_thread)
 7. [Node's Event Loop From the Inside Out](https://www.youtube.com/watch?v=P9csgxBgaZ8)
-8.  [Nonblocking I/O](https://copyconstruct.medium.com/nonblocking-i-o-99948ad7c957)
-
+8. [Nonblocking I/O](https://copyconstruct.medium.com/nonblocking-i-o-99948ad7c957)
 
 # References
 
@@ -622,4 +621,3 @@ This article, and it's related articles, started as a teach out session around e
 10. https://en.wikipedia.org/wiki/Binary_heap
 11. https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick#pending-callbacks
 12. https://blog.libtorrent.org/2012/10/asynchronous-disk-io/
-

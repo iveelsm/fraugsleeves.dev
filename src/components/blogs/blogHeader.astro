@@ -45,7 +45,8 @@ const { title, date, description, minutesRead, author, editors, tags } =
 					)
 				}
 				<span class="post-header-date">
-					<strong>Published:</strong> {new Date(date).toDateString()}
+					<strong>Published:</strong>
+					{new Date(date).toDateString()}
 				</span>
 				<ul class="post-tags">
 					{tags.map((tag) => <li class="tag">#{tag}</li>)}

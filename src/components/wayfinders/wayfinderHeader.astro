@@ -35,7 +35,8 @@ const { title, date, description, minutesRead, author } = Astro.props;
 					)
 				}
 				<span class="post-header-date">
-					<strong>Published:</strong> {new Date(date).toDateString()}
+					<strong>Published:</strong>
+					{new Date(date).toDateString()}
 				</span>
 			</div>
 		</div>
