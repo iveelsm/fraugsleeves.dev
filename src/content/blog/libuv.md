@@ -602,7 +602,7 @@ This article, and it's related articles, started as a teach out session around e
 2. [NodeConf EU | A deep dive into libuv](https://www.youtube.com/watch?v=sGTRmPiXD4Y)
 3. [rough notes on the linux side of the libuv event loop ](https://gist.github.com/trevnorris/1f3066ccb0fed9037afa)
 4. [The Node.js Event Loop: Not So Single Threaded](https://www.youtube.com/watch?v=zphcsoSJMvM)
-5. [Morning Keynote- Everything You Need to Know About Node.js Event Loop](https://www.youtube.com/watch?v=PNa9OMajw9w)
+5. [Morning Keynote - Everything You Need to Know About Node.js Event Loop](https://www.youtube.com/watch?v=PNa9OMajw9w)
 6. [All you need to know to really understand the Node.js Event Loop and its Metrics](https://www.dynatrace.com/news/blog/all-you-need-to-know-to-really-understand-the-node-js-event-loop-and-its-metrics/#disqus_thread)
 7. [Node's Event Loop From the Inside Out](https://www.youtube.com/watch?v=P9csgxBgaZ8)
 8. [Nonblocking I/O](https://copyconstruct.medium.com/nonblocking-i-o-99948ad7c957)
