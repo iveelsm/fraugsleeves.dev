@@ -12,7 +12,7 @@
 		{
 			description: "Update custom packages when available",
 			groupName: "custom package updates",
-			matchPackageNames: ["@iveelsm/*"],
+			matchPackageNames: ["@iveelsm/*", "astro-font-loader"],
 			minimumReleaseAge: "0 days",
 		},
 	],
