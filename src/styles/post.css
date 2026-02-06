@@ -316,6 +316,20 @@
 	text-decoration: none;
 }
 
+.post-content a.numeric-reference {
+	vertical-align: super;
+	font-size: 0.75em;
+	line-height: 0;
+	position: relative;
+	top: -0.25em;
+	text-decoration: none;
+	font-weight: var(--font-semibold);
+}
+
+.post-content a.numeric-reference:hover {
+	text-decoration: underline;
+}
+
 .post-content code {
 	background: var(--color-code-bg);
 	padding: 0.2em 0.4em;

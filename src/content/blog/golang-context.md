@@ -457,7 +457,7 @@ func GetUser(ctx context.Context) *User {
 }
 ```
 
-In this example, we have clear approaches for retrieving the value associated with the "user" key on a context. We have appropriate stores as well to maintain the type-safety, and it provides a reasonable escape hatch and observability options for detecting when accesses are occurring that break the contract. We can apply this pattern to any store associated with the context to keep the type safety guarantees. We can further extend these type safety guarantees through the use of `panic()` when an incorrect type is detected. This type of misuse would fall well within the Google style guide around **When to panic**. [[10]](https://google.github.io/styleguide/go/best-practices#program-checks-and-panics)
+In this example, we have clear approaches for retrieving the value associated with the "user" key on a context. We have appropriate stores as well to maintain the type-safety, and it provides a reasonable escape hatch and observability options for detecting when accesses are occurring that break the contract. We can apply this pattern to any store associated with the context to keep the type safety guarantees. We can further extend these type safety guarantees through the use of `panic()` when an incorrect type is detected. This type of misuse would fall well within the [Google style guide around when to panic](https://google.github.io/styleguide/go/best-practices#program-checks-and-panics). 
 
 ## goroutines should be associated with a context and must be properly terminated
 
