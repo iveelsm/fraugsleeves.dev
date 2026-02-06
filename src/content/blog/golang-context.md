@@ -554,4 +554,3 @@ Now the goroutines will close when the request context is cancelled, which avoid
 7. https://medium.com/@jamal.kaksouri/the-complete-guide-to-context-in-golang-efficient-concurrency-management-43d722f6eaea
 8. https://www.datadoghq.com/blog/go-memory-leaks/#goroutines
 9. https://pkg.go.dev/golang.org/x/net/context#Background
-10. https://google.github.io/styleguide/go/best-practices#program-checks-and-panics
