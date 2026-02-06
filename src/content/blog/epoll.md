@@ -1,7 +1,7 @@
 ---
 layout: ../../layouts/blog.astro
 title: "How epoll works"
-pubDate: 2025-05-07
+pubDate: 2026-02-15
 shortDescription: "One of a series of posts around the inner workings of Node.js, focused on file descriptor polling with epoll."
 description: "One of a series of posts around the inner-workings of Node.js, this article seeks to provide a deeper understanding of the asynchronous I/O polling mechanism used by many systems called epoll. It explores the concepts of file descriptors, event trigger, select, poll and epoll and their limitations."
 author: "Mikey Sleevi"
@@ -61,7 +61,7 @@ In this example, we start by opening a file `"abc.txt"`. This file is opened wit
 
 We can start to answer that question with a simplistic view of the world, much like our previous test program. We can break down I/O interactions on Linux into three main components: file descriptors, file tables, and inode tables. Those relationships can be seen here. As a note, we are going to be focused on **file handling** in Linux, a great deal of the concepts apply in pipes and sockets, however, it's just easier to view the world as files.
 
-![Simple File Descriptor View](../../assets/epoll/epoll_simple.png)
+![A diagram representing three tables, a file descriptor table, a file table and an inode table. There are several entries in each along with arrows relating the left most table, the file descriptor table, to the middle table, the file table, and additional arrows relating the file table to the right most table, the inode table](../../assets/epoll/epoll_simple.png "Simplistic File Descriptor View")
 
 ## File table
 
@@ -238,9 +238,114 @@ There is so much to file descriptors (often referred to as **fide** from here in
 
 These aren't completely outlandish, and give us a reasonable frame of reference to discuss the more important pieces of polling. With that, our view of the world resemebles the following.
 
-![Complex File Descriptor View](../../assets/epoll/epoll_complex.png)
+![A diagram of the relationship between process file descriptor tables, file tables and inode tables. It displays four tables of varying colors, two process file descriptor tables and one for the each of the remaining two types. It establishes the major relationships, drawing arrows between shared file descriptors resulting from forks, individual file descriptors and the relationship between file and inode on disk.](../../assets/epoll/epoll_complex.png "A more realistic view of file descriptors")
 
-We have up to this point, looked at the intricacies of the pieces that make up this diagram, and a simple example that writes to a file, but what would a real interaction look like? The following is an example of a simple HTTP server that helps to better illustrate a real world use case.
+Now for understanding **epoll**, there are two additional concepts we need to discuss. Those being `fork()` [19](https://www.man7.org/linux/man-pages/man2/fork.2.html) and one of the flags for file descriptors called `O_CLOEXEC`, which stands for Open Close-on-Exec. Let's talk about `fork()` first. We need to extend our simplistic example a bit in order to discuss it. As a brief aside for process management, there are only a handful of ways to actually start a process in Linux, the most common of which are `fork()` and `exec()` [27](https://www.man7.org/linux/man-pages/man3/exec.3.html). It's fairly uncommon to see one without the other, so we will be extend our simple process before and splitting up the opening of file descriptors, and the writing of file descriptors.
+
+Let's start with our parent.
+
+```c
+#include <unistd.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) {
+  int fd = open("abc.txt", O_WRONLY | O_CREAT | O_TRUNC, 0666);
+
+  pid_t pid = fork();
+  if (pid == 0) {
+    char fd_str[16];
+    snprintf(fd_str, sizeof(fd_str), "%d", fd);
+    execl("./child", "child", fd_str, NULL);
+  }
+
+  write(fd, "foo", 3);
+  close(fd);
+  return 0;
+}
+```
+
+And our child function.
+
+```c
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+int main(int argc, char *argv[]) {
+    int fd = atoi(argv[1]);
+
+    write(fd, "foo", 3);
+    close(fd);
+
+    return 0;
+}
+```
+
+We still have the same basic concept, except in one, the file descriptor is passed. Here is the output from copying that into a file `parent.c` and `child.c` and compiling and running it.
+
+```bash
+; gcc parent.c -o test
+; gcc child.c -o child
+; ./test
+; cat abc.txt
+foofoo
+```
+
+This may be surprising if you have never encountered `fork()` before. But let's see what is going on. When we start, our world view looks kind of like this.
+
+![A diagram of the relationship between process file descriptor tables, file tables and inode tables. It displays three tables of varying colors, one process file descriptor tables and one for the each of the remaining two types. It establishes the major relationships, drawing arrows between shared file descriptors resulting from forks, individual file descriptors and the relationship between file and inode on disk. It additionally has an arrow pointing to the file descriptor table indicating a fork system call](../../assets/epoll/epoll_fork_pre.png "File Descriptor Tables Pre-Fork")
+
+In this example, we are calling `fork()` with an open fide table for a process. This fide table has a reference for file descriptor `101` that has a link to our open file table. Let's assume for a moment this is `abc.txt`. Now after we call fork, let's see what happens.
+
+![A diagram of the relationship between process file descriptor tables, file tables and inode tables. It displays four tables of varying colors, two process file descriptor tables and one for the each of the remaining two types. It establishes the major relationships, drawing arrows between shared file descriptors resulting from forks, individual file descriptors and the relationship between file and inode on disk](../../assets/epoll/epoll_fork_post.png "File Descriptor Tables Post-Fork")
+
+We now have two process fide tables, both of which have the same file descriptor reference `101` pointing to the same entry in the open file table. So now, both processes write `"foo"` to the file, ending in the output `"foofoo"`.
+
+But what if we didn't desire that behavior in our program? How do we still fork at that point and prevent the write? This is where `O_CLOEXEC` comes in. Let's modify our program a bit to the following.
+
+```c
+#include <unistd.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) {
+  int fd = open("abc.txt", O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC, 0666);
+
+  pid_t pid = fork();
+  if (pid == 0) {
+    char fd_str[16];
+    snprintf(fd_str, sizeof(fd_str), "%d", fd);
+    execl("./child", "child", fd_str, NULL);
+  }
+
+  write(fd, "foo", 3);
+  close(fd);
+  return 0;
+}
+```
+
+The only thing we have added is a flag `O_CLOEXEC` to our original open call. The child remains the same. So what happens now?
+
+```bash
+; gcc cloexec.c -o cloexec
+; gcc child.c -o child
+; ./cloexec
+; cat abc.txt
+foo
+```
+
+Why did that happen though?
+
+![A diagram of the relationship between process file descriptor tables, file tables and inode tables. It displays three tables of varying colors, one process file descriptor tables and one for the each of the remaining two types. It establishes the major relationships, drawing arrows between shared file descriptors resulting from forks, individual file descriptors and the relationship between file and inode on disk. It additional has an arrow pointing to the file descriptor table indicating a fork system call with a flag set in one of the entries for the file descriptor as CLO](../../assets/epoll/epoll_close_pre.png)
+
+We still start with the same world view as before, only with the change to the _fd flags_ to indicate `CLO`. This represents our `O_CLOEXEC` flag. When we perform our `fork()`, followed by our `exec()` for the child process, the file descriptor becomes gray. As you can imagine, this is our "Close-on-Exec" flag coming into play.
+
+![A diagram of the relationship between process file descriptor tables, file tables and inode tables. It displays four tables of varying colors, two process file descriptor tables and one for the each of the remaining two types. It establishes the major relationships, drawing arrows between shared file descriptors resulting from forks, individual file descriptors and the relationship between file and inode on disk. It has one of the entries gray out in the second file descriptor table, this has a counterpart in the first table where a CLO flag has been set](../../assets/epoll/epoll_close_post.png)
+
+So our writer can not write directly to our file descriptor after the `exec()` which results in the text `"foo"` only being written in the parent process, not in the child. While we have looked at the intricacies of the pieces that make up this diagram, and a simple example that writes to a file, it begs the question, what would a real interaction look like? The following is an example of a simple HTTP server that helps to better illustrate a real world use case.
 
 ```c
 void server_serve(server_t **server) {
@@ -305,61 +410,7 @@ void server_serve(server_t **server) {
 }
 ```
 
-In the above, we use file descriptors at the start of the while loop as part of the `accept()` [18](https://www.man7.org/linux/man-pages/man2/accept.2.html) call. We previously have established a file descriptor for the socket handling in the `server_bind` which has been truncated for brevity sake. From there, we accept an incoming connection on that file descriptor for the socket, given by `(*server)->fdsocket`. That incoming file descriptor is then used in the `incomingctx` and passed as the `fdincoming`. From there, we are able to pass that off to our server handler who has enough information on the `incomingctx` reference to proceed. For all intents and purposes, this is basically how every HTTP server in the world works, you bind to a socket, accept incoming connections, pass off the connection to a handler who has the responsibility and passing the requisite information.
-
-Now for understanding **epoll**, there are two additional concepts we need to discuss. Those being `fork()` [19](https://www.man7.org/linux/man-pages/man2/fork.2.html) and one of the flags for file descriptors called `O_CLOEXEC`, which stands for Open Close-on-Exec. Let's take about `fork()` first. Coming back to our very simple example, we had a simple program that wrote `"foo"` to a file `abc.txt`. But what happens now?
-
-```c
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdio.h>
-
-int main(int f, char *argv[]) {
-  int fd = open("abc.txt", O_RDWR | O_CREAT | O_TRUNC, 0666);
-  fork();
-  write(fd, "foo", 3);
-  close(fd);
-  return 0;
-}
-```
-
-Here is the output from copying that into a file `test.c` and compiling and running it.
-
-```bash
-; gcc test.c -o a.out
-; ./a.out
-; cat abc.txt
-foofoo
-```
-
-This may be surprising if you have never encountered `fork()` before. But let's see what is going on. When we start, our world view looks kind of like this.
-
-![Complex File Descriptor View](../../assets/epoll/epoll_fork_pre.png)
-
-In this example, we are calling `fork()` with an open fide table for a process. This fide table has a reference for file descriptor `101` that has a link to our open file table. Let's assume for a moment this is `abc.txt`. Now after we call fork, let's see what happens.
-
-![Complex File Descriptor View](../../assets/epoll/epoll_fork_post.png)
-
-We now have two process fide tables, both of which have the same file descriptor reference `101` pointing to the same entry in the open file table. There are few ways to start a process in Unix, and `fork()` is one of them. `fork()` duplicates the calling process, including the fide table. So now, both process write `"foo"` to the file, ending in the output `"foofoo"`.
-
-But what if we didn't desire that behavior in our program? How do we still fork at that point and prevent the write? This is where `O_CLOEXEC` comes in. Let's modify our program a bit to the following.
-
-<!-- # TODO, modify above program for fork/exec flow -->
-
-![Complex File Descriptor View](../../assets/epoll/epoll_close_pre.png)
-
-In this example, we will `fork()` the process similar to perform, but when we write out the data, the file descriptor will be closed as indicated by the image below.
-
-![Complex File Descriptor View](../../assets/epoll/epoll_close_post.png)
-
-So our writer can not write directly to our file descriptor after the `fork()` which results in the following output of the program.
-
-```bash
-; gcc test.c -o a.out
-; ./a.out
-; cat abc.txt
-foofoo
-```
+In the above, we use file descriptors at the start of the while loop as part of the `accept()` [18](https://www.man7.org/linux/man-pages/man2/accept.2.html) call. We previously have established a file descriptor for the socket handling in the `server_bind` which has been truncated for brevity sake. From there, we accept an incoming connection on that file descriptor for the socket, given by `(*server)->fdsocket`. That incoming file descriptor is then used in the `incomingctx` and passed as the `fdincoming`. From there, we are able to pass that off to our server handler who has enough information on the `incomingctx` reference to proceed. For all intents and purposes, this is basically how every HTTP server in the world works, you bind to a socket, accept incoming connections, pass off the connection to a handler who has the responsibility and passing the requisite information. But here is a perplexing question, how do we know that a socket has an incoming connection?
 
 # Event triggers
 
@@ -373,7 +424,11 @@ Event triggers, or interrupts, for the purposes of this article will not be rela
 
 ![Test Gif](../../assets/epoll/epoll_edge_trigger.gif)
 
-# select and poll
+# I/O Polling
+
+As you may already be aware, performing I/O is, begrudgingly, one of the major values of a computer. I have a saying that I often refer to, I don't know the origination but it amounts to the following: "Computers were perfect until we connected them together and let them talk". However, I also recognize that computers would be normal near as popular as they are today if they couldn't. So if we know what tracks events, and how events are triggered, how do we notify programs that they need to do something with these events? This is where the I/O polling syscalls come into play.
+
+## select and poll
 
 Before we start to talk about **epoll**, we need to discuss it's precursor `select()` and `poll()`. We will start by exploring `select()`.
 
@@ -482,7 +537,7 @@ static int do_select(int n, fd_set_bits *fds, struct timespec64 *end_time) {
     }
 
     /* ...timeout handling */
-    
+
   }
 
   poll_freewait(&table);
@@ -526,7 +581,7 @@ The bitsets are gone, it's just an array of structures that represent the file d
 
 ```c
 static int do_poll(struct poll_list *list, struct poll_wqueues *wait, struct timespec64 *end_time) {
-      
+
   /* ...initialization */
 
   /* Optimise the no-wait case */
@@ -590,7 +645,71 @@ static int do_poll(struct poll_list *list, struct poll_wqueues *wait, struct tim
 
 This is a lot like the `do_select()` function. We are doing a linear scan of arguments, the only change is that we do not do any bitset management for determining file descriptors to scan. We just iterate over the list we were initially passed. However, both `select()` and `poll()` has the same problem, they are linear in time. This is a serious problem as the number of watched file descriptors start to grow. Which is where **epoll** steps in.
 
-# epoll
+## epoll
+
+**epoll** is not represented by a single interface, in fact, it's three separate interfaces. As a general note for this section, unlike the previous section, we will be stopping at the interface level. The functions here are not as contained as `poll()` and `select()` and often branch into other areas. As can be expected, as systems branch from simple linear scans of file descriptors, the underlying code gets more complex. So focusing on the interfaces, they are:
+
+- `epoll_create()` which is responsible for opening the **epoll** file descriptor [25](https://www.man7.org/linux/man-pages/man2/epoll_create.2.html)
+- `epoll_ctl()` which is a control interface for the **epoll** file descriptor [24](https://www.man7.org/linux/man-pages/man2/epoll_ctl.2.html)
+- `epoll_wait()` which is responsible for waiting for an I/O event on an **epoll** file descriptor [26](https://www.man7.org/linux/man-pages/man2/epoll_wait.2.html)
+
+If you notice, that really only talks about one file descriptor, so how does one file descriptor manage thousands of other file descriptors? The answer is that epoll is not just a system call, it's actually a data structure in the kernel. This data structure is given by the following.
+
+```c
+struct eventpoll {
+  /*
+    * This mutex is used to ensure that files are not removed
+    * while epoll is using them. This is held during the event
+    * collection loop, the file cleanup path, the epoll file exit
+    * code and the ctl operations.
+    */
+  struct mutex mtx;
+
+  /* Wait queue used by sys_epoll_wait() */
+  wait_queue_head_t wq;
+
+  /* Wait queue used by file->poll() */
+  wait_queue_head_t poll_wait;
+
+  /* List of ready file descriptors */
+  struct list_head rdllist;
+
+  /* Lock which protects rdllist and ovflist */
+  rwlock_t lock;
+
+  /* RB tree root used to store monitored fd structs */
+  struct rb_root_cached rbr;
+
+  /*
+    * This is a single linked list that chains all the "struct epitem" that
+    * happened while transferring ready events to userspace w/out
+    * holding ->lock.
+    */
+  struct epitem *ovflist;
+
+  /* wakeup_source used when ep_scan_ready_list is running */
+  struct wakeup_source *ws;
+
+  /* The user that created the eventpoll descriptor */
+  struct user_struct *user;
+
+  struct file *file;
+
+  /* used to optimize loop detection check */
+  u64 gen;
+  struct hlist_head refs;
+
+  /*
+    * usage count, used together with epitem->dying to
+    * orchestrate the disposal of this struct
+    */
+  refcount_t refcount;
+
+  /* ...skipped */
+};
+```
+
+And we can create that data structure is created from by using the first interface we are going to be discussing `epoll_create()`.
 
 ```c
 #include <sys/epoll.h>
@@ -599,9 +718,15 @@ int epoll_create(
 );
 ```
 
+The size argument is an indication to the kernel about the number of file descriptors a process wants to monitor, which helps the kernel to decide the size of the epoll instance. Since Linux 2.6.8, this argument is ignored because the epoll data structure dynamically resizes as file descriptors are added or removed from it. So let's talk a visual look at what happens when we call it.
+
 ![Complex File Descriptor View](../../assets/epoll/epoll_create_pre.png)
 
+The system call returns a file descriptor to the newly created epoll kernel data structure. The calling process can then use this file descriptor to add, remove or modify other file descriptors it wants to monitor for I/O to the epoll instance.
+
 ![Complex File Descriptor View](../../assets/epoll/epoll_create_post.png)
+
+This file descriptor that has been returned can now be modify with the second in our syscall list, `epoll_ctl()`.
 
 ```c
 #include <sys/epoll.h>
@@ -613,9 +738,21 @@ int epoll_ctl(
 );
 ```
 
+Going through the arguments, `epfd` is the file descriptor for the **epoll** data structure, `fd` is the file descriptor we want to add to the epoll list, `o` refers to the operation to be performed on the file descriptor and `event` is a pointer to a structure which stores the event we actually want to monitor for. In general, three operations are supported for the `op`:
+
+- `EPOLL_CTL_ADD` which registers fd with the **epoll** instance and get notified about events that occur on fd
+- `EPOLL_CTL_DEL` which deregisters the fd from the epoll instance. An important note is that if a file descriptor has been added to multiple **epoll** instances, then closing it will remove it from all of the epoll interest lists to which it was added.
+- `EPOLL_CTL_MOD` which modifies the events **epoll** is monitoring on the fd.
+
+So let's look at a simple example where we add a bunch of file descriptors to be modified.
+
 ![Complex File Descriptor View](../../assets/epoll/epoll_ctl_pre.png)
 
+We generally start with the `epoll_ctl()` call on the **epoll** data structure, in this case, we call with several `EPOLL_CTL_ADD`.
+
 ![Complex File Descriptor View](../../assets/epoll/epoll_ctl_post.png)
+
+And then afterwards, our internal **epoll** data structure has been populated with the requisite file descriptors. So now, we need to know which file descriptors have the events that we are interested in, which brings us to the final syscall interface, `epoll_wait()`.
 
 ```c
 #include <sys/epoll.h>
@@ -627,9 +764,126 @@ int epoll_wait(
 );
 ```
 
+Iterating through the arguments again, `epfd` is the file descriptor for the **epoll** data structure, `evlist` is an array of structures allocated by the calling process and populated by **epoll**, this is also called the ready list. `maxevents` is the length of `evlist` and `timeout` specifies how long we should block for. Some possibilities here are:
+
+- When the timeout is set to 0, `epoll_wait()` does not block but returns immediately after checking which file descriptors in the interest list for `epfd` are ready
+- When timeout is set to -1, `epoll_wait()` will block "forever". By "forever", `epoll_wait()` will block until one of the file descriptors becomes ready or a call is interrupted by a signal handler.
+- When timeout is positive and non-zero, it will block until any of the conditions in the negative case, or the timeout expires.
+
+The return code in the non-error case is the number of file descriptors that are ready, which is bounded by `maxevents`. So let's continue our visualization example.
+
 ![Complex File Descriptor View](../../assets/epoll/epoll_wait_pre.png)
 
+We start with a simple wait call on our file descriptors, none of which have deviated from the state that we added them with.
+
 ![Complex File Descriptor View](../../assets/epoll/epoll_wait_post.png)
+
+However, after the call finishes, we have several file descriptors ready from our available list and those have been returned to the process for handling. This is the one point in this subsection we have to dive into the code. Let's look more closely at what is happening here.
+
+```c
+static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events, int maxevents, struct timespec64 *timeout) {
+  /* ... initialization */
+
+  lockdep_assert_irqs_enabled();
+
+  /* ...timeout */
+
+  /*
+   * This call is racy: We may or may not see events that are being added
+   * to the ready list under the lock (e.g., in IRQ callbacks). For cases
+   * with a non-zero timeout, this thread will check the ready list under
+   * lock and will add to the wait queue.  For cases with a zero
+   * timeout, the user by definition should not care and will have to
+   * recheck again.
+   */
+  eavail = ep_events_available(ep);
+
+  while (1) {
+    if (eavail) {
+      /*
+       * Try to transfer events to user space. In case we get
+       * 0 events and there's still timeout left over, we go
+       * trying again in search of more luck.
+       */
+      res = ep_send_events(ep, events, maxevents);
+      if (res)
+        return res;
+    }
+
+    /* ... timeout, signal handling */
+
+    /*
+     * Internally init_wait() uses autoremove_wake_function(),
+     * thus wait entry is removed from the wait queue on each
+     * wakeup. Why it is important? In case of several waiters
+     * each new wakeup will hit the next waiter, giving it the
+     * chance to harvest new event. Otherwise wakeup can be
+     * lost. This is also good performance-wise, because on
+     * normal wakeup path no need to call __remove_wait_queue()
+     * explicitly, thus ep->lock is not taken, which halts the
+     * event delivery.
+     *
+     * In fact, we now use an even more aggressive function that
+     * unconditionally removes, because we don't reuse the wait
+     * entry between loop iterations. This lets us also avoid the
+     * performance issue if a process is killed, causing all of its
+     * threads to wake up without being removed normally.
+     */
+    init_wait(&wait);
+    wait.func = ep_autoremove_wake_function;
+
+    write_lock_irq(&ep->lock);
+    /*
+     * Barrierless variant, waitqueue_active() is called under
+     * the same lock on wakeup ep_poll_callback() side, so it
+     * is safe to avoid an explicit barrier.
+     */
+    __set_current_state(TASK_INTERRUPTIBLE);
+
+    /*
+     * Do the final check under the lock. ep_scan_ready_list()
+     * plays with two lists (->rdllist and ->ovflist) and there
+     * is always a race when both lists are empty for short
+     * period of time although events are pending, so lock is
+     * important.
+     */
+    eavail = ep_events_available(ep);
+    if (!eavail)
+      __add_wait_queue_exclusive(&ep->wq, &wait);
+
+    write_unlock_irq(&ep->lock);
+
+    if (!eavail)
+      timed_out = !schedule_hrtimeout_range(to, slack,
+                    HRTIMER_MODE_ABS);
+    __set_current_state(TASK_RUNNING);
+
+    /*
+     * We were woken up, thus go and try to harvest some events.
+     * If timed out and still on the wait queue, recheck eavail
+     * carefully under lock, below.
+     */
+    eavail = 1;
+
+    if (!list_empty_careful(&wait.entry)) {
+      write_lock_irq(&ep->lock);
+      /*
+       * If the thread timed out and is not on the wait queue,
+       * it means that the thread was woken up after its
+       * timeout expired before it could reacquire the lock.
+       * Thus, when wait.entry is empty, it needs to harvest
+       * events.
+       */
+      if (timed_out)
+        eavail = list_empty(&wait.entry);
+      __remove_wait_queue(&ep->wq, &wait);
+      write_unlock_irq(&ep->lock);
+    }
+  }
+}
+```
+
+Let's break down this code. We start by checking if IRQs, also known as interrupt requests, are even enabled. This is uncommon to not be enabled, but epoll will not function without it as there will be no triggers. We then check if any events are availabe, which is done through a read of the `rdllist` in the `eventpoll` structure and then a verification of the `ovflist`. If there are events available, we are going to try and transfer them from kernel space to user space. We do this by determining if the event on the entry in the ready list intersects with the requested event, in a thread safe manner.
 
 ## Performance and pitfalls
 
@@ -658,3 +912,7 @@ int epoll_wait(
 21. https://www.kegel.com/c10k.html
 22. https://en.wikipedia.org/wiki/Multiplexing
 23. https://daniel.haxx.se/docs/poll-vs-select.html
+24. https://www.man7.org/linux/man-pages/man2/epoll_ctl.2.html
+25. https://www.man7.org/linux/man-pages/man2/epoll_wait.2.html
+26. https://www.man7.org/linux/man-pages/man2/epoll_wait.2.html
+27. https://www.man7.org/linux/man-pages/man3/exec.3.html
