@@ -1,5 +1,5 @@
-import { NAVIGATION_ITEMS } from "./navigationItems";
 import { IVEELSM_FONTS_FILTER } from "./fonts";
+import { NAVIGATION_ITEMS } from "./navigationItems";
 import { SOCIAL_LINKS } from "./socialLinks";
 
 const SITE_URL = "https://fraugsleeves.dev";

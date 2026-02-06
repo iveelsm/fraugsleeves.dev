@@ -12,12 +12,14 @@ import { IVEELSM_FONTS_FILTER } from "./src/constants";
 // eslint-disable-next-line
 const site = process.env.SITE_URL || "https://fraugsleeves.dev";
 
-
 // https://astro.build/config
 export default defineConfig({
 	site,
 	integrations: [
-		fontsIntegration({ packages: ["@iveelsm/fonts"], filter: IVEELSM_FONTS_FILTER }),
+		fontsIntegration({
+			packages: ["@iveelsm/fonts"],
+			filter: IVEELSM_FONTS_FILTER,
+		}),
 		pagefind(),
 		sitemap(),
 	],

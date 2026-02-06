@@ -617,6 +617,6 @@ This article, and it's related articles, started as a teach out session around e
 6. https://github.com/libevent/libevent
 7. https://en.wikipedia.org/wiki/Reactor_pattern
 8. https://en.wikipedia.org/wiki/Min-max_heap
-9.  https://en.wikipedia.org/wiki/Binary_heap
+9. https://en.wikipedia.org/wiki/Binary_heap
 10. https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick#pending-callbacks
 11. https://blog.libtorrent.org/2012/10/asynchronous-disk-io/

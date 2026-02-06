@@ -1,9 +1,13 @@
 ---
 import { getFontsCss, getFontsPackageInfo } from "astro-font-loader";
+
 import { IVEELSM_FONTS_FILTER } from "../../constants";
 
 const fontsPackageInfo = getFontsPackageInfo("@iveelsm/fonts");
-const fontsCss = getFontsCss({ filter: IVEELSM_FONTS_FILTER }, fontsPackageInfo);
+const fontsCss = getFontsCss(
+	{ filter: IVEELSM_FONTS_FILTER },
+	fontsPackageInfo,
+);
 ---
 
 {fontsCss && <style is:inline set:html={fontsCss} />}

@@ -1,5 +1,5 @@
-import { visit } from "unist-util-visit";
 import type { Root, Element, Text } from "hast";
+import { visit } from "unist-util-visit";
 
 /**
  * Rehype plugin to wrap numeric references (e.g., [1], [2], [3]) in a span
@@ -8,7 +8,11 @@ import type { Root, Element, Text } from "hast";
 export default function rehypeNumericReferences() {
 	return (tree: Root) => {
 		visit(tree, "element", (node: Element) => {
-			if (node.tagName === "a" && node.children && node.children.length > 0) {
+			if (
+				node.tagName === "a" &&
+				node.children &&
+				node.children.length > 0
+			) {
 				const firstChild = node.children[0];
 
 				if (
@@ -20,14 +24,19 @@ export default function rehypeNumericReferences() {
 					let classArray: string[];
 
 					if (Array.isArray(existingClasses)) {
-						classArray = existingClasses.filter((c): c is string => typeof c === 'string');
-					} else if (typeof existingClasses === 'string') {
+						classArray = existingClasses.filter(
+							(c): c is string => typeof c === "string",
+						);
+					} else if (typeof existingClasses === "string") {
 						classArray = [existingClasses];
 					} else {
 						classArray = [];
 					}
 
-					node.properties.className = [...classArray, "numeric-reference"];
+					node.properties.className = [
+						...classArray,
+						"numeric-reference",
+					];
 				}
 			}
 		});
