@@ -1,3 +1,4 @@
+import { IVEELSM_FONTS_FILTER } from "./fonts";
 import { NAVIGATION_ITEMS } from "./navigationItems";
 import { SOCIAL_LINKS } from "./socialLinks";
 
@@ -17,4 +18,5 @@ export {
 	DEFAULT_DESCRIPTION,
 	DEFAULT_IMAGE,
 	DEFAULT_ALT,
+	IVEELSM_FONTS_FILTER,
 };

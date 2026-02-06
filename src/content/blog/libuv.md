@@ -14,17 +14,17 @@ tags: ["node.js", "event-loop", "asynchronous", "c", "how-it-works"]
 
 # Introduction
 
-Any dive into the inner workings of Node.js [[1]](https://nodejs.org/en/) cannot be complete without discussing event loops. The first sentence of About Node.js highlights this without the reader realizing it.
+Any dive into the inner workings of Node.js cannot be complete without discussing event loops. The first sentence of About Node.js highlights this without the reader realizing it.
 
-> As an asynchronous event-driven JavaScript runtime, Node.js is designed to build scalable network applications. [[3]](https://nodejs.org/en/about/)
+> As an asynchronous event-driven JavaScript runtime, Node.js is designed to build scalable network applications. [[1]](https://nodejs.org/en/about/)
 
-The idea of an asynchronous, event-driven runtime is the bedrock of Node.js, and one of the many reasons why it has become so popular today [[4]](https://survey.stackoverflow.co/2025/technology#most-popular-technologies). One of the core pieces of the runtime, and likely most discussed piece, is the **event loop** [[5]](https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/#what-is-the-event-loop). It is the heart of Node.js and will be the centerpiece of this article. The event loop is composed of many pieces, but at its core is a library called **libuv**. [[2]](https://github.com/libuv/libuv) As with any library, the content in this article may drift towards incorrect over time. When I initially produced this content in late 2019, it required several changes to update it for 2025. This article has been drafted with a lens for libuv `v1.x`, specifically around the time of `v1.51.0`. This will provide an incomplete picture, and if the reader finds themselves wanting for more details, I strongly encourage also reading the [documentation the library provides](https://docs.libuv.org/en/v1.x/guide.html).
+The idea of an asynchronous, event-driven runtime is the bedrock of Node.js, and one of the many reasons why it has become so popular today. [[2]](https://survey.stackoverflow.co/2025/technology#most-popular-technologies) One of the core pieces of the runtime, and likely most discussed piece, is the **event loop**. [[3]](https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/#what-is-the-event-loop) It is the heart of Node.js and will be the centerpiece of this article. The event loop is composed of many pieces, but at its core is a library called **libuv**. [[4]](https://github.com/libuv/libuv) As with any library, the content in this article may drift towards incorrect over time. When I initially produced this content in late 2019, it required several changes to update it for 2025. This article has been drafted with a lens for libuv `v1.x`, specifically around the time of `v1.51.0`. This will provide an incomplete picture, and if the reader finds themselves wanting for more details, I strongly encourage also reading the [documentation the library provides](https://docs.libuv.org/en/v1.x/guide.html).
 
 # What is libuv?
 
-Libuv arose as an abstraction over libev [[6]](https://github.com/enki/libev), which itself was modeled after libevent [[7]](https://github.com/libevent/libevent). All of which are themselves abstractions over system calls like `select`, `poll` and `epoll`, or event notification interfaces like `kqueue`. In the library's own words, libuv can be referred to as a...
+Libuv arose as an abstraction over libev [[5]](https://github.com/enki/libev), which itself was modeled after libevent. [[6]](https://github.com/libevent/libevent) All of which are themselves abstractions over system calls like `select`, `poll`, or event notification interfaces like **epoll** and **kqueue**. In the library's own words, libuv can be referred to as a...
 
-> multi-platform support library with a focus on asynchronous I/O [[2]](https://github.com/libuv/libuv)
+> multi-platform support library with a focus on asynchronous I/O [[4]](https://github.com/libuv/libuv)
 
 To the keen reader, this will sound very much like our _asynchronous, event-driven runtime_, we've just replaced _event-driven_ with I/O. Which is to say the concepts that drive libuv and Node.js are one and the same. Before we discuss those concepts, I want to take the time to highly the large number of features within the library:
 
@@ -53,7 +53,7 @@ An event loop is a design pattern that focuses on the control flow of events. Th
 
 > The event loop is the central part of libuv’s functionality. It takes care of polling for I/O and scheduling callbacks to be run based on different sources of events
 
-There are many styles for event loops, libuv's particular application is based on the Reactor Pattern. [[8]](https://en.wikipedia.org/wiki/Reactor_pattern) And libuv is not the only application of this pattern, systems like nginx, Netty, Spring, Tokio and Twisted all arose as applications of it. It has proven to be a strong design pattern for I/O handling in particular. Libuv puts its own special twist on the idea by breaking the event loop into phases, those being:
+There are many styles for event loops, libuv's particular application is based on the Reactor Pattern. [[7]](https://en.wikipedia.org/wiki/Reactor_pattern) And libuv is not the only application of this pattern, systems like nginx, Netty, Spring, Tokio and Twisted all arose as applications of it. It has proven to be a strong design pattern for I/O handling in particular. Libuv puts its own special twist on the idea by breaking the event loop into phases, those being:
 
 - Timer
 - Pending
@@ -170,7 +170,7 @@ int uv_run(uv_loop_t* loop, uv_run_mode mode) {
 }
 ```
 
-As you can see, there is again a suffix indicating the phase that the function corresponds to. I want to call special attention to a particular aspect of the event loop, which is `uv__update_time`. One of the foundational components of the event loop is time. While a large part of the `uv_loop_t` data structure is dedicated to queues for handles, there is a core component called the `timer_heap`. The `timer_heap` is a min-heap [[9]](https://en.wikipedia.org/wiki/Min-max_heap) data structure. And a key part of the reliable running of timers is the concept of "now", which is controlled, in part through `uv__update_time`. The event loop tries to maintain millisecond level tick precision in order to reliably execute timers. Let's see now how we utilize this precision, and the phases more generally by exploring each phase in detail.
+As you can see, there is again a suffix indicating the phase that the function corresponds to. I want to call special attention to a particular aspect of the event loop, which is `uv__update_time`. One of the foundational components of the event loop is time. While a large part of the `uv_loop_t` data structure is dedicated to queues for handles, there is a core component called the `timer_heap`. The `timer_heap` is a min-heap data structure. [[8]](https://en.wikipedia.org/wiki/Min-max_heap) And a key part of the reliable running of timers is the concept of "now", which is controlled, in part through `uv__update_time`. The event loop tries to maintain millisecond level tick precision in order to reliably execute timers. Let's see now how we utilize this precision, and the phases more generally by exploring each phase in detail.
 
 # Phases of the Event Loop
 
@@ -193,7 +193,7 @@ The first phase we are going to look at is the timer phase. The timer phase effe
 > - inserting an element
 > - removing the smallest or largest element from a min-heap or max-heap
 >
-> Binary heaps are also commonly employed in the heapsort sorting algorithm, which is an in-place algorithm because binary heaps can be implemented as an implicit data structure, storing keys in an array and using their relative positions within that array to represent child-parent relationships. [[10]](https://en.wikipedia.org/wiki/Binary_heap)
+> Binary heaps are also commonly employed in the heapsort sorting algorithm, which is an in-place algorithm because binary heaps can be implemented as an implicit data structure, storing keys in an array and using their relative positions within that array to represent child-parent relationships. [[9]](https://en.wikipedia.org/wiki/Binary_heap)
 
 ![A mostly gray scale image of the original libuv event loop with only the timer min-heap and timer phases remaining colored in yellow, the remaining event loop phases and datastructures are left in gray scale. It's intention is to focus the reader on the fact that this section is focused exclusively on the timer phase.](../../assets/libuv/libuv_timer.png "Libuv Timer Min-Heap")
 
@@ -243,7 +243,7 @@ We close out the code with that ability to repeat timers, as seen in `setInterva
 
 The pending phase is the first of our queue structured phases. For the context of Node.js, it serves a specific purpose which we didn't highlight in our original four phases.
 
-> This phase executes callbacks for some system operations such as types of TCP errors. For example if a TCP socket receives ECONNREFUSED when attempting to connect, some \*nix systems want to wait to report the error. This will be queued to execute in the pending callbacks phase. [[11]](https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick#pending-callbacks)
+> This phase executes callbacks for some system operations such as types of TCP errors. For example if a TCP socket receives ECONNREFUSED when attempting to connect, some \*nix systems want to wait to report the error. This will be queued to execute in the pending callbacks phase. [[10]](https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick#pending-callbacks)
 
 Which, for most readers, this phase is not going to be the highlight of your exploration of the event loop. It's purpose is focused and limited. The primary goal from a libuv standpoint is the execution of deferred I/O callbacks that were retrieved in the I/O polling phase. As such, you can see how Node.js arrived at this use for the management of TCP errors.
 
@@ -463,13 +463,13 @@ The code to manage all of this, including **epoll** is reasonably long, but not 
 2. Process the events with the I/O callback handler
 3. Continue until there are no more file descriptors to process
 
-That simplifies the loop quite a bit as there is a fair bit of epoll management, but for all intents and purposes that's enough for understanding the libuv portion. The main difference between this phase and other phases is that each phase is explicitly told what to do before it even starts, this is the only phase that needs to ask an external source about what it needs to perform. As a note, the File I/O functions slightly different than this, as the blocking File I/O operations rely on a threadpool [[12]](https://blog.libtorrent.org/2012/10/asynchronous-disk-io/).
+That simplifies the loop quite a bit as there is a fair bit of **epoll** management, but for all intents and purposes that's enough for understanding the libuv portion. The main difference between this phase and other phases is that each phase is explicitly told what to do before it even starts, this is the only phase that needs to ask an external source about what it needs to perform. As a note, the File I/O functions slightly different than this, as the blocking File I/O operations rely on a threadpool. [[11]](https://blog.libtorrent.org/2012/10/asynchronous-disk-io/)
 
 ## Close
 
 The final is the closing handles. From the context of Node.js, this is responsible for closing of resources.
 
-> If a socket or handle is closed abruptly (e.g. socket.destroy()), the 'close' event will be emitted in this phase. Otherwise it will be emitted via process.nextTick(). [[5]](https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick)
+> If a socket or handle is closed abruptly (e.g. socket.destroy()), the 'close' event will be emitted in this phase. Otherwise it will be emitted via process.nextTick(). [[3]](https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick)
 
 ![A mostly gray scale image of the original libuv event loop with only the closing linked list and closing phases remaining colored in red, the remaining event loop phases and datastructures are left in gray scale. It's intention is to focus the reader on the fact that this section is focused exclusively on the closing phase.](../../assets/libuv/libuv_close.png "Libuv Closing Handles")
 
@@ -609,15 +609,14 @@ This article, and it's related articles, started as a teach out session around e
 
 # References
 
-1. https://nodejs.org/en/
-2. https://github.com/libuv/libuv
-3. https://nodejs.org/en/about/
-4. https://survey.stackoverflow.co/2025/technology#most-popular-technologies
-5. https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick
-6. https://github.com/enki/libev
-7. https://github.com/libevent/libevent
-8. https://en.wikipedia.org/wiki/Reactor_pattern
-9. https://en.wikipedia.org/wiki/Min-max_heap
-10. https://en.wikipedia.org/wiki/Binary_heap
-11. https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick#pending-callbacks
-12. https://blog.libtorrent.org/2012/10/asynchronous-disk-io/
+1. https://nodejs.org/en/about/
+2. https://survey.stackoverflow.co/2025/technology#most-popular-technologies
+3. https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick
+4. https://github.com/libuv/libuv
+5. https://github.com/enki/libev
+6. https://github.com/libevent/libevent
+7. https://en.wikipedia.org/wiki/Reactor_pattern
+8. https://en.wikipedia.org/wiki/Min-max_heap
+9. https://en.wikipedia.org/wiki/Binary_heap
+10. https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick#pending-callbacks
+11. https://blog.libtorrent.org/2012/10/asynchronous-disk-io/

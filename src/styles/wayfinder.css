@@ -164,6 +164,20 @@ main a:hover {
 	text-decoration: none;
 }
 
+main a.numeric-reference {
+	vertical-align: super;
+	font-size: 0.75em;
+	line-height: 0;
+	position: relative;
+	top: -0.25em;
+	text-decoration: none;
+	font-weight: var(--font-semibold);
+}
+
+main a.numeric-reference:hover {
+	text-decoration: underline;
+}
+
 main code {
 	background: var(--color-code-bg);
 	padding: 0.2em 0.4em;

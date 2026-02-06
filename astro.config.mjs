@@ -5,21 +5,21 @@ import sitemap from "@astrojs/sitemap";
 import { remarkReadingTime } from "./src/remark-reading-time";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypeNumericReferences from "./src/rehype-numeric-references";
 import { fontsIntegration } from "astro-font-loader";
+import { IVEELSM_FONTS_FILTER } from "./src/constants";
 
 // eslint-disable-next-line
 const site = process.env.SITE_URL || "https://fraugsleeves.dev";
-
-// Filter to only include Berkeley Mono Variable fonts
-const fontFilter = (filename) =>
-	filename.toLowerCase().includes("variable") ||
-	filename.toLowerCase().includes("garamond");
 
 // https://astro.build/config
 export default defineConfig({
 	site,
 	integrations: [
-		fontsIntegration({ packages: ["@iveelsm/fonts"], filter: fontFilter }),
+		fontsIntegration({
+			packages: ["@iveelsm/fonts"],
+			filter: IVEELSM_FONTS_FILTER,
+		}),
 		pagefind(),
 		sitemap(),
 	],
@@ -30,6 +30,7 @@ export default defineConfig({
 		remarkPlugins: [remarkReadingTime],
 		rehypePlugins: [
 			rehypeSlug,
+			rehypeNumericReferences,
 			[
 				rehypeAutolinkHeadings,
 				{
