@@ -1,4 +1,8 @@
 name: Fly Deploy Staging
+    
+permissions:
+    contents: read
+    packages: read  
 
 on:
     pull_request_target:
@@ -11,10 +15,6 @@ jobs:
         runs-on: ubuntu-latest
         concurrency: deploy-staging-group
         if: github.actor == 'dependabot[bot]' || github.actor == 'iveelsm'
-        permissions:
-            contents: read
-            packages: read
-
         steps:
             - name: Checkout
               uses: actions/checkout@v6

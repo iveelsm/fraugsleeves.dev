@@ -1,5 +1,9 @@
 name: Fly Deploy
 
+permissions:
+    contents: read
+    packages: read
+
 on:
     push:
         branches:
@@ -10,10 +14,6 @@ jobs:
         name: Deploy to Production
         runs-on: ubuntu-latest
         concurrency: deploy-group
-        permissions:
-            contents: read
-            packages: read
-
         steps:
             - name: Checkout
               uses: actions/checkout@v6
