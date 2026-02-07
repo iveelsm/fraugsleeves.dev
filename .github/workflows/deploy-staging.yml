@@ -1,8 +1,8 @@
 name: Fly Deploy Staging
-    
+
 permissions:
     contents: read
-    packages: read  
+    packages: read
 
 on:
     pull_request_target:
