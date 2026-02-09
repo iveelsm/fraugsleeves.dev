@@ -4,18 +4,18 @@
 @import "./base.css";
 
 .tags-container {
-	max-width: var(--max-width-container);
 	margin: 0 auto;
 	padding: var(--space-xl);
+	max-width: var(--max-width-container);
 }
 
 .tags-title {
-	font-size: var(--text-3xl);
-	font-weight: var(--font-semibold);
-	color: var(--color-text-heading);
 	margin-bottom: var(--space-xl);
-	padding-bottom: var(--space-sm);
 	border-bottom: 1px solid var(--color-border);
+	padding-bottom: var(--space-sm);
+	color: var(--color-text-heading);
+	font-weight: var(--font-semibold);
+	font-size: var(--text-3xl);
 }
 
 .tags-list {
@@ -28,19 +28,19 @@
 	display: inline-flex;
 	align-items: center;
 	gap: var(--space-sm);
-	padding: var(--space-sm) var(--space-md);
-	background-color: var(--color-tag-bg);
+	transition: all var(--transition-fast);
 	border: 1px solid var(--color-border);
 	border-radius: var(--radius-sm);
-	font-size: var(--text-sm);
+	background-color: var(--color-tag-bg);
+	padding: var(--space-sm) var(--space-md);
 	color: var(--color-text-muted);
+	font-size: var(--text-sm);
 	text-decoration: none;
-	transition: all var(--transition-fast);
 }
 
 .tag-link:hover {
-	background-color: var(--color-accent-bg);
 	border-color: var(--color-accent);
+	background-color: var(--color-accent-bg);
 	color: var(--color-accent);
 }
 
@@ -50,16 +50,16 @@
 
 .tag-count {
 	display: inline-flex;
-	align-items: center;
 	justify-content: center;
+	align-items: center;
+	transition: all var(--transition-fast);
+	border-radius: var(--radius-full);
+	background: rgba(0, 0, 0, 0.08);
+	padding: 0 var(--space-xs);
 	min-width: 1.25rem;
 	height: 1.25rem;
-	padding: 0 var(--space-xs);
-	background: rgba(0, 0, 0, 0.08);
-	border-radius: var(--radius-full);
-	font-size: var(--text-xs);
 	color: var(--color-text-subtle);
-	transition: all var(--transition-fast);
+	font-size: var(--text-xs);
 }
 
 .tag-link:hover .tag-count {

@@ -6,34 +6,34 @@
 .upcoming-container {
 	display: flex;
 	flex-direction: column;
-	align-items: center;
 	justify-content: center;
-	min-height: calc(100vh - var(--toolbar-height) - 150px);
-	padding: var(--space-xl);
-	text-align: center;
+	align-items: center;
 	gap: var(--space-xl);
+	padding: var(--space-xl);
+	min-height: calc(100vh - var(--toolbar-height) - 150px);
+	text-align: center;
 }
 
 @media (min-width: 768px) {
 	.upcoming-container {
 		flex-direction: row;
-		text-align: left;
 		gap: var(--space-2xl);
-		max-width: var(--max-width-wide);
 		margin: 0 auto;
+		max-width: var(--max-width-wide);
+		text-align: left;
 	}
 }
 
 .upcoming-image {
 	flex-shrink: 0;
-	max-width: 400px;
 	width: 100%;
+	max-width: 400px;
 }
 
 .upcoming-image img {
+	opacity: 0.9;
 	width: 100%;
 	height: auto;
-	opacity: 0.9;
 }
 
 .upcoming-content {
@@ -44,25 +44,25 @@
 }
 
 .upcoming-title {
-	font-size: clamp(2rem, 8vw, 4rem);
-	font-weight: var(--font-semibold);
-	color: var(--color-text-heading);
-	line-height: 1.1;
 	margin: 0;
+	color: var(--color-text-heading);
+	font-weight: var(--font-semibold);
+	font-size: clamp(2rem, 8vw, 4rem);
+	line-height: 1.1;
 	letter-spacing: -0.02em;
 }
 
 .upcoming-message {
-	font-size: var(--text-xl);
-	color: var(--color-text);
 	margin: 0;
+	color: var(--color-text);
+	font-size: var(--text-xl);
 	line-height: var(--leading-normal);
 }
 
 .upcoming-subtitle {
-	font-size: var(--text-base);
-	color: var(--color-text-muted);
 	margin: 0;
+	color: var(--color-text-muted);
+	font-size: var(--text-base);
 	line-height: var(--leading-relaxed);
 }
 
@@ -76,14 +76,13 @@
 
 .upcoming-link {
 	display: inline-flex;
-	align-items: center;
 	justify-content: center;
+	align-items: center;
+	transition: all var(--transition-fast);
+	border-radius: var(--radius-md);
 	padding: var(--space-sm) var(--space-lg);
 	font-size: var(--text-base);
-	font-weight: var(--font-medium);
 	text-decoration: none;
-	border-radius: var(--radius-md);
-	transition: all var(--transition-fast);
 }
 
 .upcoming-link.primary {
@@ -92,20 +91,20 @@
 }
 
 .upcoming-link.primary:hover {
-	background-color: var(--uchu-blue-6);
 	transform: translateY(-2px);
 	box-shadow: var(--shadow-md);
+	background-color: var(--uchu-blue-6);
 }
 
 .upcoming-link.secondary {
+	border: 1px solid var(--color-border);
 	background-color: var(--color-bg-alt);
 	color: var(--color-text-heading);
-	border: 1px solid var(--color-border);
 }
 
 .upcoming-link.secondary:hover {
-	background-color: var(--uchu-gray-2);
 	border-color: var(--color-border-dark);
+	background-color: var(--uchu-gray-2);
 }
 
 @media (max-width: 767px) {

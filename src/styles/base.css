@@ -7,19 +7,19 @@
 *,
 *::before,
 *::after {
+	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
-	box-sizing: border-box;
 }
 
 html {
-	font-family: var(--font-mono);
-	font-size: 16px;
-	font-weight: var(--font-ultralight);
-	line-height: var(--leading-normal);
 	background-color: var(--color-bg);
-	color: var(--color-text);
 	scroll-behavior: smooth;
+	color: var(--color-text);
+	font-weight: var(--font-ultralight);
+	font-size: 16px;
+	line-height: var(--leading-normal);
+	font-family: var(--font-mono);
 }
 
 html,
@@ -41,55 +41,55 @@ body {
 }
 
 .container {
-	max-width: var(--max-width-container);
 	margin: 0 auto;
 	padding: var(--space-xl);
+	max-width: var(--max-width-container);
 }
 
 .container-wide {
-	max-width: var(--max-width-wide);
 	margin: 0 auto;
 	padding: var(--space-xl);
+	max-width: var(--max-width-wide);
 }
 
 .section-title {
-	font-size: var(--text-2xl);
-	font-weight: var(--font-semibold);
-	color: var(--color-text-heading);
 	margin-bottom: var(--space-lg);
-	padding-bottom: var(--space-sm);
 	border-bottom: 1px solid var(--color-border);
+	padding-bottom: var(--space-sm);
+	color: var(--color-text-heading);
+	font-weight: var(--font-semibold);
+	font-size: var(--text-2xl);
 }
 
 .page-title {
-	font-size: var(--text-3xl);
-	font-weight: var(--font-semibold);
-	color: var(--color-text-heading);
 	margin-bottom: var(--space-xl);
-	padding-bottom: var(--space-sm);
 	border-bottom: 1px solid var(--color-border);
+	padding-bottom: var(--space-sm);
+	color: var(--color-text-heading);
+	font-weight: var(--font-semibold);
+	font-size: var(--text-3xl);
 }
 
 .posts-list {
-	list-style: none;
-	padding: 0;
-	margin: 0;
 	display: flex;
 	flex-direction: column;
 	gap: var(--space-md);
+	margin: 0;
+	padding: 0;
+	list-style: none;
 }
 
 .post-item {
-	padding: var(--space-lg);
-	background: var(--color-bg-alt);
+	transition: all var(--transition-fast);
 	border: 1px solid var(--color-border);
 	border-radius: var(--radius-lg);
-	transition: all var(--transition-fast);
+	background: var(--color-bg-alt);
+	padding: var(--space-lg);
 }
 
 .post-item:hover {
-	border-color: var(--color-border-dark);
 	box-shadow: var(--shadow-md);
+	border-color: var(--color-border-dark);
 }
 
 .post-link {
@@ -97,16 +97,16 @@ body {
 	justify-content: space-between;
 	align-items: baseline;
 	gap: var(--space-md);
-	text-decoration: none;
 	margin-bottom: var(--space-xs);
+	text-decoration: none;
 }
 
 .post-title {
-	font-family: var(--font-serif);
-	font-size: var(--text-xl);
-	font-weight: var(--font-semibold);
-	color: var(--color-text-heading);
 	transition: color var(--transition-fast);
+	color: var(--color-text-heading);
+	font-weight: var(--font-semibold);
+	font-size: var(--text-xl);
+	font-family: var(--font-serif);
 }
 
 .post-link:hover .post-title {
@@ -114,15 +114,15 @@ body {
 }
 
 .post-date {
-	font-size: var(--text-sm);
 	color: var(--color-text-subtle);
+	font-size: var(--text-sm);
 	white-space: nowrap;
 }
 
 .post-description {
-	font-size: var(--text-sm);
-	color: var(--color-text-muted);
 	margin: 0;
+	color: var(--color-text-muted);
+	font-size: var(--text-sm);
 	line-height: var(--leading-normal);
 }
 
@@ -135,35 +135,35 @@ body {
 
 .post-tag {
 	display: inline-block;
-	padding: 0.15rem var(--space-sm);
-	background-color: var(--color-tag-bg);
+	transition: all var(--transition-fast);
 	border: 1px solid var(--color-border);
 	border-radius: var(--radius-sm);
-	font-size: var(--text-xs);
+	background-color: var(--color-tag-bg);
+	padding: 0.15rem var(--space-sm);
 	color: var(--color-text-muted);
+	font-size: var(--text-xs);
 	text-decoration: none;
-	transition: all var(--transition-fast);
 }
 
 .post-tag:hover {
-	background-color: var(--color-accent-bg);
 	border-color: var(--color-accent);
+	background-color: var(--color-accent-bg);
 	color: var(--color-accent);
 }
 
 .post-tag.active {
-	background-color: var(--color-accent);
 	border-color: var(--color-accent);
+	background-color: var(--color-accent);
 	color: #fff;
 }
 
 .view-all-link {
 	display: inline-block;
-	margin-top: var(--space-lg);
-	font-size: var(--text-lg);
-	color: var(--color-text-muted);
-	text-decoration: none;
 	transition: color var(--transition-fast);
+	margin-top: var(--space-lg);
+	color: var(--color-text-muted);
+	font-size: var(--text-lg);
+	text-decoration: none;
 }
 
 .view-all-link:hover {
@@ -172,17 +172,17 @@ body {
 
 .social-link {
 	display: flex;
-	align-items: center;
 	justify-content: center;
-	color: var(--color-text-muted);
-	padding: var(--space-sm);
-	border-radius: var(--radius-sm);
+	align-items: center;
 	transition: all var(--transition-fast);
+	border-radius: var(--radius-sm);
+	padding: var(--space-sm);
+	color: var(--color-text-muted);
 }
 
 .social-link:hover {
-	color: var(--color-accent);
 	transform: rotate(8deg);
+	color: var(--color-accent);
 }
 
 .social-link :global(svg) {
@@ -191,18 +191,18 @@ body {
 
 .card {
 	display: block;
-	padding: var(--space-lg);
-	background-color: var(--color-bg-alt);
+	transition: all var(--transition-fast);
 	border: 1px solid var(--color-border);
 	border-radius: var(--radius-md);
+	background-color: var(--color-bg-alt);
+	padding: var(--space-lg);
 	text-decoration: none;
-	transition: all var(--transition-fast);
 }
 
 .card:hover {
-	border-color: var(--color-accent);
 	transform: translateY(-2px);
 	box-shadow: var(--shadow-md);
+	border-color: var(--color-accent);
 }
 
 .card-content {
@@ -212,12 +212,12 @@ body {
 }
 
 .card-title {
-	font-family: var(--font-serif);
-	font-size: var(--text-xl);
-	font-weight: var(--font-semibold);
-	color: var(--color-text-heading);
-	margin: 0;
 	transition: color var(--transition-fast);
+	margin: 0;
+	color: var(--color-text-heading);
+	font-weight: var(--font-semibold);
+	font-size: var(--text-xl);
+	font-family: var(--font-serif);
 }
 
 .card:hover .card-title {
@@ -225,16 +225,16 @@ body {
 }
 
 .card-description {
-	font-size: var(--text-sm);
-	color: var(--color-text-muted);
 	margin: 0;
+	color: var(--color-text-muted);
+	font-size: var(--text-sm);
 	line-height: var(--leading-normal);
 }
 
 .card-date {
-	font-size: var(--text-xs);
-	color: var(--color-text-subtle);
 	margin-top: var(--space-xs);
+	color: var(--color-text-subtle);
+	font-size: var(--text-xs);
 }
 
 @media (max-width: 640px) {

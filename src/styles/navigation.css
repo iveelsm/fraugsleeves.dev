@@ -5,21 +5,21 @@
 @import "./base.css";
 
 .toolbar {
-	width: 100%;
-	background-color: var(--color-toolbar-bg);
 	position: sticky;
 	top: 0;
 	z-index: 200;
+	background-color: var(--color-toolbar-bg);
+	width: 100%;
 }
 
 .toolbar-content {
-	max-width: var(--max-width-wide);
-	margin: 0 auto;
-	padding: 0 var(--space-xl);
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	gap: var(--space-md);
+	margin: 0 auto;
+	padding: 0 var(--space-xl);
+	max-width: var(--max-width-wide);
 	height: var(--toolbar-height);
 }
 
@@ -31,15 +31,15 @@
 
 .toolbar-logo {
 	display: flex;
-	align-items: center;
 	flex-shrink: 0;
+	align-items: center;
 }
 
 .logo-image {
-	height: 32px;
-	width: auto;
 	filter: invert(0.7);
 	transition: filter var(--transition-fast);
+	width: auto;
+	height: 32px;
 }
 
 .toolbar-logo:hover .logo-image {
@@ -60,23 +60,22 @@
 }
 
 .toolbar-link {
-	color: var(--color-toolbar-text);
-	text-decoration: none;
-	font-size: var(--text-sm);
-	font-weight: var(--font-medium);
-	padding: var(--space-sm) var(--space-md);
-	border-radius: var(--radius-sm);
 	transition: all var(--transition-fast);
+	border-radius: var(--radius-sm);
+	padding: var(--space-sm) var(--space-md);
+	color: var(--color-toolbar-text);
+	font-size: var(--text-sm);
+	text-decoration: none;
 }
 
 .toolbar-link:hover {
-	color: var(--color-toolbar-text-active);
 	background-color: var(--color-toolbar-hover-bg);
+	color: var(--color-toolbar-text-active);
 }
 
 .toolbar-link.active {
-	color: var(--color-toolbar-text-active);
 	background-color: var(--color-toolbar-active-bg);
+	color: var(--color-toolbar-text-active);
 	font-weight: var(--font-semibold);
 }
 
@@ -86,20 +85,20 @@
 
 .hamburger-btn {
 	display: flex;
-	align-items: center;
 	justify-content: center;
-	background: transparent;
-	border: none;
-	color: var(--color-toolbar-text);
-	padding: var(--space-sm);
-	border-radius: var(--radius-sm);
-	cursor: pointer;
+	align-items: center;
 	transition: all var(--transition-fast);
+	cursor: pointer;
+	border: none;
+	border-radius: var(--radius-sm);
+	background: transparent;
+	padding: var(--space-sm);
+	color: var(--color-toolbar-text);
 }
 
 .hamburger-btn:hover {
-	color: var(--color-toolbar-text-active);
 	background-color: var(--color-toolbar-hover-bg);
+	color: var(--color-toolbar-text-active);
 }
 
 .hamburger-btn .close-icon {
@@ -117,21 +116,21 @@
 .mobile-nav-overlay {
 	position: fixed;
 	top: var(--toolbar-height);
-	left: 0;
 	right: 0;
 	bottom: 0;
-	background: var(--color-toolbar-bg);
-	z-index: 199;
-	opacity: 0;
-	visibility: hidden;
+	left: 0;
 	transform: translateY(-10px);
+	visibility: hidden;
+	opacity: 0;
+	z-index: 199;
 	transition: all var(--transition-normal);
+	background: var(--color-toolbar-bg);
 }
 
 .mobile-nav-overlay.active {
-	opacity: 1;
-	visibility: visible;
 	transform: translateY(0);
+	visibility: visible;
+	opacity: 1;
 }
 
 .mobile-nav-content {
@@ -146,23 +145,22 @@
 
 .mobile-nav-link {
 	display: block;
-	color: var(--color-toolbar-text);
-	text-decoration: none;
-	font-size: var(--text-lg);
-	font-weight: var(--font-medium);
-	padding: var(--space-md) var(--space-lg);
-	border-radius: var(--radius-md);
 	transition: all var(--transition-fast);
+	border-radius: var(--radius-md);
+	padding: var(--space-md) var(--space-lg);
+	color: var(--color-toolbar-text);
+	font-size: var(--text-lg);
+	text-decoration: none;
 }
 
 .mobile-nav-link:hover {
-	color: var(--color-toolbar-text-active);
 	background-color: var(--color-toolbar-hover-bg);
+	color: var(--color-toolbar-text-active);
 }
 
 .mobile-nav-link.active {
-	color: var(--color-toolbar-text-active);
 	background-color: var(--color-toolbar-active-bg);
+	color: var(--color-toolbar-text-active);
 	font-weight: var(--font-semibold);
 }
 
