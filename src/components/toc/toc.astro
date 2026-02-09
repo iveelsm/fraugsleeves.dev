@@ -9,7 +9,7 @@ const toc = buildTree(headings);
 
 {
 	toc && toc.length > 0 && (
-		<nav class="article-toc">
+		<nav class="toc__nav">
 			<ul>
 				{toc.map((heading) => (
 					<Entry heading={heading} />

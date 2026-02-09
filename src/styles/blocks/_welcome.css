@@ -1,0 +1,43 @@
+/* ===========================================
+   Welcome Block
+   Homepage welcome section
+   =========================================== */
+
+/* Block: welcome */
+.welcome {
+	margin-bottom: var(--space-2xl);
+	padding: var(--space-2xl) 0;
+	text-align: center;
+}
+
+/* Element: title */
+.welcome__title {
+	margin-bottom: var(--space-md);
+	color: var(--color-text-heading);
+	font-weight: var(--font-bold);
+	font-size: var(--text-4xl);
+	font-family: var(--font-serif);
+}
+
+/* Element: text */
+.welcome__text {
+	margin: 0 auto var(--space-lg);
+	max-width: 600px;
+	color: var(--color-text-muted);
+	font-size: var(--text-xl);
+	line-height: var(--leading-normal);
+}
+
+/* Element: social */
+.welcome__social {
+	display: flex;
+	justify-content: center;
+	gap: var(--space-md);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+	.welcome__title {
+		font-size: var(--text-3xl);
+	}
+}

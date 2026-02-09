@@ -1,9 +1,10 @@
 /* ===========================================
-   404 Page Styles
+   Not Found Block
+   404 page styles
    =========================================== */
-@import "./base.css";
 
-.not-found-container {
+/* Block: not-found */
+.not-found {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -14,36 +15,30 @@
 	text-align: center;
 }
 
-@media (min-width: 768px) {
-	.not-found-container {
-		flex-direction: row;
-		gap: var(--space-2xl);
-		margin: 0 auto;
-		max-width: var(--max-width-wide);
-		text-align: left;
-	}
-}
-
-.not-found-image {
+/* Element: image */
+.not-found__image {
 	flex-shrink: 0;
 	width: 100%;
 	max-width: 400px;
 }
 
-.not-found-image img {
+.not-found__image img,
+.not-found__image svg {
 	opacity: 0.9;
 	width: 100%;
 	height: auto;
 }
 
-.not-found-content {
+/* Element: content */
+.not-found__content {
 	display: flex;
 	flex-direction: column;
 	gap: var(--space-lg);
 	max-width: 480px;
 }
 
-.not-found-title {
+/* Element: title */
+.not-found__title {
 	margin: 0;
 	color: var(--color-text-heading);
 	font-weight: var(--font-semibold);
@@ -52,21 +47,24 @@
 	letter-spacing: -0.02em;
 }
 
-.not-found-message {
+/* Element: message */
+.not-found__message {
 	margin: 0;
 	color: var(--color-text);
 	font-size: var(--text-xl);
 	line-height: var(--leading-normal);
 }
 
-.not-found-actions {
+/* Element: actions */
+.not-found__actions {
 	display: flex;
 	flex-wrap: wrap;
 	gap: var(--space-md);
 	margin-top: var(--space-sm);
 }
 
-.not-found-link {
+/* Element: link */
+.not-found__link {
 	display: inline-flex;
 	justify-content: center;
 	align-items: center;
@@ -77,46 +75,52 @@
 	text-decoration: none;
 }
 
-.not-found-link.primary {
+/* Modifier: primary */
+.not-found__link--primary {
 	background-color: var(--color-accent);
 	color: var(--uchu-yang);
 }
 
-.not-found-link.primary:hover {
+.not-found__link--primary:hover {
 	transform: translateY(-2px);
 	box-shadow: var(--shadow-md);
 	background-color: var(--uchu-blue-6);
 }
 
-.not-found-link.secondary {
+/* Modifier: secondary */
+.not-found__link--secondary {
 	border: 1px solid var(--color-border);
 	background-color: var(--color-bg-alt);
 	color: var(--color-text-heading);
 }
 
-.not-found-link.secondary:hover {
+.not-found__link--secondary:hover {
 	border-color: var(--color-border-dark);
 	background-color: var(--uchu-gray-2);
 }
 
-.not-found-search {
+/* Element: search */
+.not-found__search {
 	margin-top: var(--space-lg);
 	border-top: 1px solid var(--color-border);
 	padding-top: var(--space-lg);
 }
 
-.not-found-hint {
+/* Element: hint */
+.not-found__hint {
 	margin: 0 0 var(--space-md);
 	color: var(--color-text-muted);
 	font-size: var(--text-sm);
 }
 
-.not-found-search-form {
+/* Element: search-form */
+.not-found__search-form {
 	display: flex;
 	gap: var(--space-sm);
 }
 
-.not-found-search-input {
+/* Element: search-input */
+.not-found__search-input {
 	flex: 1;
 	transition: all var(--transition-fast);
 	outline: none;
@@ -129,16 +133,17 @@
 	font-family: var(--font-mono);
 }
 
-.not-found-search-input:focus {
+.not-found__search-input:focus {
 	box-shadow: 0 0 0 3px var(--color-accent-bg);
 	border-color: var(--color-accent);
 }
 
-.not-found-search-input::placeholder {
+.not-found__search-input::placeholder {
 	color: var(--color-text-subtle);
 }
 
-.not-found-search-button {
+/* Element: search-button */
+.not-found__search-button {
 	transition: all var(--transition-fast);
 	cursor: pointer;
 	border: none;
@@ -150,24 +155,35 @@
 	font-family: var(--font-mono);
 }
 
-.not-found-search-button:hover {
+.not-found__search-button:hover {
 	background-color: var(--uchu-blue-6);
 }
 
+/* Responsive */
+@media (min-width: 768px) {
+	.not-found {
+		flex-direction: row;
+		gap: var(--space-2xl);
+		margin: 0 auto;
+		max-width: var(--max-width-wide);
+		text-align: left;
+	}
+}
+
 @media (max-width: 767px) {
-	.not-found-image {
+	.not-found__image {
 		max-width: 280px;
 	}
 
-	.not-found-actions {
+	.not-found__actions {
 		justify-content: center;
 	}
 
-	.not-found-search-form {
+	.not-found__search-form {
 		flex-direction: column;
 	}
 
-	.not-found-search-button {
+	.not-found__search-button {
 		width: 100%;
 	}
 }

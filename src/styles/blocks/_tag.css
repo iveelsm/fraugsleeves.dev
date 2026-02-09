@@ -1,0 +1,40 @@
+/* ===========================================
+   Tag Block
+   Tags and tag links
+   =========================================== */
+
+/* Block: tag (inline tag badge) */
+.tag {
+	display: inline-block;
+	transition: all var(--transition-fast);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+	background-color: var(--color-tag-bg);
+	padding: 0.15rem var(--space-sm);
+	color: var(--color-text-muted);
+	font-size: var(--text-xs);
+	text-decoration: none;
+}
+
+.tag:hover {
+	border-color: var(--color-accent);
+	background-color: var(--color-accent-bg);
+	color: var(--color-accent);
+}
+
+/* Modifier: active */
+.tag--active {
+	border-color: var(--color-accent);
+	background-color: var(--color-accent);
+	color: #fff;
+}
+
+/* Modifier: pill (for post headers) */
+.tag--pill {
+	border: none;
+	border-radius: var(--radius-full);
+	background-color: var(--color-tag-bg);
+	color: var(--color-tag-text);
+	font-family: var(--font-mono);
+	white-space: nowrap;
+}

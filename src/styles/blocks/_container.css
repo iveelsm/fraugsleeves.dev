@@ -1,0 +1,23 @@
+/* ===========================================
+   Container Block
+   Generic container layouts
+   =========================================== */
+
+/* Block: container */
+.container {
+	margin: 0 auto;
+	padding: var(--space-xl);
+	max-width: var(--max-width-container);
+}
+
+/* Modifier: wide */
+.container--wide {
+	max-width: var(--max-width-wide);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+	.container {
+		padding: var(--space-lg);
+	}
+}

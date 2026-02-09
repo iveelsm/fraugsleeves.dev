@@ -12,29 +12,29 @@ interface Props {
 const { title, date, description, minutesRead, author } = Astro.props;
 ---
 
-<header class="post-header-fixed">
-	<div class="post-header-box">
-		<div class="post-header-content">
-			<div class="post-header-main">
+<header class="post-header">
+	<div class="post-header__box">
+		<div class="post-header__content">
+			<div class="post-header__main">
 				<h1
-					class="post-title"
+					class="post-header__title post-header__title--small"
 					data-pagefind-meta="title"
 					set:html={formatText(title)}
 				/>
-				<div class="post-meta">
+				<div class="post-header__meta">
 					<span class="reading-time">{minutesRead}</span>
 				</div>
 			</div>
-			<div class="post-header-collapsible">
-				<p class="post-summary">{description}</p>
+			<div class="post-header__collapsible">
+				<p class="post-header__summary">{description}</p>
 				{
 					author && (
-						<p class="post-author-line">
+						<p class="post-header__author-line">
 							<strong>Author:</strong> {author}
 						</p>
 					)
 				}
-				<span class="post-header-date">
+				<span class="post-header__date">
 					<strong>Published:</strong>
 					{new Date(date).toDateString()}
 				</span>

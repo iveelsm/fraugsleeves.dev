@@ -1,0 +1,57 @@
+/* ===========================================
+   Card Block
+   Generic card component (wayfinders)
+   =========================================== */
+
+/* Block: card */
+.card {
+	display: block;
+	transition: all var(--transition-fast);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-md);
+	background-color: var(--color-bg-alt);
+	padding: var(--space-lg);
+	text-decoration: none;
+}
+
+.card:hover {
+	transform: translateY(-2px);
+	box-shadow: var(--shadow-md);
+	border-color: var(--color-accent);
+}
+
+/* Element: content */
+.card__content {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-xs);
+}
+
+/* Element: title */
+.card__title {
+	transition: color var(--transition-fast);
+	margin: 0;
+	color: var(--color-text-heading);
+	font-weight: var(--font-semibold);
+	font-size: var(--text-xl);
+	font-family: var(--font-serif);
+}
+
+.card:hover .card__title {
+	color: var(--color-accent);
+}
+
+/* Element: description */
+.card__description {
+	margin: 0;
+	color: var(--color-text-muted);
+	font-size: var(--text-sm);
+	line-height: var(--leading-normal);
+}
+
+/* Element: date */
+.card__date {
+	margin-top: var(--space-xs);
+	color: var(--color-text-subtle);
+	font-size: var(--text-xs);
+}

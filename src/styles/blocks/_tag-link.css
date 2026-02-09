@@ -1,29 +1,9 @@
 /* ===========================================
-   Tags Page Specific Styles
+   Tag Link Block
+   Clickable tag with count
    =========================================== */
-@import "./base.css";
 
-.tags-container {
-	margin: 0 auto;
-	padding: var(--space-xl);
-	max-width: var(--max-width-container);
-}
-
-.tags-title {
-	margin-bottom: var(--space-xl);
-	border-bottom: 1px solid var(--color-border);
-	padding-bottom: var(--space-sm);
-	color: var(--color-text-heading);
-	font-weight: var(--font-semibold);
-	font-size: var(--text-3xl);
-}
-
-.tags-list {
-	display: flex;
-	flex-wrap: wrap;
-	gap: var(--space-sm);
-}
-
+/* Block: tag-link */
 .tag-link {
 	display: inline-flex;
 	align-items: center;
@@ -44,11 +24,13 @@
 	color: var(--color-accent);
 }
 
-.tag-name {
+/* Element: name */
+.tag-link__name {
 	color: inherit;
 }
 
-.tag-count {
+/* Element: count */
+.tag-link__count {
 	display: inline-flex;
 	justify-content: center;
 	align-items: center;
@@ -62,22 +44,7 @@
 	font-size: var(--text-xs);
 }
 
-.tag-link:hover .tag-count {
+.tag-link:hover .tag-link__count {
 	background: var(--color-accent);
 	color: #fff;
-}
-
-.no-tags {
-	color: var(--color-text-muted);
-	font-size: var(--text-base);
-}
-
-@media (max-width: 640px) {
-	.tags-container {
-		padding: var(--space-lg);
-	}
-
-	.tags-title {
-		font-size: var(--text-2xl);
-	}
 }

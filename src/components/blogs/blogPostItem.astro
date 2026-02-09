@@ -21,19 +21,19 @@ import { formatDate } from "../formatDate";
 import { formatText } from "../formatText";
 ---
 
-<li class="post-item" data-tags={JSON.stringify(tags)}>
-	<a href={href} class="post-link">
-		<span class="post-title" set:html={formatText(title)} />
-		<span class="post-date">{formatDate(date)}</span>
+<li class="post-list__item" data-tags={JSON.stringify(tags)}>
+	<a href={href} class="post-list__link">
+		<span class="post-list__title" set:html={formatText(title)} />
+		<span class="post-list__date">{formatDate(date)}</span>
 	</a>
-	{description && <p class="post-description">{description}</p>}
+	{description && <p class="post-list__description">{description}</p>}
 	{
 		showTags && tags.length > 0 && (
-			<div class="post-tags">
+			<div class="post-list__tags">
 				{tags.map((tag: string) => (
 					<a
 						href={`/blog?tag=${encodeURIComponent(tag)}`}
-						class="post-tag"
+						class="tag"
 						data-tag={tag}
 					>
 						{tag}

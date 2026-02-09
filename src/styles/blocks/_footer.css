@@ -1,16 +1,18 @@
 /* ===========================================
-   Footer Component Styles
+   Footer Block
+   Site footer component
    =========================================== */
-@import "./base.css";
 
-.site-footer {
+/* Block: footer */
+.footer {
 	border-top: none;
 	background-color: var(--color-toolbar-bg);
 	padding: var(--space-lg) var(--space-xl);
 	width: 100%;
 }
 
-.footer-content {
+/* Element: content */
+.footer__content {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -18,44 +20,31 @@
 	max-width: var(--max-width-wide);
 }
 
-.footer-copyright {
+/* Element: copyright */
+.footer__copyright {
 	color: var(--color-toolbar-text);
 	font-size: var(--text-sm);
 }
 
-.footer-copyright p {
+.footer__copyright p {
 	margin: 0;
 }
 
-.footer-social {
+/* Element: social */
+.footer__social {
 	display: flex;
 	gap: var(--space-md);
 }
 
-.site-footer .social-link {
-	color: var(--color-toolbar-text);
-}
-
-.site-footer .social-link svg {
-	fill: var(--color-toolbar-text);
-}
-
-.site-footer .social-link:hover {
-	color: var(--color-toolbar-text-active);
-}
-
-.site-footer .social-link:hover svg {
-	fill: var(--color-toolbar-text-active);
-}
-
+/* Responsive */
 @media (max-width: 640px) {
-	.footer-content {
+	.footer__content {
 		flex-direction: column;
 		gap: var(--space-md);
 		text-align: center;
 	}
 
-	.footer-social {
+	.footer__social {
 		order: -1;
 	}
 }

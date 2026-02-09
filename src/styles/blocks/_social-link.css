@@ -1,0 +1,41 @@
+/* ===========================================
+   Social Link Block
+   Social media link icons
+   =========================================== */
+
+/* Block: social-link */
+.social-link {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	transition: all var(--transition-fast);
+	border-radius: var(--radius-sm);
+	padding: var(--space-sm);
+	color: var(--color-text-muted);
+}
+
+.social-link:hover {
+	transform: rotate(8deg);
+	color: var(--color-accent);
+}
+
+.social-link svg {
+	fill: currentColor;
+}
+
+/* Modifier: footer (for footer context) */
+.social-link--footer {
+	color: var(--color-toolbar-text);
+}
+
+.social-link--footer svg {
+	fill: var(--color-toolbar-text);
+}
+
+.social-link--footer:hover {
+	color: var(--color-toolbar-text-active);
+}
+
+.social-link--footer:hover svg {
+	fill: var(--color-toolbar-text-active);
+}

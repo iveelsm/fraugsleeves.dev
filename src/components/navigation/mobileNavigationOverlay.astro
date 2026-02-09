@@ -13,17 +13,17 @@ interface Props {
 const { currentPath, navItems } = Astro.props;
 ---
 
-<div class="mobile-nav-overlay" id="mobile-nav-overlay">
-	<div class="mobile-nav-content">
-		<nav class="mobile-nav-links">
+<div class="mobile-nav" id="mobile-nav-overlay">
+	<div class="mobile-nav__content">
+		<nav class="mobile-nav__links">
 			{
 				navItems.map((item) => (
 					<a
 						href={item.href}
 						class:list={[
-							"mobile-nav-link",
+							"mobile-nav__link",
 							{
-								active: isActive(
+								"mobile-nav__link--active": isActive(
 									currentPath,
 									item.href,
 									item.exact,

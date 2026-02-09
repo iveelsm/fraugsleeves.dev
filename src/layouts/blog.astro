@@ -1,5 +1,5 @@
 ---
-import "../styles/post.css";
+import "../styles/blocks/index.css";
 
 import Searchable from "./searchable.astro";
 
@@ -36,9 +36,9 @@ const article = {
 		tags={frontmatter.tags ?? []}
 	/>
 
-	<div class="blog-container">
+	<div class="blog-layout">
 		<Sidebar headings={headings} />
-		<main class="post-content">
+		<main class="blog-layout__content post-content">
 			<slot />
 		</main>
 	</div>

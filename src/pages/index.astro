@@ -1,5 +1,5 @@
 ---
-import "../styles/home.css";
+import "../styles/blocks/index.css";
 
 import { RecentBlogs } from "../components/blogs";
 import { RecentWayfinders } from "../components/wayfinders";
@@ -8,13 +8,13 @@ import { Searchable } from "../layouts/";
 ---
 
 <Searchable title={DEFAULT_TITLE}>
-	<div class="index-container">
-		<section class="welcome-section">
-			<h1 class="welcome-title">Welcome!</h1>
-			<p class="welcome-text">
+	<div class="container">
+		<section class="welcome">
+			<h1 class="welcome__title">Welcome!</h1>
+			<p class="welcome__text">
 				To an exposition of wayfinding within software development
 			</p>
-			<div class="social-links">
+			<div class="welcome__social">
 				{
 					SOCIAL_LINKS.map((link) => (
 						<a

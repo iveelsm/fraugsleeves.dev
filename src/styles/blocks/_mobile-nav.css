@@ -1,0 +1,61 @@
+/* ===========================================
+   Mobile Nav Block
+   Mobile navigation overlay
+   =========================================== */
+
+/* Block: mobile-nav */
+.mobile-nav {
+	position: fixed;
+	top: var(--toolbar-height);
+	right: 0;
+	bottom: 0;
+	left: 0;
+	transform: translateY(-10px);
+	visibility: hidden;
+	opacity: 0;
+	z-index: 199;
+	transition: all var(--transition-normal);
+	background: var(--color-toolbar-bg);
+}
+
+/* Modifier: active */
+.mobile-nav--active {
+	transform: translateY(0);
+	visibility: visible;
+	opacity: 1;
+}
+
+/* Element: content */
+.mobile-nav__content {
+	padding: var(--space-lg);
+}
+
+/* Element: links */
+.mobile-nav__links {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-sm);
+}
+
+/* Element: link */
+.mobile-nav__link {
+	display: block;
+	transition: all var(--transition-fast);
+	border-radius: var(--radius-md);
+	padding: var(--space-md) var(--space-lg);
+	color: var(--color-toolbar-text);
+	font-size: var(--text-lg);
+	text-decoration: none;
+}
+
+.mobile-nav__link:hover {
+	background-color: var(--color-toolbar-hover-bg);
+	color: var(--color-toolbar-text-active);
+}
+
+/* Modifier: active */
+.mobile-nav__link--active {
+	background-color: var(--color-toolbar-active-bg);
+	color: var(--color-toolbar-text-active);
+	font-weight: var(--font-semibold);
+}

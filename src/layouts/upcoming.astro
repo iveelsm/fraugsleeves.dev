@@ -1,5 +1,5 @@
 ---
-import "../styles/upcoming.css";
+import "../styles/blocks/index.css";
 
 import UpcomingBlog from "../components/blogs/upcomingBlog.astro";
 import Standard from "./standard.astro";
@@ -12,7 +12,7 @@ const { title } = Astro.props;
 ---
 
 <Standard>
-	<main class="upcoming-container">
+	<main class="upcoming">
 		<UpcomingBlog title={title} />
 	</main>
 </Standard>

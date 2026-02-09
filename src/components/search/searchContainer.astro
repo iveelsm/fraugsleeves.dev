@@ -2,9 +2,9 @@
 import { CloseIcon, SearchIcon } from "../../icons";
 ---
 
-<div class="search-container" id="search-container">
+<div class="search" id="search-container">
 	<button
-		class="search-toggle"
+		class="search__toggle"
 		type="button"
 		aria-label="Open search"
 		aria-expanded="false"
@@ -13,17 +13,17 @@ import { CloseIcon, SearchIcon } from "../../icons";
 		<SearchIcon width={18} height={18} />
 	</button>
 
-	<div class="search-input-wrapper search-desktop" id="search-input-wrapper">
-		<SearchIcon class="search-input-icon" width={16} height={16} />
+	<div class="search__input-wrapper search--desktop" id="search-input-wrapper">
+		<SearchIcon class="search__input-icon" width={16} height={16} />
 		<input
 			type="text"
-			class="search-input"
+			class="search__input"
 			id="search-input"
 			placeholder="Search..."
 			autocomplete="off"
 		/>
 		<button
-			class="search-clear"
+			class="search__clear"
 			id="search-clear"
 			type="button"
 			aria-label="Close search"
@@ -32,7 +32,7 @@ import { CloseIcon, SearchIcon } from "../../icons";
 		</button>
 	</div>
 
-	<div class="search-dropdown search-desktop" id="search-dropdown">
-		<div class="search-results" id="search-results"></div>
+	<div class="search__dropdown search--desktop" id="search-dropdown">
+		<div class="search__results" id="search-results"></div>
 	</div>
 </div>

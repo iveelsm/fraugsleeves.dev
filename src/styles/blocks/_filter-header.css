@@ -1,15 +1,10 @@
 /* ===========================================
-   Blog List Page Specific Styles
+   Filter Header Block
+   Tag filter header for blog listing
    =========================================== */
-@import "./base.css";
 
-.blog-container {
-	margin: 0 auto;
-	padding: var(--space-xl);
-	max-width: var(--max-width-container);
-}
-
-.blog-container .filter-header {
+/* Block: filter-header */
+.filter-header {
 	display: flex;
 	align-items: center;
 	gap: var(--space-sm);
@@ -20,18 +15,21 @@
 	padding: var(--space-md);
 }
 
-.blog-container .filter-label {
+/* Element: label */
+.filter-header__label {
 	color: var(--color-text-muted);
 	font-size: var(--text-sm);
 }
 
-.blog-container .filter-tag {
+/* Element: tag */
+.filter-header__tag {
 	color: var(--color-accent);
 	font-weight: var(--font-semibold);
 	font-size: var(--text-sm);
 }
 
-.blog-container .filter-clear {
+/* Element: clear */
+.filter-header__clear {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -40,22 +38,10 @@
 	border-radius: var(--radius-sm);
 	padding: var(--space-xs);
 	color: var(--color-text-muted);
+	text-decoration: none;
 }
 
-.blog-container .filter-clear:hover {
+.filter-header__clear:hover {
 	background: var(--color-bg-alt);
 	color: var(--color-text);
-}
-
-.blog-container .no-posts {
-	padding: var(--space-2xl);
-	color: var(--color-text-muted);
-	font-size: var(--text-base);
-	text-align: center;
-}
-
-@media (max-width: 640px) {
-	.blog-container {
-		padding: var(--space-lg);
-	}
 }

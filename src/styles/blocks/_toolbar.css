@@ -1,9 +1,9 @@
 /* ===========================================
-   Navigation Component Styles
+   Toolbar Block (Navigation)
+   Main site navigation toolbar
    =========================================== */
 
-@import "./base.css";
-
+/* Block: toolbar */
 .toolbar {
 	position: sticky;
 	top: 0;
@@ -12,7 +12,8 @@
 	width: 100%;
 }
 
-.toolbar-content {
+/* Element: content */
+.toolbar__content {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -23,30 +24,34 @@
 	height: var(--toolbar-height);
 }
 
-.toolbar-right {
+/* Element: right */
+.toolbar__right {
 	display: flex;
 	align-items: center;
 	gap: var(--space-md);
 }
 
-.toolbar-logo {
+/* Element: logo */
+.toolbar__logo {
 	display: flex;
 	flex-shrink: 0;
 	align-items: center;
 }
 
-.logo-image {
+/* Element: logo-image */
+.toolbar__logo-image {
 	filter: invert(0.7);
 	transition: filter var(--transition-fast);
 	width: auto;
 	height: 32px;
 }
 
-.toolbar-logo:hover .logo-image {
+.toolbar__logo:hover .toolbar__logo-image {
 	filter: invert(1);
 }
 
-.toolbar-links {
+/* Element: links */
+.toolbar__links {
 	display: flex;
 	gap: var(--space-sm);
 	transition:
@@ -54,12 +59,13 @@
 		opacity var(--transition-fast);
 }
 
-.toolbar-content:has(.search-container.expanded) .toolbar-links {
+.toolbar__content:has(.search.search--open) .toolbar__links {
 	transform: translateX(-20px);
 	opacity: 0.7;
 }
 
-.toolbar-link {
+/* Element: link */
+.toolbar__link {
 	transition: all var(--transition-fast);
 	border-radius: var(--radius-sm);
 	padding: var(--space-sm) var(--space-md);
@@ -68,22 +74,30 @@
 	text-decoration: none;
 }
 
-.toolbar-link:hover {
+.toolbar__link:hover {
 	background-color: var(--color-toolbar-hover-bg);
 	color: var(--color-toolbar-text-active);
 }
 
-.toolbar-link.active {
+/* Modifier: active */
+.toolbar__link--active {
 	background-color: var(--color-toolbar-active-bg);
 	color: var(--color-toolbar-text-active);
 	font-weight: var(--font-semibold);
 }
 
-.toolbar-mobile {
+/* Element: desktop (wrapper for desktop nav) */
+.toolbar__desktop {
+	display: flex;
+}
+
+/* Element: mobile (wrapper for mobile nav) */
+.toolbar__mobile {
 	display: none;
 }
 
-.hamburger-btn {
+/* Element: hamburger */
+.toolbar__hamburger {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -96,99 +110,47 @@
 	color: var(--color-toolbar-text);
 }
 
-.hamburger-btn:hover {
+.toolbar__hamburger:hover {
 	background-color: var(--color-toolbar-hover-bg);
 	color: var(--color-toolbar-text-active);
 }
 
-.hamburger-btn .close-icon {
+.toolbar__hamburger-icon--close {
 	display: none;
 }
 
-.hamburger-btn.active .hamburger-icon {
+/* Modifier: active */
+.toolbar__hamburger--active .toolbar__hamburger-icon--open {
 	display: none;
 }
 
-.hamburger-btn.active .close-icon {
+.toolbar__hamburger--active .toolbar__hamburger-icon--close {
 	display: block;
 }
 
-.mobile-nav-overlay {
-	position: fixed;
-	top: var(--toolbar-height);
-	right: 0;
-	bottom: 0;
-	left: 0;
-	transform: translateY(-10px);
-	visibility: hidden;
-	opacity: 0;
-	z-index: 199;
-	transition: all var(--transition-normal);
-	background: var(--color-toolbar-bg);
-}
-
-.mobile-nav-overlay.active {
-	transform: translateY(0);
-	visibility: visible;
-	opacity: 1;
-}
-
-.mobile-nav-content {
-	padding: var(--space-lg);
-}
-
-.mobile-nav-links {
+/* Element: mobile-search */
+.toolbar__mobile-search {
 	display: flex;
-	flex-direction: column;
-	gap: var(--space-sm);
+	align-items: center;
 }
 
-.mobile-nav-link {
-	display: block;
-	transition: all var(--transition-fast);
-	border-radius: var(--radius-md);
-	padding: var(--space-md) var(--space-lg);
-	color: var(--color-toolbar-text);
-	font-size: var(--text-lg);
-	text-decoration: none;
-}
-
-.mobile-nav-link:hover {
-	background-color: var(--color-toolbar-hover-bg);
-	color: var(--color-toolbar-text-active);
-}
-
-.mobile-nav-link.active {
-	background-color: var(--color-toolbar-active-bg);
-	color: var(--color-toolbar-text-active);
-	font-weight: var(--font-semibold);
-}
-
-.toolbar-desktop {
-	display: flex;
-}
-
+/* Responsive */
 @media (max-width: 640px) {
-	.toolbar-content {
+	.toolbar__content {
 		padding: 0 var(--space-md);
 	}
 
-	.logo-image {
+	.toolbar__logo-image {
 		height: 24px;
 	}
 
-	.toolbar-desktop {
+	.toolbar__desktop {
 		display: none;
 	}
 
-	.toolbar-mobile {
+	.toolbar__mobile {
 		display: flex;
 		align-items: center;
 		gap: var(--space-sm);
-	}
-
-	.mobile-search-wrapper {
-		display: flex;
-		align-items: center;
 	}
 }

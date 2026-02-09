@@ -1,6 +1,6 @@
 export function initHeadingAnchors() {
 	const anchorLinks = document.querySelectorAll(
-		".post-content .heading-anchor",
+		".post-content__body .heading-anchor",
 	);
 
 	anchorLinks.forEach((anchor) => {

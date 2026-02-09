@@ -1,0 +1,18 @@
+/* ===========================================
+   Blog Page Block
+   Blog listing page styles
+   =========================================== */
+
+/* Block: blog-page */
+.blog-page {
+	margin: 0 auto;
+	padding: var(--space-xl);
+	max-width: var(--max-width-container);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+	.blog-page {
+		padding: var(--space-lg);
+	}
+}

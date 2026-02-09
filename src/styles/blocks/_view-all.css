@@ -1,0 +1,18 @@
+/* ===========================================
+   View All Link Block
+   "View all" style links
+   =========================================== */
+
+/* Block: view-all */
+.view-all {
+	display: inline-block;
+	transition: color var(--transition-fast);
+	margin-top: var(--space-lg);
+	color: var(--color-text-muted);
+	font-size: var(--text-lg);
+	text-decoration: none;
+}
+
+.view-all:hover {
+	color: var(--color-accent);
+}

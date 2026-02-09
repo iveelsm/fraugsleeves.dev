@@ -1,5 +1,5 @@
 export function initScrollSpy() {
-	const tocLinks = document.querySelectorAll(".article-toc a");
+	const tocLinks = document.querySelectorAll(".toc__link");
 	const headings = document.querySelectorAll(
 		"main h1[id], main h2[id], main h3[id], main h4[id]",
 	);
@@ -18,10 +18,10 @@ export function initScrollSpy() {
 
 	const updateActiveLink = (id) => {
 		tocLinks.forEach((link) => {
-			link.classList.remove("active");
+			link.classList.remove("toc__link--active");
 			const href = link.getAttribute("href");
 			if (href === `#${id}`) {
-				link.classList.add("active");
+				link.classList.add("toc__link--active");
 			}
 		});
 	};

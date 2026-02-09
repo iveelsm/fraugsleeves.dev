@@ -1,5 +1,5 @@
 ---
-import "../styles/tags.css";
+import "../styles/blocks/index.css";
 
 import { getUniqueOccurences } from "../components/tags";
 import { Searchable } from "../layouts";
@@ -8,21 +8,21 @@ const uniqueTags = await getUniqueOccurences();
 ---
 
 <Searchable>
-	<div class="tags-container">
-		<h1 class="tags-title">Tags</h1>
-		<div class="tags-list">
+	<div class="tags-page">
+		<h1 class="tags-page__title">Tags</h1>
+		<div class="tags-page__list">
 			{
 				Object.keys(uniqueTags).map((tag) => (
 					<a
 						href={`/blog?tag=${encodeURIComponent(tag)}`}
 						class="tag-link"
 					>
-						<span class="tag-name">{tag}</span>
-						<span class="tag-count">{uniqueTags[tag]}</span>
+						<span class="tag-link__name">{tag}</span>
+						<span class="tag-link__count">{uniqueTags[tag]}</span>
 					</a>
 				))
 			}
 		</div>
-		{uniqueTags.length === 0 && <p class="no-tags">No tags found.</p>}
+		{uniqueTags.length === 0 && <p class="tags-page__no-tags">No tags found.</p>}
 	</div>
 </Searchable>

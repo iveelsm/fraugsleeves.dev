@@ -1,5 +1,5 @@
 ---
-import "../../styles/navigation.css";
+import "../../styles/blocks/index.css";
 
 import DesktopNavigation from "./desktopNavigation.astro";
 import MobileNavigation from "./mobileNavigation.astro";
@@ -12,9 +12,9 @@ const currentPath = Astro.url.pathname;
 ---
 
 <nav class="toolbar">
-	<div class="toolbar-content">
-		<a href="/" class="toolbar-logo" aria-label="Home">
-			<LogoIcon class="logo-image" />
+	<div class="toolbar__content">
+		<a href="/" class="toolbar__logo" aria-label="Home">
+			<LogoIcon class="toolbar__logo-image" />
 		</a>
 
 		<MobileNavigation />
@@ -38,16 +38,16 @@ const currentPath = Astro.url.pathname;
 		if (!hamburgerBtn || !mobileNavOverlay) return;
 
 		hamburgerBtn.addEventListener("click", () => {
-			const isOpen = mobileNavOverlay.classList.contains("active");
+			const isOpen = mobileNavOverlay.classList.contains("mobile-nav--active");
 
 			if (isOpen) {
-				mobileNavOverlay.classList.remove("active");
-				hamburgerBtn.classList.remove("active");
+				mobileNavOverlay.classList.remove("mobile-nav--active");
+				hamburgerBtn.classList.remove("toolbar__hamburger--active");
 				hamburgerBtn.setAttribute("aria-expanded", "false");
 				document.body.style.overflow = "";
 			} else {
-				mobileNavOverlay.classList.add("active");
-				hamburgerBtn.classList.add("active");
+				mobileNavOverlay.classList.add("mobile-nav--active");
+				hamburgerBtn.classList.add("toolbar__hamburger--active");
 				hamburgerBtn.setAttribute("aria-expanded", "true");
 				document.body.style.overflow = "hidden";
 			}
@@ -55,11 +55,11 @@ const currentPath = Astro.url.pathname;
 
 		// Close menu when clicking a link
 		const mobileNavLinks =
-			mobileNavOverlay.querySelectorAll(".mobile-nav-link");
+			mobileNavOverlay.querySelectorAll(".mobile-nav__link");
 		mobileNavLinks.forEach((link) => {
 			link.addEventListener("click", () => {
-				mobileNavOverlay.classList.remove("active");
-				hamburgerBtn.classList.remove("active");
+				mobileNavOverlay.classList.remove("mobile-nav--active");
+				hamburgerBtn.classList.remove("toolbar__hamburger--active");
 				hamburgerBtn.setAttribute("aria-expanded", "false");
 				document.body.style.overflow = "";
 			});
@@ -69,10 +69,10 @@ const currentPath = Astro.url.pathname;
 		document.addEventListener("keydown", (e) => {
 			if (
 				e.key === "Escape" &&
-				mobileNavOverlay.classList.contains("active")
+				mobileNavOverlay.classList.contains("mobile-nav--active")
 			) {
-				mobileNavOverlay.classList.remove("active");
-				hamburgerBtn.classList.remove("active");
+				mobileNavOverlay.classList.remove("mobile-nav--active");
+				hamburgerBtn.classList.remove("toolbar__hamburger--active");
 				hamburgerBtn.setAttribute("aria-expanded", "false");
 				document.body.style.overflow = "";
 			}

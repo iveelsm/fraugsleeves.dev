@@ -1,20 +1,23 @@
 /* ===========================================
-   Wayfinders List Page Styles
+   Wayfinders Page Block
+   Wayfinders listing page styles
    =========================================== */
-@import "./base.css";
 
-.wayfinders-container {
+/* Block: wayfinders-page */
+.wayfinders-page {
 	margin: 0 auto;
 	padding: var(--space-xl);
 	max-width: var(--max-width-container);
 }
 
-.wayfinders-header {
+/* Element: header */
+.wayfinders-page__header {
 	margin-bottom: var(--space-2xl);
 	text-align: center;
 }
 
-.wayfinders-title {
+/* Element: title */
+.wayfinders-page__title {
 	margin-bottom: var(--space-md);
 	color: var(--color-text-heading);
 	font-weight: var(--font-semibold);
@@ -22,7 +25,8 @@
 	font-family: var(--font-serif);
 }
 
-.wayfinders-quote {
+/* Element: quote */
+.wayfinders-page__quote {
 	position: relative;
 	margin: 0 auto var(--space-lg);
 	border-left: 3px solid var(--color-accent);
@@ -37,7 +41,7 @@
 	text-align: left;
 }
 
-.wayfinders-quote::before {
+.wayfinders-page__quote::before {
 	position: absolute;
 	top: -0.25rem;
 	left: 0.5rem;
@@ -49,7 +53,8 @@
 	font-family: Georgia, serif;
 }
 
-.wayfinders-description {
+/* Element: description */
+.wayfinders-page__description {
 	margin: 0 auto;
 	max-width: 650px;
 	color: var(--color-text-muted);
@@ -57,28 +62,13 @@
 	line-height: var(--leading-normal);
 }
 
-.wayfinders-grid {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	gap: var(--space-lg);
-}
-
-@media (max-width: 900px) {
-	.wayfinders-grid {
-		grid-template-columns: repeat(2, 1fr);
-	}
-}
-
+/* Responsive */
 @media (max-width: 600px) {
-	.wayfinders-container {
+	.wayfinders-page {
 		padding: var(--space-lg);
 	}
 
-	.wayfinders-title {
+	.wayfinders-page__title {
 		font-size: var(--text-2xl);
-	}
-
-	.wayfinders-grid {
-		grid-template-columns: 1fr;
 	}
 }

@@ -1,0 +1,25 @@
+/* ===========================================
+   Wayfinders Grid Block
+   Grid layout for wayfinder cards
+   =========================================== */
+
+/* Block: wayfinders-grid */
+.wayfinders-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: var(--space-lg);
+	font-family: var(--font-mono);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+	.wayfinders-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media (max-width: 600px) {
+	.wayfinders-grid {
+		grid-template-columns: 1fr;
+	}
+}

@@ -10,8 +10,8 @@ const allWayfinders = (await getCollection("wayfinders")).sort(
 const recentWayfinders = allWayfinders.slice(0, 3);
 ---
 
-<section class="wayfinders-section">
-	<h2 class="section-title">Wayfinders</h2>
+<section class="section">
+	<h2 class="section__title section__title--serif">Wayfinders</h2>
 	<div class="wayfinders-grid">
 		{
 			recentWayfinders.map((wayfinder) => (
@@ -24,5 +24,5 @@ const recentWayfinders = allWayfinders.slice(0, 3);
 			))
 		}
 	</div>
-	<a href="/wayfinders" class="view-all-link"> View all wayfinders → </a>
+	<a href="/wayfinders" class="view-all"> View all wayfinders → </a>
 </section>

@@ -1,6 +1,4 @@
 ---
-import "../../styles/search.css";
-
 import SearchContainer from "./searchContainer.astro";
 ---
 
@@ -28,18 +26,18 @@ import SearchContainer from "./searchContainer.astro";
 			if (!query.trim()) {
 				resultsContainer.innerHTML = "";
 				resultsContainer
-					.closest(".search-dropdown")
-					?.classList.remove("visible");
+					.closest(".search__dropdown")
+					?.classList.remove("search__dropdown--visible");
 				return;
 			}
 
 			const pf = await loadPagefind();
 			if (!pf) {
 				resultsContainer.innerHTML =
-					'<div class="search-no-results">Search unavailable</div>';
+					'<div class="search__no-results">Search unavailable</div>';
 				resultsContainer
-					.closest(".search-dropdown")
-					?.classList.add("visible");
+					.closest(".search__dropdown")
+					?.classList.add("search__dropdown--visible");
 				return;
 			}
 
@@ -47,10 +45,10 @@ import SearchContainer from "./searchContainer.astro";
 
 			if (search.results.length === 0) {
 				resultsContainer.innerHTML =
-					'<div class="search-no-results">No results found</div>';
+					'<div class="search__no-results">No results found</div>';
 				resultsContainer
-					.closest(".search-dropdown")
-					?.classList.add("visible");
+					.closest(".search__dropdown")
+					?.classList.add("search__dropdown--visible");
 				return;
 			}
 
@@ -61,17 +59,17 @@ import SearchContainer from "./searchContainer.astro";
 			resultsContainer.innerHTML = results
 				.map(
 					(result) => `
-			<a href="${result.url}" class="search-result">
-				<div class="search-result-title">${result.meta?.title || result.meta?.name || result.title || result.url}</div>
-				<div class="search-result-excerpt">${result.excerpt}</div>
+			<a href="${result.url}" class="search__result">
+				<div class="search__result-title">${result.meta?.title || result.meta?.name || result.title || result.url}</div>
+				<div class="search__result-excerpt">${result.excerpt}</div>
 			</a>
 		`,
 				)
 				.join("");
 
 			resultsContainer
-				.closest(".search-dropdown")
-				?.classList.add("visible");
+				.closest(".search__dropdown")
+				?.classList.add("search__dropdown--visible");
 		}
 
 		function debounce(fn, delay) {
@@ -84,15 +82,15 @@ import SearchContainer from "./searchContainer.astro";
 
 		function initDesktopSearch() {
 			const container = document.querySelector(
-				".toolbar-desktop .search-container",
+				".toolbar__desktop .search",
 			);
 			if (!container) return;
 
-			const toggle = container.querySelector(".search-toggle");
-			const input = container.querySelector(".search-input");
-			const clearBtn = container.querySelector(".search-clear");
-			const dropdown = container.querySelector(".search-dropdown");
-			const resultsContainer = container.querySelector(".search-results");
+			const toggle = container.querySelector(".search__toggle");
+			const input = container.querySelector(".search__input");
+			const clearBtn = container.querySelector(".search__clear");
+			const dropdown = container.querySelector(".search__dropdown");
+			const resultsContainer = container.querySelector(".search__results");
 
 			if (!toggle) return;
 
@@ -105,7 +103,7 @@ import SearchContainer from "./searchContainer.astro";
 
 			function openSearch() {
 				isOpen = true;
-				container.classList.add("search-open");
+				container.classList.add("search--open");
 				toggle.style.opacity = "0";
 				toggle.style.transform = "scale(0.8)";
 				toggle.style.pointerEvents = "none";
@@ -114,12 +112,12 @@ import SearchContainer from "./searchContainer.astro";
 
 			function closeSearch() {
 				isOpen = false;
-				container.classList.remove("search-open");
+				container.classList.remove("search--open");
 				toggle.style.opacity = "1";
 				toggle.style.transform = "scale(1)";
 				toggle.style.pointerEvents = "auto";
 				if (input) input.value = "";
-				dropdown?.classList.remove("visible");
+				dropdown?.classList.remove("search__dropdown--visible");
 				if (resultsContainer) resultsContainer.innerHTML = "";
 			}
 

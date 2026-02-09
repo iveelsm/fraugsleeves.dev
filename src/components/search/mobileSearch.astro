@@ -1,13 +1,11 @@
 ---
-import "../../styles/search.css";
-
 import MobileOverlay from "./mobileOverlay.astro";
 
 import { SearchIcon } from "../../icons";
 ---
 
 <button
-	class="search-toggle"
+	class="search__toggle"
 	type="button"
 	aria-label="Open search"
 	id="mobile-search-toggle"
@@ -44,7 +42,7 @@ import { SearchIcon } from "../../icons";
 			const pf = await loadPagefind();
 			if (!pf) {
 				resultsContainer.innerHTML =
-					'<div class="search-no-results">Search unavailable</div>';
+					'<div class="search-overlay__no-results">Search unavailable</div>';
 				return;
 			}
 
@@ -52,7 +50,7 @@ import { SearchIcon } from "../../icons";
 
 			if (search.results.length === 0) {
 				resultsContainer.innerHTML =
-					'<div class="search-no-results">No results found</div>';
+					'<div class="search-overlay__no-results">No results found</div>';
 				return;
 			}
 
@@ -63,9 +61,9 @@ import { SearchIcon } from "../../icons";
 			resultsContainer.innerHTML = results
 				.map(
 					(result) => `
-			<a href="${result.url}" class="search-result">
-				<div class="search-result-title">${result.meta?.title || result.meta?.name || result.title || result.url}</div>
-				<div class="search-result-excerpt">${result.excerpt}</div>
+			<a href="${result.url}" class="search-overlay__result">
+				<div class="search-overlay__result-title">${result.meta?.title || result.meta?.name || result.title || result.url}</div>
+				<div class="search-overlay__result-excerpt">${result.excerpt}</div>
 			</a>
 		`,
 				)
@@ -101,13 +99,13 @@ import { SearchIcon } from "../../icons";
 			);
 
 			function openSearch() {
-				overlay.classList.add("active");
+				overlay.classList.add("search-overlay--active");
 				document.body.style.overflow = "hidden";
 				setTimeout(() => overlayInput?.focus(), 150);
 			}
 
 			function closeSearch() {
-				overlay.classList.remove("active");
+				overlay.classList.remove("search-overlay--active");
 				document.body.style.overflow = "";
 				if (overlayInput) overlayInput.value = "";
 				if (overlayResults) overlayResults.innerHTML = "";
@@ -122,7 +120,7 @@ import { SearchIcon } from "../../icons";
 			document.addEventListener("keydown", (e) => {
 				if (
 					e.key === "Escape" &&
-					overlay.classList.contains("active")
+					overlay.classList.contains("search-overlay--active")
 				) {
 					closeSearch();
 				}

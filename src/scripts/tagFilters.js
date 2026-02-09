@@ -6,8 +6,8 @@ export function initTagFilter() {
 	const filterTagName = document.getElementById("filter-tag-name");
 	const postsList = document.getElementById("posts-list");
 	const noPosts = document.getElementById("no-posts");
-	const postItems = document.querySelectorAll(".post-item");
-	const tagLinks = document.querySelectorAll(".post-tag");
+	const postItems = document.querySelectorAll(".post-list__item");
+	const tagLinks = document.querySelectorAll(".tag-link");
 
 	if (!filterHeader || !filterTagName || !postsList || !noPosts) {
 		console.warn(`There was no selectors found for the filters, disabling`);
@@ -48,9 +48,9 @@ export function initTagFilter() {
 	tagLinks.forEach((link) => {
 		const tag = link.getAttribute("data-tag");
 		if (tag === tagFilter) {
-			link.classList.add("active");
+			link.classList.add("tag-link--active");
 		} else {
-			link.classList.remove("active");
+			link.classList.remove("tag-link--active");
 		}
 	});
 }

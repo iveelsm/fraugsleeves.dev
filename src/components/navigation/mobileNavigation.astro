@@ -3,18 +3,18 @@ import { CloseIcon, HamburgerIcon } from "../../icons";
 import { MobileSearch } from "../search";
 ---
 
-<div class="toolbar-mobile">
-	<div class="mobile-search-wrapper">
+<div class="toolbar__mobile">
+	<div class="toolbar__mobile-search">
 		<MobileSearch />
 	</div>
 	<button
-		class="hamburger-btn"
+		class="toolbar__hamburger"
 		id="hamburger-btn"
 		type="button"
 		aria-label="Open menu"
 		aria-expanded="false"
 	>
-		<HamburgerIcon class="hamburger-icon" width={24} height={24} />
-		<CloseIcon class="close-icon" width={24} height={24} />
+		<HamburgerIcon class="toolbar__hamburger-icon--open" width={24} height={24} />
+		<CloseIcon class="toolbar__hamburger-icon--close" width={24} height={24} />
 	</button>
 </div>

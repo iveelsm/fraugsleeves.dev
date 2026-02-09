@@ -1,0 +1,124 @@
+/* ===========================================
+   Wayfinder Post Block
+   Individual wayfinder page styles
+   =========================================== */
+
+/* Block: wayfinder-post */
+.wayfinder-post {
+	margin: 0 auto;
+	padding: var(--space-xl);
+	max-width: var(--max-width-container);
+	font-family: var(--font-mono);
+}
+
+.wayfinder-post main {
+	font-size: var(--text-base);
+}
+
+.wayfinder-post main h1,
+.wayfinder-post main h2,
+.wayfinder-post main h3,
+.wayfinder-post main h4 {
+	margin-top: 2.5rem;
+	margin-bottom: var(--space-md);
+	color: var(--color-text-heading);
+	font-weight: var(--font-semibold);
+}
+
+.wayfinder-post main h1 {
+	font-size: var(--text-3xl);
+}
+
+.wayfinder-post main h2 {
+	border-bottom: 1px solid var(--color-border);
+	padding-bottom: var(--space-xs);
+	font-size: var(--text-2xl);
+}
+
+.wayfinder-post main h3 {
+	font-size: var(--text-xl);
+}
+
+.wayfinder-post main h4 {
+	font-size: var(--text-lg);
+}
+
+.wayfinder-post main p {
+	margin: var(--space-md) 0;
+	color: var(--color-text);
+}
+
+.wayfinder-post main a {
+	color: var(--color-accent);
+	text-decoration: underline;
+}
+
+.wayfinder-post main a:hover {
+	text-decoration: none;
+}
+
+.wayfinder-post main a.numeric-reference {
+	position: relative;
+	top: -0.25em;
+	vertical-align: super;
+	font-weight: var(--font-semibold);
+	font-size: 0.75em;
+	line-height: 0;
+	text-decoration: none;
+}
+
+.wayfinder-post main a.numeric-reference:hover {
+	text-decoration: underline;
+}
+
+.wayfinder-post main code {
+	border-radius: var(--radius-sm);
+	background: var(--color-code-bg);
+	padding: 0.2em 0.4em;
+	font-size: 0.95em;
+	font-family: var(--font-mono);
+}
+
+.wayfinder-post main pre {
+	margin: var(--space-lg) 0;
+	border-radius: var(--radius-md);
+	background: var(--color-code-bg);
+	padding: var(--space-md);
+	overflow-x: auto;
+	font-size: 0.95em;
+	font-family: var(--font-mono);
+}
+
+.wayfinder-post main pre code {
+	background: none;
+	padding: 0;
+}
+
+.wayfinder-post main ul,
+.wayfinder-post main ol {
+	margin: var(--space-md) 0;
+	padding-left: var(--space-lg);
+}
+
+.wayfinder-post main li {
+	margin-bottom: var(--space-sm);
+}
+
+.wayfinder-post main blockquote {
+	margin: var(--space-md) 0;
+	border-left: 3px solid var(--color-accent);
+	padding-left: var(--space-md);
+	color: var(--color-text-muted);
+	font-style: italic;
+}
+
+.wayfinder-post .heading-anchor {
+	display: none;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+	.wayfinder-post {
+		padding: var(--space-md);
+	}
+}

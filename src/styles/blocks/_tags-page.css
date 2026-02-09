@@ -1,0 +1,45 @@
+/* ===========================================
+   Tags Page Block
+   Tags listing page styles
+   =========================================== */
+
+/* Block: tags-page */
+.tags-page {
+	margin: 0 auto;
+	padding: var(--space-xl);
+	max-width: var(--max-width-container);
+}
+
+/* Element: title */
+.tags-page__title {
+	margin-bottom: var(--space-xl);
+	border-bottom: 1px solid var(--color-border);
+	padding-bottom: var(--space-sm);
+	color: var(--color-text-heading);
+	font-weight: var(--font-semibold);
+	font-size: var(--text-3xl);
+}
+
+/* Element: list */
+.tags-page__list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--space-sm);
+}
+
+/* Element: no-tags */
+.tags-page__no-tags {
+	color: var(--color-text-muted);
+	font-size: var(--text-base);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+	.tags-page {
+		padding: var(--space-lg);
+	}
+
+	.tags-page__title {
+		font-size: var(--text-2xl);
+	}
+}
