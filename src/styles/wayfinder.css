@@ -9,15 +9,15 @@
 }
 
 .post-header-box {
-	max-width: var(--max-width-container);
 	margin: 0 auto;
-	background: var(--color-bg-alt);
-	border: 1px solid var(--color-border-dark);
-	border-radius: var(--radius-lg);
-	padding: 1.25rem var(--space-lg);
 	box-shadow:
 		0 4px 12px oklch(0% 0 0 / 0.12),
 		0 2px 4px oklch(0% 0 0 / 0.08);
+	border: 1px solid var(--color-border-dark);
+	border-radius: var(--radius-lg);
+	background: var(--color-bg-alt);
+	padding: 1.25rem var(--space-lg);
+	max-width: var(--max-width-container);
 }
 
 .post-header-content {
@@ -32,26 +32,26 @@
 }
 
 .post-header-main .post-title {
-	font-family: var(--font-serif);
-	font-size: var(--text-2xl);
-	font-weight: var(--font-bold);
-	color: var(--color-text-heading);
-	line-height: var(--leading-tight);
 	margin: 0;
+	color: var(--color-text-heading);
+	font-weight: var(--font-bold);
+	font-size: var(--text-2xl);
+	line-height: var(--leading-tight);
+	font-family: var(--font-serif);
 }
 
 .post-meta {
-	font-size: var(--text-code);
-	color: var(--color-text-subtle);
 	display: flex;
+	flex-grow: 1;
 	justify-content: right;
 	padding-right: var(--space-lg);
-	flex-grow: 1;
+	color: var(--color-text-subtle);
+	font-size: var(--text-code);
 }
 
 .post-date {
-	font-size: var(--font-base);
 	color: var(--color-text-subtle);
+	font-size: var(--font-base);
 	white-space: nowrap;
 }
 
@@ -60,41 +60,41 @@
 }
 
 .post-header-collapsible {
-	overflow: hidden;
-	max-height: 200px;
 	opacity: 1;
-	margin-top: 0.75rem;
 	transition: all var(--transition-normal);
+	margin-top: 0.75rem;
+	max-height: 200px;
+	overflow: hidden;
 }
 
 .post-summary {
-	font-size: 0.95rem;
-	color: var(--color-text-muted);
 	margin-bottom: 0.75rem;
+	color: var(--color-text-muted);
 	font-style: italic;
+	font-size: 0.95rem;
 	line-height: var(--leading-normal);
 }
 
 .post-author-line,
 .post-editors-line {
-	color: var(--color-text-muted);
 	margin: 0 0 0.5rem 0;
+	color: var(--color-text-muted);
 	line-height: var(--leading-normal);
 }
 
 .post-author-line strong,
 .post-editors-line strong {
-	font-family: var(--font-mono-variable);
 	color: var(--color-text-subtle);
+	font-family: var(--font-mono);
 }
 
 .post-tags {
-	list-style: none;
 	display: flex;
 	flex-wrap: wrap;
 	gap: var(--space-sm);
-	padding: 0;
 	margin: 0;
+	padding: 0;
+	list-style: none;
 }
 
 .heading-anchor {
@@ -102,20 +102,20 @@
 }
 
 .tag {
+	border-radius: var(--radius-full);
 	background-color: var(--color-tag-bg);
+	padding: 0.15rem var(--space-sm);
 	color: var(--color-tag-text);
 	font-size: var(--text-xs);
-	padding: 0.15rem var(--space-sm);
-	border-radius: var(--radius-full);
 	font-family: var(--font-mono);
 	white-space: nowrap;
 }
 
 .wayfinder-post {
-	font-family: var(--font-mono);
-	max-width: var(--max-width-container);
 	margin: 0 auto;
 	padding: var(--space-xl);
+	max-width: var(--max-width-container);
+	font-family: var(--font-mono);
 }
 
 main {
@@ -126,10 +126,10 @@ main h1,
 main h2,
 main h3,
 main h4 {
-	font-weight: var(--font-semibold);
 	margin-top: 2.5rem;
 	margin-bottom: var(--space-md);
 	color: var(--color-text-heading);
+	font-weight: var(--font-semibold);
 }
 
 main h1 {
@@ -137,9 +137,9 @@ main h1 {
 }
 
 main h2 {
-	font-size: var(--text-2xl);
 	border-bottom: 1px solid var(--color-border);
 	padding-bottom: var(--space-xs);
+	font-size: var(--text-2xl);
 }
 
 main h3 {
@@ -165,13 +165,13 @@ main a:hover {
 }
 
 main a.numeric-reference {
-	vertical-align: super;
-	font-size: 0.75em;
-	line-height: 0;
 	position: relative;
 	top: -0.25em;
-	text-decoration: none;
+	vertical-align: super;
 	font-weight: var(--font-semibold);
+	font-size: 0.75em;
+	line-height: 0;
+	text-decoration: none;
 }
 
 main a.numeric-reference:hover {
@@ -179,21 +179,21 @@ main a.numeric-reference:hover {
 }
 
 main code {
+	border-radius: var(--radius-sm);
 	background: var(--color-code-bg);
 	padding: 0.2em 0.4em;
-	border-radius: var(--radius-sm);
-	font-family: var(--font-mono);
 	font-size: 0.95em;
+	font-family: var(--font-mono);
 }
 
 main pre {
+	margin: var(--space-lg) 0;
+	border-radius: var(--radius-md);
 	background: var(--color-code-bg);
 	padding: var(--space-md);
 	overflow-x: auto;
-	border-radius: var(--radius-md);
-	font-family: var(--font-mono);
 	font-size: 0.95em;
-	margin: var(--space-lg) 0;
+	font-family: var(--font-mono);
 }
 
 main pre code {
@@ -204,8 +204,8 @@ main pre code {
 /* Lists */
 main ul,
 main ol {
-	padding-left: var(--space-lg);
 	margin: var(--space-md) 0;
+	padding-left: var(--space-lg);
 }
 
 main li {
@@ -213,8 +213,8 @@ main li {
 }
 
 main blockquote {
-	border-left: 3px solid var(--color-accent);
 	margin: var(--space-md) 0;
+	border-left: 3px solid var(--color-accent);
 	padding-left: var(--space-md);
 	color: var(--color-text-muted);
 	font-style: italic;

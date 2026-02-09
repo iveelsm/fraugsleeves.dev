@@ -6,34 +6,34 @@
 .not-found-container {
 	display: flex;
 	flex-direction: column;
-	align-items: center;
 	justify-content: center;
-	min-height: calc(100vh - var(--toolbar-height) - 150px);
-	padding: var(--space-xl);
-	text-align: center;
+	align-items: center;
 	gap: var(--space-xl);
+	padding: var(--space-xl);
+	min-height: calc(100vh - var(--toolbar-height) - 150px);
+	text-align: center;
 }
 
 @media (min-width: 768px) {
 	.not-found-container {
 		flex-direction: row;
-		text-align: left;
 		gap: var(--space-2xl);
-		max-width: var(--max-width-wide);
 		margin: 0 auto;
+		max-width: var(--max-width-wide);
+		text-align: left;
 	}
 }
 
 .not-found-image {
 	flex-shrink: 0;
-	max-width: 400px;
 	width: 100%;
+	max-width: 400px;
 }
 
 .not-found-image img {
+	opacity: 0.9;
 	width: 100%;
 	height: auto;
-	opacity: 0.9;
 }
 
 .not-found-content {
@@ -44,18 +44,18 @@
 }
 
 .not-found-title {
-	font-size: clamp(4rem, 15vw, 8rem);
-	font-weight: var(--font-semibold);
-	color: var(--color-text-heading);
-	line-height: 1;
 	margin: 0;
+	color: var(--color-text-heading);
+	font-weight: var(--font-semibold);
+	font-size: clamp(4rem, 15vw, 8rem);
+	line-height: 1;
 	letter-spacing: -0.02em;
 }
 
 .not-found-message {
-	font-size: var(--text-xl);
-	color: var(--color-text);
 	margin: 0;
+	color: var(--color-text);
+	font-size: var(--text-xl);
 	line-height: var(--leading-normal);
 }
 
@@ -68,14 +68,13 @@
 
 .not-found-link {
 	display: inline-flex;
-	align-items: center;
 	justify-content: center;
+	align-items: center;
+	transition: all var(--transition-fast);
+	border-radius: var(--radius-md);
 	padding: var(--space-sm) var(--space-lg);
 	font-size: var(--text-base);
-	font-weight: var(--font-medium);
 	text-decoration: none;
-	border-radius: var(--radius-md);
-	transition: all var(--transition-fast);
 }
 
 .not-found-link.primary {
@@ -84,32 +83,32 @@
 }
 
 .not-found-link.primary:hover {
-	background-color: var(--uchu-blue-6);
 	transform: translateY(-2px);
 	box-shadow: var(--shadow-md);
+	background-color: var(--uchu-blue-6);
 }
 
 .not-found-link.secondary {
+	border: 1px solid var(--color-border);
 	background-color: var(--color-bg-alt);
 	color: var(--color-text-heading);
-	border: 1px solid var(--color-border);
 }
 
 .not-found-link.secondary:hover {
-	background-color: var(--uchu-gray-2);
 	border-color: var(--color-border-dark);
+	background-color: var(--uchu-gray-2);
 }
 
 .not-found-search {
 	margin-top: var(--space-lg);
-	padding-top: var(--space-lg);
 	border-top: 1px solid var(--color-border);
+	padding-top: var(--space-lg);
 }
 
 .not-found-hint {
-	font-size: var(--text-sm);
-	color: var(--color-text-muted);
 	margin: 0 0 var(--space-md);
+	color: var(--color-text-muted);
+	font-size: var(--text-sm);
 }
 
 .not-found-search-form {
@@ -119,20 +118,20 @@
 
 .not-found-search-input {
 	flex: 1;
-	padding: var(--space-sm) var(--space-md);
-	font-family: var(--font-mono);
-	font-size: var(--text-sm);
-	color: var(--color-text);
-	background-color: var(--color-bg-alt);
+	transition: all var(--transition-fast);
+	outline: none;
 	border: 1px solid var(--color-border);
 	border-radius: var(--radius-sm);
-	outline: none;
-	transition: all var(--transition-fast);
+	background-color: var(--color-bg-alt);
+	padding: var(--space-sm) var(--space-md);
+	color: var(--color-text);
+	font-size: var(--text-sm);
+	font-family: var(--font-mono);
 }
 
 .not-found-search-input:focus {
-	border-color: var(--color-accent);
 	box-shadow: 0 0 0 3px var(--color-accent-bg);
+	border-color: var(--color-accent);
 }
 
 .not-found-search-input::placeholder {
@@ -140,16 +139,15 @@
 }
 
 .not-found-search-button {
-	padding: var(--space-sm) var(--space-md);
-	font-family: var(--font-mono);
-	font-size: var(--text-sm);
-	font-weight: var(--font-medium);
-	color: var(--uchu-yang);
-	background-color: var(--color-accent);
+	transition: all var(--transition-fast);
+	cursor: pointer;
 	border: none;
 	border-radius: var(--radius-sm);
-	cursor: pointer;
-	transition: all var(--transition-fast);
+	background-color: var(--color-accent);
+	padding: var(--space-sm) var(--space-md);
+	color: var(--uchu-yang);
+	font-size: var(--text-sm);
+	font-family: var(--font-mono);
 }
 
 .not-found-search-button:hover {

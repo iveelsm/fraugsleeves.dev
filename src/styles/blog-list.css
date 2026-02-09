@@ -4,54 +4,54 @@
 @import "./base.css";
 
 .blog-container {
-	max-width: var(--max-width-container);
 	margin: 0 auto;
 	padding: var(--space-xl);
+	max-width: var(--max-width-container);
 }
 
 .blog-container .filter-header {
 	display: flex;
 	align-items: center;
 	gap: var(--space-sm);
-	padding: var(--space-md);
 	margin-bottom: var(--space-lg);
-	background: var(--color-accent-bg);
 	border: 1px solid var(--color-accent);
 	border-radius: var(--radius-md);
+	background: var(--color-accent-bg);
+	padding: var(--space-md);
 }
 
 .blog-container .filter-label {
-	font-size: var(--text-sm);
 	color: var(--color-text-muted);
+	font-size: var(--text-sm);
 }
 
 .blog-container .filter-tag {
-	font-size: var(--text-sm);
-	font-weight: var(--font-semibold);
 	color: var(--color-accent);
+	font-weight: var(--font-semibold);
+	font-size: var(--text-sm);
 }
 
 .blog-container .filter-clear {
 	display: flex;
-	align-items: center;
 	justify-content: center;
+	align-items: center;
+	transition: all var(--transition-fast);
 	margin-left: auto;
+	border-radius: var(--radius-sm);
 	padding: var(--space-xs);
 	color: var(--color-text-muted);
-	border-radius: var(--radius-sm);
-	transition: all var(--transition-fast);
 }
 
 .blog-container .filter-clear:hover {
-	color: var(--color-text);
 	background: var(--color-bg-alt);
+	color: var(--color-text);
 }
 
 .blog-container .no-posts {
+	padding: var(--space-2xl);
 	color: var(--color-text-muted);
 	font-size: var(--text-base);
 	text-align: center;
-	padding: var(--space-2xl);
 }
 
 @media (max-width: 640px) {

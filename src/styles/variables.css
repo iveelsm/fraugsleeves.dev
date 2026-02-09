@@ -99,9 +99,6 @@
 	--font-mono:
 		"Berkeley Mono Variable", ui-monospace, SFMono-Regular, Monaco,
 		Consolas, monospace;
-	--font-mono-variable:
-		"Berkeley Mono Variable", ui-monospace, SFMono-Regular, Monaco,
-		Consolas, monospace;
 	--font-serif:
 		"EB Garamond", ui-serif, Garamond, Georgia, "Times New Roman", Times,
 		serif;
@@ -121,11 +118,9 @@
 	--leading-relaxed: 1.75;
 
 	--font-ultralight: 100;
-	--font-light: 200;
-	--font-regular: 350;
-	--font-medium: 450;
+	--font-regular: 400;
 	--font-semibold: 600;
-	--font-bold: 800;
+	--font-bold: 700;
 
 	--color-bg: var(--uchu-yang);
 	--color-bg-alt: var(--uchu-gray-1);
