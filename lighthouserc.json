@@ -4,9 +4,10 @@
 			"staticDistDir": "./dist",
 			"url": [
 				"/",
-				"/blog/",
-				"/wayfinders/",
-				"/tags/"
+				"/blog.html",
+				"/blog/libuv.html",
+				"/wayfinders.html",
+				"/tags.html"
 			],
 			"numberOfRuns": 3
 		},

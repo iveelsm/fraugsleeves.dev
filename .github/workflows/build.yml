@@ -65,12 +65,6 @@ jobs:
             - name: Install dependencies
               run: npm ci
 
-            - name: Download build artifact
-              uses: actions/download-artifact@v6
-              with:
-                  name: dist
-                  path: dist/
-
             - name: Run Lighthouse CI
               run: npm run lighthouse
               env:
