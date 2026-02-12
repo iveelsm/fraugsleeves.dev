@@ -19,15 +19,15 @@ This article is going to be focused on taking a tour through some of the mechani
 
 Which gives us some sense of what we are talking about. But I find that a better way to introduce epoll is to introduce the problem that it solves.
 
-> The classic Unix way to wait for I/O events on multiple file descriptors is with the select() and poll() system calls. When a process invokes one of those calls, the kernel goes through the list of interesting file descriptors, checks to see if non-blocking I/O is available on any of them, and adds the calling process to a wait queue for each file descriptor that would block. This implementation works reasonably well when the number of file descriptors is small. But if a process is managing thousands of file descriptors, the select() and poll() calls must check every single one of them, and add the calling process to thousands of wait queues. For every single call. Needless to say, this approach does not scale very well. [14](https://lwn.net/Articles/13587/)
+> The classic Unix way to wait for I/O events on multiple file descriptors is with the select() and poll() system calls. When a process invokes one of those calls, the kernel goes through the list of interesting file descriptors, checks to see if non-blocking I/O is available on any of them, and adds the calling process to a wait queue for each file descriptor that would block. This implementation works reasonably well when the number of file descriptors is small. But if a process is managing thousands of file descriptors, the select() and poll() calls must check every single one of them, and add the calling process to thousands of wait queues. For every single call. Needless to say, this approach does not scale very well. [[1]](https://lwn.net/Articles/13587/)
 
-This quote comes from the initial introduction of epoll into the Linux kernel in late 2002. The idea, being rather explicitly outlined, was that watching changes on file descriptors was far too slow at as the count numbered in the thousands. We will discuss why that is done important shortly, but monitoring thousands of file descriptors is one of the foundations of computing today. It’s not uncommon for a single service to get into the tens of thousands of file descriptors. [21](https://www.kegel.com/c10k.html) Runtimes that ended up depending on this change, like Node.js, wouldn’t be released until 7 years later, and the foundational event loop for Node.js called [libuv](/blog/libuv) would not be released 2011. It’s not a stretch today to say that epoll is one of the foundations of the internet. [17](https://darkcoding.net/software/epoll-the-api-that-powers-the-modern-internet/) In order to understand epoll, the problems it solves and the problems it creates, you have to understand two major ideas: file descriptors and triggering. Let’s start by talking about file descriptors. As with any library, the content in this article may drift towards incorrect over time. This article has been drafted with a lens for Linux `v6.8`. This article will provide an incomplete picture, and if the reader finds themselves wanting for more details, I would encourage [diving into the the Linux source coude](https://github.com/torvalds/linux).
+This quote comes from the initial introduction of epoll into the Linux kernel in late 2002. The idea, being rather explicitly outlined, was that watching changes on file descriptors was far too slow at as the count numbered in the thousands. We will discuss why that is done important shortly, but monitoring thousands of file descriptors is one of the foundations of computing today. It’s not uncommon for a single service to get into the tens of thousands of file descriptors. [[2]](https://www.kegel.com/c10k.html) Runtimes that ended up depending on this change, like Node.js, wouldn’t be released until 7 years later, and the foundational event loop for Node.js called [libuv](/blog/libuv) would not be released 2011. It’s not a stretch today to say that epoll is one of the foundations of the internet. [[3]](https://darkcoding.net/software/epoll-the-api-that-powers-the-modern-internet/) In order to understand epoll, the problems it solves and the problems it creates, you have to understand two major ideas: file descriptors and triggering. Let’s start by talking about file descriptors. As with any library, the content in this article may drift towards incorrect over time. This article has been drafted with a lens for Linux `v6.8`. This article will provide an incomplete picture, and if the reader finds themselves wanting for more details, I would encourage [diving into the the Linux source coude](https://github.com/torvalds/linux).
 
 # File descriptors
 
 There will be two very similar terms that we will be introducing, **file descriptors** and **file descriptions**. It’s very important to note that while these two ideas are related, they represent different concepts. A file descrition is fundamentally an internal data structure in the linux kernel, we will revisit them momentarily. The important part is **file descriptions are an internal data structure, not to be confused with the more common file descriptors**. We will see why this statement is important later. So what are **file descriptors**?
 
-> In Unix and related computer operating systems, a file descriptor (FD, less frequently fildes) is an abstract indicator (handle) used to access a file or other input/output resource, such as a pipe or network socket. [4](https://en.wikipedia.org/wiki/File_descriptor)
+> In Unix and related computer operating systems, a file descriptor (FD, less frequently fildes) is an abstract indicator (handle) used to access a file or other input/output resource, such as a pipe or network socket. [[4]](https://en.wikipedia.org/wiki/File_descriptor)
 
 That is to say, if you are doing I/O, you are using a file descriptor. File descriptors are process bounded, that is to say that the table that manages file descriptors is mostly unique to a process. This table can be seen below.
 
@@ -57,7 +57,7 @@ int main(int f, char *argv[]) {
 }
 ```
 
-In this example, we start by opening a file `"abc.txt"`. This file is opened with the permissions `666`, which indicates that the owner, the group and other can all read and write. [15](https://en.wikipedia.org/wiki/File-system_permissions) It passes in three flags, represent three ideas: the file is opened in a read/write mode (`O_RDWR`); if the file does not exist, create it as a regular file (`O_CREAT`); if the file already exists and is a regular file, and the access mode allows writing, it will be truncated to length 0 (`O_TRUNC`). We then proceed to immediately write the data `"foo"` to the integer returned from the `open()` call. This integer represents a file descriptor, more specifically a small, nonnegative integer that is an index to an entry in the process's table of open file descriptors. [16](https://man7.org/linux/man-pages/man2/open.2.html) We finally wrap up by closing the open file descriptor, and our text file now contains the text `foo`. The question remains though, how do we get from an integer to writing data on a filesystem?
+In this example, we start by opening a file `"abc.txt"`. This file is opened with the permissions `666`, which indicates that the owner, the group and other can all read and write. [[5]](https://en.wikipedia.org/wiki/File-system_permissions) It passes in three flags, represent three ideas: the file is opened in a read/write mode (`O_RDWR`); if the file does not exist, create it as a regular file (`O_CREAT`); if the file already exists and is a regular file, and the access mode allows writing, it will be truncated to length 0 (`O_TRUNC`). We then proceed to immediately write the data `"foo"` to the integer returned from the `open()` call. This integer represents a file descriptor, more specifically a small, nonnegative integer that is an index to an entry in the process's table of open file descriptors. [[6]](https://man7.org/linux/man-pages/man2/open.2.html) We finally wrap up by closing the open file descriptor, and our text file now contains the text `foo`. The question remains though, how do we get from an integer to writing data on a filesystem?
 
 We can start to answer that question with a simplistic view of the world, much like our previous test program. We can break down I/O interactions on Linux into three main components: file descriptors, file tables, and inode tables. Those relationships can be seen here. As a note, we are going to be focused on **file handling** in Linux, a great deal of the concepts apply in pipes and sockets, however, it's just easier to view the world as files.
 
@@ -67,7 +67,7 @@ We can start to answer that question with a simplistic view of the world, much l
 
 File tables are the bridge between the application view of the world and the filesystems view of the world. File tables bridge file descriptors and inodes with information about the mode of access.
 
-> In the traditional implementation of Unix, file descriptors index into a per-process file descriptor table maintained by the kernel, that in turn indexes into a system-wide table of files opened by all processes, called the file table. This table records the mode with which the file (or other resource) has been opened: for reading, writing, appending, and possibly other modes. [4](https://en.wikipedia.org/wiki/File_descriptor)
+> In the traditional implementation of Unix, file descriptors index into a per-process file descriptor table maintained by the kernel, that in turn indexes into a system-wide table of files opened by all processes, called the file table. This table records the mode with which the file (or other resource) has been opened: for reading, writing, appending, and possibly other modes. [[4]](https://en.wikipedia.org/wiki/File_descriptor)
 
 Unfortunately, this model only exists in theory. In reality, there is no large table that represents the bridge between files. Instead we have a following structure.
 
@@ -121,7 +121,7 @@ An inode is a representation of a file system object. This one of the four major
 
 The formal definition highlights some additional pieces.
 
-> An inode (index node) is a data structure in a Unix-style file system that describes a file-system object such as a file or a directory. Each inode stores the attributes and disk block locations of the object's data. File-system object attributes may include metadata (times of last change, access, modification), as well as owner and permission data. [5](https://en.wikipedia.org/wiki/Inode)
+> An inode (index node) is a data structure in a Unix-style file system that describes a file-system object such as a file or a directory. Each inode stores the attributes and disk block locations of the object's data. File-system object attributes may include metadata (times of last change, access, modification), as well as owner and permission data. [[7]](https://en.wikipedia.org/wiki/Inode)
 
 However, much like the file table, the inode table doesn't exist. It's an abstraction, in reality, it's just references. Each filesystem contains it's own version of the inode table, called a superblock. We won't discuss the intricacies of particular file system superblock management here, we will instead stop at the discussing of the `struct inode`.
 
@@ -240,7 +240,7 @@ These aren't completely outlandish, and give us a reasonable frame of reference 
 
 ![A diagram of the relationship between process file descriptor tables, file tables and inode tables. It displays four tables of varying colors, two process file descriptor tables and one for the each of the remaining two types. It establishes the major relationships, drawing arrows between shared file descriptors resulting from forks, individual file descriptors and the relationship between file and inode on disk.](../../assets/epoll/epoll_complex.png "A more realistic view of file descriptors")
 
-Now for understanding **epoll**, there are two additional concepts we need to discuss. Those being `fork()` [19](https://www.man7.org/linux/man-pages/man2/fork.2.html) and one of the flags for file descriptors called `O_CLOEXEC`, which stands for Open Close-on-Exec. Let's talk about `fork()` first. We need to extend our simplistic example a bit in order to discuss it. As a brief aside for process management, there are only a handful of ways to actually start a process in Linux, the most common of which are `fork()` and `exec()` [27](https://www.man7.org/linux/man-pages/man3/exec.3.html). It's fairly uncommon to see one without the other, so we will be extend our simple process before and splitting up the opening of file descriptors, and the writing of file descriptors.
+Now for understanding **epoll**, there are two additional concepts we need to discuss. Those being `fork()` [[8]](https://www.man7.org/linux/man-pages/man2/fork.2.html) and one of the flags for file descriptors called `O_CLOEXEC`, which stands for Open Close-on-Exec. Let's talk about `fork()` first. We need to extend our simplistic example a bit in order to discuss it. As a brief aside for process management, there are only a handful of ways to actually start a process in Linux, the most common of which are `fork()` and `exec()`. [[9]](https://www.man7.org/linux/man-pages/man3/exec.3.html) It's fairly uncommon to see one without the other, so we will be extend our simple process before and splitting up the opening of file descriptors, and the writing of file descriptors.
 
 Let's start with our parent.
 
@@ -410,11 +410,25 @@ void server_serve(server_t **server) {
 }
 ```
 
-In the above, we use file descriptors at the start of the while loop as part of the `accept()` [18](https://www.man7.org/linux/man-pages/man2/accept.2.html) call. We previously have established a file descriptor for the socket handling in the `server_bind` which has been truncated for brevity sake. From there, we accept an incoming connection on that file descriptor for the socket, given by `(*server)->fdsocket`. That incoming file descriptor is then used in the `incomingctx` and passed as the `fdincoming`. From there, we are able to pass that off to our server handler who has enough information on the `incomingctx` reference to proceed. For all intents and purposes, this is basically how every HTTP server in the world works, you bind to a socket, accept incoming connections, pass off the connection to a handler who has the responsibility and passing the requisite information. But here is a perplexing question, how do we know that a socket has an incoming connection?
+In the above, we use file descriptors at the start of the while loop as part of the `accept()` [[10]](https://www.man7.org/linux/man-pages/man2/accept.2.html) call. We previously have established a file descriptor for the socket handling in the `server_bind` which has been truncated for brevity sake. From there, we accept an incoming connection on that file descriptor for the socket, given by `(*server)->fdsocket`. That incoming file descriptor is then used in the `incomingctx` and passed as the `fdincoming`. From there, we are able to pass that off to our server handler who has enough information on the `incomingctx` reference to proceed. For all intents and purposes, this is basically how every HTTP server in the world works, you bind to a socket, accept incoming connections, pass off the connection to a handler who has the responsibility and passing the requisite information. But here is a perplexing question, how do we know that a socket has an incoming connection?
 
 # Event triggers
 
-Event triggers, or interrupts, for the purposes of this article will not be related to hardware interrupts. We will instead be taking a simplistic view to eliminate some of the complexities associated with event handling in Linux systems. If you are dissatisfied with this simplification, I would strongly encourage exploring [this article on this Linux networking stack](https://blog.packagecloud.io/monitoring-tuning-linux-networking-stack-receiving-data/). We will be taking a drastically simplified view to explain how they function in one direction.
+Interrupt Requests, or IRQs, are often broken into two classes, what is called a hard IRQs and what is called a soft IRQs. [[20]](https://en.wikipedia.org/wiki/Interrupt_request). We will be primarily focused on the interface for firing soft IRQ tasklets, and will bundle the associated scheduling mechanisms into one pretend interface. If you are dissatisfied with this simplification, I would strongly encourage exploring [this article on this Linux networking stack](https://blog.packagecloud.io/monitoring-tuning-linux-networking-stack-receiving-data/) and [this presentation on IRQs](https://events.static.linuxfound.org/sites/events/files/slides/Chaiken_ELCE2016.pdf). So let's isolate this section to answering the following question.
+
+> How does a inode know it has data ready to read from it's file descriptor?
+
+
+The answer to this question fundamentally boils down to trigger mechanisms. There are two classes of triggers in the IRQ space, level and edge triggers. Both have their respective use cases, here is a grab bag of example use cases:
+
+* Level Triggers
+  * [Redis](https://github.com/redis/redis/blob/8.4.1/src/ae_epoll.c)
+  * [Node.js](https://github.com/libuv/libuv/blob/v1.x/src/unix/linux.c)
+* Edge Triggers
+  * [Nginx](https://github.com/nginx/nginx/blob/stable-1.28/src/event/modules/ngx_epoll_module.c)
+  * [Golang](https://github.com/golang/go/blob/go1.25.7/src/runtime/netpoll_epoll.go)
+
+Level triggers are used when you can't consume all the data in the descriptor and you want to keep triggering while data is available. There are several disadvantages to this discussed in more detail in the linked pitfalls artricles. Edge triggers only notify as write ready once, which often means that you need to pull at the data into user space. Edge triggers are useful in multicore machines where multiple threads can wait on the same file descriptor as only one will wake to handle it.
 
 ## Level triggers
 
@@ -432,11 +446,11 @@ As you may already be aware, performing I/O is, begrudgingly, one of the major v
 
 Before we start to talk about **epoll**, we need to discuss it's precursor `select()` and `poll()`. We will start by exploring `select()`.
 
-> select is a system call and application programming interface (API) in Unix-like and POSIX-compliant operating systems for examining the status of file descriptors of open input/output channels. [1](https://en.wikipedia.org/wiki/Select_%28Unix%29)
+> select is a system call and application programming interface (API) in Unix-like and POSIX-compliant operating systems for examining the status of file descriptors of open input/output channels. [[11]](https://en.wikipedia.org/wiki/Select_%28Unix%29)
 
-`select()` is a system call for synchronous I/O multiplexing. Let's break that statement down a bit. We start with the word "synchronous", which is rather obviously counter to the asynchronous nature of Node.js and generally the nature of **epoll**. However, `select()` was one of the very first I/O management system calls, and as such, did not have anywhere near the same scale of problem that computing had today. It was introduced in 4.2BSD Unix in 1983! [26](https://daniel.haxx.se/docs/poll-vs-select.html) The second half of that original statement, **multiplexing**, refers to the idea of taking multiple signals and producing a single signal from them.
+`select()` is a system call for synchronous I/O multiplexing. Let's break that statement down a bit. We start with the word "synchronous", which is rather obviously counter to the asynchronous nature of Node.js and generally the nature of **epoll**. However, `select()` was one of the very first I/O management system calls, and as such, did not have anywhere near the same scale of problem that computing had today. It was introduced in 4.2BSD Unix in 1983! [[12]](https://daniel.haxx.se/docs/poll-vs-select.html) The second half of that original statement, **multiplexing**, refers to the idea of taking multiple signals and producing a single signal from them.
 
-> In computing, I/O multiplexing can also be used to refer to the concept of processing multiple input/output events from a single event loop, with system calls like poll and select (Unix). [22](https://en.wikipedia.org/wiki/Multiplexing)
+> In computing, I/O multiplexing can also be used to refer to the concept of processing multiple input/output events from a single event loop, with system calls like poll and select (Unix). [[13]](https://en.wikipedia.org/wiki/Multiplexing)
 
 To rephrase our original definition. `select()` is a system call that will handle multiple I/O events and produce one event for processing when called. So, hat does this call end up looking like?
 
@@ -452,9 +466,9 @@ int select(
 
 This interface highlights a few interesting ideas. The first is the use of file descriptors, in read, write and exception modes. Read and write make sense, but what's an "exceptional mode". Generally, exceptional modes break down into the following ideas:
 
-- There is out-of-band data on a TCP socket [23](https://www.man7.org/linux/man-pages/man7/tcp.7.html)
-- A pseudoterminal boss in packet mode has seen a state change on the worker [24](https://www.man7.org/linux/man-pages/man2/ioctl_tty.2.html)
-- A cgroup.events file has been modified [25](https://www.man7.org/linux/man-pages/man7/cgroups.7.html)
+- There is out-of-band data on a TCP socket [[14]](https://www.man7.org/linux/man-pages/man7/tcp.7.html)
+- A pseudoterminal boss in packet mode has seen a state change on the worker [[15]](https://www.man7.org/linux/man-pages/man2/ioctl_tty.2.html)
+- A cgroup.events file has been modified [[16]](https://www.man7.org/linux/man-pages/man7/cgroups.7.html)
 
 We won't really discuss those ideas in more detail. I encourage perusing the man pages if you have follow up questions here. However, I feel that's insufficient to describe select in detail. I try to make a habit of exploring code more deeply than just the interface layer, so let's try to break down more clearly what is happening.
 
@@ -561,7 +575,7 @@ Note, a great deal of the code has been truncated to focus the conversation. As 
   /* ...truncated */
 ```
 
-How does this compare to it's newer counterpart `poll()`? `poll()` was introduced in SVR3 Unix in 1987. [26](https://daniel.haxx.se/docs/poll-vs-select.html) And it generally functions very similarly to `select()`. It is also a I/O multiplexing mechanism, but it has one major advantage over `select()` it performs far better on sparse file descriptors. The problem with `select()` was that the way you interacted with it was by giving it bitsets. Those bitsets meant that you enumerated file descriptors that you might not actually be interested processing. `poll()` mildly improves upon this by allowing you to pass explicit file descriptors, so the scan over the bitset becomes unnecessary. This is demonstrated in the interface.
+How does this compare to it's newer counterpart `poll()`? `poll()` was introduced in SVR3 Unix in 1987. [[12]](https://daniel.haxx.se/docs/poll-vs-select.html) And it generally functions very similarly to `select()`. It is also a I/O multiplexing mechanism, but it has one major advantage over `select()` it performs far better on sparse file descriptors. The problem with `select()` was that the way you interacted with it was by giving it bitsets. Those bitsets meant that you enumerated file descriptors that you might not actually be interested processing. `poll()` mildly improves upon this by allowing you to pass explicit file descriptors, so the scan over the bitset becomes unnecessary. This is demonstrated in the interface.
 
 ```c
 int poll(
@@ -649,9 +663,9 @@ This is a lot like the `do_select()` function. We are doing a linear scan of arg
 
 **epoll** is not represented by a single interface, in fact, it's three separate interfaces. As a general note for this section, unlike the previous section, we will be stopping at the interface level. The functions here are not as contained as `poll()` and `select()` and often branch into other areas. As can be expected, as systems branch from simple linear scans of file descriptors, the underlying code gets more complex. So focusing on the interfaces, they are:
 
-- `epoll_create()` which is responsible for opening the **epoll** file descriptor [25](https://www.man7.org/linux/man-pages/man2/epoll_create.2.html)
-- `epoll_ctl()` which is a control interface for the **epoll** file descriptor [24](https://www.man7.org/linux/man-pages/man2/epoll_ctl.2.html)
-- `epoll_wait()` which is responsible for waiting for an I/O event on an **epoll** file descriptor [26](https://www.man7.org/linux/man-pages/man2/epoll_wait.2.html)
+- `epoll_create()` which is responsible for opening the **epoll** file descriptor [[17]](https://www.man7.org/linux/man-pages/man2/epoll_create.2.html)
+- `epoll_ctl()` which is a control interface for the **epoll** file descriptor [[18]](https://www.man7.org/linux/man-pages/man2/epoll_ctl.2.html)
+- `epoll_wait()` which is responsible for waiting for an I/O event on an **epoll** file descriptor [[19]](https://www.man7.org/linux/man-pages/man2/epoll_wait.2.html)
 
 If you notice, that really only talks about one file descriptor, so how does one file descriptor manage thousands of other file descriptors? The answer is that epoll is not just a system call, it's actually a data structure in the kernel. This data structure is given by the following.
 
@@ -883,36 +897,59 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events, int 
 }
 ```
 
-Let's break down this code. We start by checking if IRQs, also known as interrupt requests, are even enabled. This is uncommon to not be enabled, but epoll will not function without it as there will be no triggers. We then check if any events are availabe, which is done through a read of the `rdllist` in the `eventpoll` structure and then a verification of the `ovflist`. If there are events available, we are going to try and transfer them from kernel space to user space. We do this by determining if the event on the entry in the ready list intersects with the requested event, in a thread safe manner.
+Let's break down this code. We start by checking if IRQs, also known as interrupt requests, are even enabled. This is uncommon to not be enabled, but epoll will not function without it as there will be no triggers. We then check if any events are availabe, which is done through a read of the `rdllist` in the `eventpoll` structure and then a verification of the `ovflist`. If there are events available, we are going to try and transfer them from kernel space to user space. We do this by determining if the event on the entry in the ready list intersects with the requested event, in a thread safe manner. That's going to be the majority of the functionality, afterwards, we perform some additional scans of the available list and finally some time out management towards the end of the function.
 
 ## Performance and pitfalls
 
+So just how well has epoll handled the C10K problem? In the Linux Programming Interface by Michael Kerrisk, there is the following table that describes the performance of epoll.
+
+| # operations  |  poll  |  select   | epoll |
+| ------------  | ------ | --------- | ----- |
+| 10            |   0.61 |    0.73   | 0.41  |
+| 100           |   2.9  |    3.0    | 0.42  |
+| 1000          |  35    |   35      | 0.53  |
+| 10000         | 990    |  930      | 0.66  |
+
+As part of this blog, I endeavored to recreate this benchmark for a more modern kernel, as these benchmarks were derived for `v2.6.x`.
+
+Additionally, beyond just the performance benchmarks. There are handful of fundamental problems in **epoll** that required special edge case handling in order to make the system viable. These are discussed in better detail than I can present in the following posts and videos, I highly encourage them for those interested in understanding the pitfalls of epoll even deeper.
+
+1. [Epoll is fundamentally broken 1/2](https://idea.popcount.org/2017-02-20-epoll-is-fundamentally-broken-12/)
+2. [Epoll is fundamentally broken 2/2](https://idea.popcount.org/2017-03-20-epoll-is-fundamentally-broken-22/)
+3. [Ubuntu Slaughters Kittens | BSD Now 103](https://www.youtube.com/watch?v=l6XQUciI-Sc&t=3364s)
+
+# Summary
+
+This article, and it's related articles, started as a teach out session around early-2020 for developers interested in starting to develop in Node.js. The goal was to teach the intricacies of the platform in a way that broke down a complex asynchronous event system, into a digestable procedurable based approach. epoll has far more depth than we were able to explore here, but I hope the relationships between file descriptors, triggers and the various I/O polling mechanisms seems a bit more approachable now. If you are still interested in reading more about this, I would encourage reading the following linked articles which helped solidify my understanding.
+
+1. [Nonblocking I/O](https://medium.com/@copyconstruct/nonblocking-i-o-99948ad7c957)
+2. [The method to epoll’s madness](https://medium.com/@copyconstruct/the-method-to-epolls-madness-d9d2d6378642)
+3. [Async IO on Linux: select, poll, and epoll](https://jvns.ca/blog/2017/06/03/async-io-on-linux--select--poll--and-epoll/)
+4. [Using epoll() for Asynchronous Network Programming](https://kovyrin.net/2006/04/13/epoll-asynchronous-network-programming/)
+5. [Monitoring and Tuning the Linux Networking Stack: Receiving Data](https://blog.packagecloud.io/monitoring-tuning-linux-networking-stack-receiving-data/)
+6. [Mastering epoll: The Engine Behind High-Performance Linux Networking](https://medium.com/@m-ibrahim.research/mastering-epoll-the-engine-behind-high-performance-linux-networking-85a15e6bde90)
+
+
 # References
 
-1. https://en.wikipedia.org/wiki/Select_%28Unix%29
-2. https://en.wikipedia.org/wiki/Poll_(Unix)
-3. https://en.wikipedia.org/wiki/Interrupt
+1. https://lwn.net/Articles/13587/
+2. https://www.kegel.com/c10k.html
+3. https://darkcoding.net/software/epoll-the-api-that-powers-the-modern-internet/
 4. https://en.wikipedia.org/wiki/File_descriptor
-5. https://en.wikipedia.org/wiki/Inode
-6. https://medium.com/@copyconstruct/nonblocking-i-o-99948ad7c957
-7. https://medium.com/@copyconstruct/the-method-to-epolls-madness-d9d2d6378642
-8. https://idea.popcount.org/2017-02-20-epoll-is-fundamentally-broken-12/
-9. https://idea.popcount.org/2017-03-20-epoll-is-fundamentally-broken-22/
-10. https://jvns.ca/blog/2017/06/03/async-io-on-linux--select--poll--and-epoll/
-11. https://kovyrin.net/2006/04/13/epoll-asynchronous-network-programming/
-12. http://man7.org/training/download/lusp_fileio_slides.pdf
-13. https://www.youtube.com/watch?v=l6XQUciI-Sc
-14. https://lwn.net/Articles/13587/
-15. https://en.wikipedia.org/wiki/File-system_permissions
-16. https://man7.org/linux/man-pages/man2/open.2.html
-17. https://darkcoding.net/software/epoll-the-api-that-powers-the-modern-internet/
-18. https://www.man7.org/linux/man-pages/man2/accept.2.html
-19. https://www.man7.org/linux/man-pages/man2/fork.2.html
-20. https://blog.packagecloud.io/monitoring-tuning-linux-networking-stack-receiving-data/
-21. https://www.kegel.com/c10k.html
-22. https://en.wikipedia.org/wiki/Multiplexing
-23. https://daniel.haxx.se/docs/poll-vs-select.html
-24. https://www.man7.org/linux/man-pages/man2/epoll_ctl.2.html
-25. https://www.man7.org/linux/man-pages/man2/epoll_wait.2.html
-26. https://www.man7.org/linux/man-pages/man2/epoll_wait.2.html
-27. https://www.man7.org/linux/man-pages/man3/exec.3.html
+5. https://en.wikipedia.org/wiki/File-system_permissions
+6. https://man7.org/linux/man-pages/man2/open.2.html
+7. https://en.wikipedia.org/wiki/Inode
+8. https://www.man7.org/linux/man-pages/man2/fork.2.html
+9. https://www.man7.org/linux/man-pages/man3/exec.3.html
+10. https://www.man7.org/linux/man-pages/man2/accept.2.html
+11. https://en.wikipedia.org/wiki/Select_%28Unix%29
+12. https://daniel.haxx.se/docs/poll-vs-select.html
+13. https://en.wikipedia.org/wiki/Multiplexing
+14. https://www.man7.org/linux/man-pages/man7/tcp.7.html
+15. https://www.man7.org/linux/man-pages/man2/ioctl_tty.2.html
+16. https://www.man7.org/linux/man-pages/man7/cgroups.7.html
+17. https://www.man7.org/linux/man-pages/man2/epoll_create.2.html
+18. https://www.man7.org/linux/man-pages/man2/epoll_ctl.2.html
+19. https://www.man7.org/linux/man-pages/man2/epoll_wait.2.html
+
+1. https://en.wikipedia.org/wiki/Interrupt
