@@ -951,5 +951,4 @@ This article, and it's related articles, started as a teach out session around e
 17. https://www.man7.org/linux/man-pages/man2/epoll_create.2.html
 18. https://www.man7.org/linux/man-pages/man2/epoll_ctl.2.html
 19. https://www.man7.org/linux/man-pages/man2/epoll_wait.2.html
-
-1. https://en.wikipedia.org/wiki/Interrupt
+20. https://en.wikipedia.org/wiki/Interrupt_request
