@@ -414,7 +414,7 @@ In the above, we use file descriptors at the start of the while loop as part of 
 
 # Event triggers
 
-Interrupt Requests, or IRQs, are often broken into two classes, what is called a hard IRQs and what is called a soft IRQs. [[20]](https://en.wikipedia.org/wiki/Interrupt_request). We will be primarily focused on the interface for firing soft IRQ tasklets, and will bundle the associated scheduling mechanisms into one pretend interface. If you are dissatisfied with this simplification, I would strongly encourage exploring [this article on this Linux networking stack](https://blog.packagecloud.io/monitoring-tuning-linux-networking-stack-receiving-data/) and [this presentation on IRQs](https://events.static.linuxfound.org/sites/events/files/slides/Chaiken_ELCE2016.pdf). So let's isolate this section to answering the following question.
+Interrupt Requests, or IRQs, are often broken into two classes, what is called a hard IRQ and what is called a soft IRQ. [[20]](https://en.wikipedia.org/wiki/Interrupt_request). We will be primarily focused on the interface for constructing hard IRQs for firing soft IRQ tasklets, and will ignore some of the mechanisms for creating softIRQ tasklets and focus exclusively on hardware triggers. If you are dissatisfied with this simplification, I would strongly encourage exploring [this article on this Linux networking stack](https://blog.packagecloud.io/monitoring-tuning-linux-networking-stack-receiving-data/) and [this presentation on IRQs](https://events.static.linuxfound.org/sites/events/files/slides/Chaiken_ELCE2016.pdf). So let's isolate this section to answering the following question.
 
 > How does a inode know it has data ready to read from it's file descriptor?
 
@@ -432,11 +432,19 @@ Level triggers are used when you can't consume all the data in the descriptor an
 
 ## Level triggers
 
-![Test Gif](../../assets/epoll/epoll_level_trigger.gif)
+Level triggers are triggers that stay asserted until the device clears the interrupt condition. This is pretty easy to visualize, let's say that we have a line where we indicate that we are at a high logical level, and anything below that line is a low logic level. Our interrupt conditions might look like the following.
+
+![An x-y graph with a green dotted line at about the halfway point on the y-axis. This is a gif that loops through various state changes in the amount of data for a hypothetical file descriptor. It highlights that the file descriptor creates an interrupt request when the data is above the green dotted line, but does not generate an interrupt request when it falls below the dotted line](../../assets/epoll/epoll_level_trigger.gif "Simple Level Trigger Visualization")
+
+Of course, this is not how hardware interrupts work in practice, mostly because drivers don't assign an arbitrary number of bytes to determine when a file is ready. But it is a close approximation to the actual high and low logic levels that cause hard IRQs in the device drivers, and it's much easier to visualize. As you can see in the gif, our interrupts only fire when we exceed our arbitrary line. When you start to apply this to hardware, which tends to think in a more binary state, you can start see where an issue for performance starts to arise. When a read or write event occurs on the monitored file descriptor and you don’t read or write all the data at once, then the interrupt request will keep firing.
 
 ## Edge triggers
 
-![Test Gif](../../assets/epoll/epoll_edge_trigger.gif)
+Edge-triggered are triggers that generate an interrupt only on transitions of the signal. These could be [rising or falling signals depending on the flags passed.](https://github.com/torvalds/linux/blob/v6.8/include/linux/interrupt.h#L30-L37). So let's look at an example visualization where we only notify on rising.
+
+![An x-y graph with a green dotted line at about the halfway point on the y-axis. This is a gif that loops through various state changes in the amount of data for a hypothetical file descriptor. It highlights that the file descriptor creates an interrupt request each time more data is written, but does not generate an interrupt request each time the data is read](../../assets/epoll/epoll_edge_trigger.gif "Simple Edge Trigger Visualization")
+
+As you can see, each time data is added, we notify, but we don't notify for reading. Again, this is a simplification of the hardware process as they often rely on binary views of the world, so if the driver has not reset a high logic state, even if more data is written it is not guaranteed to produce an interrupt. This is because we only notify on the rising edge, so if we start with data, then we only read part, or we get more write data, that is not a change in the logical state. You get less notifications in this state, but you have to perform more "remembering" of ready file descriptors as a trade-off.
 
 # I/O Polling
 
