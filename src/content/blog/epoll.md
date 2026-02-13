@@ -21,11 +21,11 @@ Which gives us some sense of what we are talking about. But I find that a better
 
 > The classic Unix way to wait for I/O events on multiple file descriptors is with the select() and poll() system calls. When a process invokes one of those calls, the kernel goes through the list of interesting file descriptors, checks to see if non-blocking I/O is available on any of them, and adds the calling process to a wait queue for each file descriptor that would block. This implementation works reasonably well when the number of file descriptors is small. But if a process is managing thousands of file descriptors, the select() and poll() calls must check every single one of them, and add the calling process to thousands of wait queues. For every single call. Needless to say, this approach does not scale very well. [[1]](https://lwn.net/Articles/13587/)
 
-This quote comes from the initial introduction of epoll into the Linux kernel in late 2002. The idea, being rather explicitly outlined, was that watching changes on file descriptors was far too slow at as the count numbered in the thousands. We will discuss why that is done important shortly, but monitoring thousands of file descriptors is one of the foundations of computing today. It’s not uncommon for a single service to get into the tens of thousands of file descriptors. [[2]](https://www.kegel.com/c10k.html) Runtimes that ended up depending on this change, like Node.js, wouldn’t be released until 7 years later, and the foundational event loop for Node.js called [libuv](/blog/libuv) would not be released 2011. It’s not a stretch today to say that epoll is one of the foundations of the internet. [[3]](https://darkcoding.net/software/epoll-the-api-that-powers-the-modern-internet/) In order to understand epoll, the problems it solves and the problems it creates, you have to understand two major ideas: file descriptors and triggering. Let’s start by talking about file descriptors. As with any library, the content in this article may drift towards incorrect over time. This article has been drafted with a lens for Linux `v6.8`. This article will provide an incomplete picture, and if the reader finds themselves wanting for more details, I would encourage [diving into the the Linux source coude](https://github.com/torvalds/linux).
+This quote comes from the initial introduction of epoll into the Linux kernel in late 2002. The idea, being rather explicitly outlined, was that watching changes on file descriptors was far too slow at as the count numbered in the thousands. We will discuss why that is done important shortly, but monitoring thousands of file descriptors is one of the foundations of computing today. It’s not uncommon for a single service to get into the tens of thousands of file descriptors. [[2]](https://www.kegel.com/c10k.html) Runtimes that ended up depending on this change, like Node.js, wouldn’t be released until 7 years later, and the foundational event loop for Node.js called [libuv](/blog/libuv) would not be released 2011. It’s not a stretch today to say that epoll is one of the foundations of the internet. [[3]](https://darkcoding.net/software/epoll-the-api-that-powers-the-modern-internet/) In order to understand epoll, the problems it solves and the problems it creates, you have to understand two major ideas: file descriptors and triggering. Let’s start by talking about file descriptors. As with any library, the content in this article may drift towards incorrect over time. This article has been drafted with a lens for Linux `v6.8`. This article will provide an incomplete picture, and if the reader finds themselves wanting for more details, I would encourage diving into the references and linked content, there is a wealth of information in the references section alone.
 
 # File descriptors
 
-There will be two very similar terms that we will be introducing, **file descriptors** and **file descriptions**. It’s very important to note that while these two ideas are related, they represent different concepts. A file descrition is fundamentally an internal data structure in the linux kernel, we will revisit them momentarily. The important part is **file descriptions are an internal data structure, not to be confused with the more common file descriptors**. We will see why this statement is important later. So what are **file descriptors**?
+There will be two very similar terms that we will be introducing, **file descriptors** and *file descriptions*. It’s very important to note that while these two ideas are related, they represent different concepts. A file descrition is fundamentally an internal data structure in the linux kernel, we will revisit them momentarily. The important part is **file descriptions are an internal data structure, not to be confused with the more common file descriptors**. We will see why this statement is important later. So what are **file descriptors**?
 
 > In Unix and related computer operating systems, a file descriptor (FD, less frequently fildes) is an abstract indicator (handle) used to access a file or other input/output resource, such as a pipe or network socket. [[4]](https://en.wikipedia.org/wiki/File_descriptor)
 
@@ -59,7 +59,7 @@ int main(int f, char *argv[]) {
 
 In this example, we start by opening a file `"abc.txt"`. This file is opened with the permissions `666`, which indicates that the owner, the group and other can all read and write. [[5]](https://en.wikipedia.org/wiki/File-system_permissions) It passes in three flags, represent three ideas: the file is opened in a read/write mode (`O_RDWR`); if the file does not exist, create it as a regular file (`O_CREAT`); if the file already exists and is a regular file, and the access mode allows writing, it will be truncated to length 0 (`O_TRUNC`). We then proceed to immediately write the data `"foo"` to the integer returned from the `open()` call. This integer represents a file descriptor, more specifically a small, nonnegative integer that is an index to an entry in the process's table of open file descriptors. [[6]](https://man7.org/linux/man-pages/man2/open.2.html) We finally wrap up by closing the open file descriptor, and our text file now contains the text `foo`. The question remains though, how do we get from an integer to writing data on a filesystem?
 
-We can start to answer that question with a simplistic view of the world, much like our previous test program. We can break down I/O interactions on Linux into three main components: file descriptors, file tables, and inode tables. Those relationships can be seen here. As a note, we are going to be focused on **file handling** in Linux, a great deal of the concepts apply in pipes and sockets, however, it's just easier to view the world as files.
+We can start to answer that question with a simplistic view of the world, much like our previous test program. We can break down I/O interactions on Linux into three main components: file descriptors, file tables, and inode tables. Those relationships can be seen here. As a note, we are going to be focused on **file handling in Linux in this section**, a great deal of the concepts apply to pipes and sockets, however, it's just easier to view the world as files.
 
 ![A diagram representing three tables, a file descriptor table, a file table and an inode table. There are several entries in each along with arrows relating the left most table, the file descriptor table, to the middle table, the file table, and additional arrows relating the file table to the right most table, the inode table](../../assets/epoll/epoll_simple.png "Simplistic File Descriptor View")
 
@@ -69,7 +69,7 @@ File tables are the bridge between the application view of the world and the fil
 
 > In the traditional implementation of Unix, file descriptors index into a per-process file descriptor table maintained by the kernel, that in turn indexes into a system-wide table of files opened by all processes, called the file table. This table records the mode with which the file (or other resource) has been opened: for reading, writing, appending, and possibly other modes. [[4]](https://en.wikipedia.org/wiki/File_descriptor)
 
-Unfortunately, this model only exists in theory. In reality, there is no large table that represents the bridge between files. Instead we have a following structure.
+Unfortunately, this model only exists in theory. In reality, there is **no large table that represents the bridge between files**. Instead we have a following structure.
 
 ```c
 struct file {
@@ -108,7 +108,7 @@ struct file {
 }
 ```
 
-As you can see from the above, there is some information about the flags for the file, the read ahead state of the file, the position, locks, etc. Rather curiously, there are epoll mechanisms contained within the struct as well. That is to say, there is a fair amount going on with this data structure. This is what is often referred to as a **file description**. This data structure was referenced previous in our process file descriptor table previously. The most important piece I want to call out is the `struct inode` reference in the file. This is the means by which file descriptors are able to reference filesystem elements known as `inodes`. So what is an inode?
+As you can see from the above, there is some information about the flags for the file, the read ahead state of the file, the position, locks, etc. Rather curiously, there are epoll mechanisms contained within the struct as well. That is to say, there is a fair amount going on with this data structure. This is what is often referred to as a *file description*. This data structure was referenced previous in our process file descriptor table previously. The most important piece I want to call out is the `struct inode` reference in the file. This is the means by which file descriptors are able to reference filesystem elements known as `inodes`. So what is an inode?
 
 ## inode table
 
@@ -123,7 +123,7 @@ The formal definition highlights some additional pieces.
 
 > An inode (index node) is a data structure in a Unix-style file system that describes a file-system object such as a file or a directory. Each inode stores the attributes and disk block locations of the object's data. File-system object attributes may include metadata (times of last change, access, modification), as well as owner and permission data. [[7]](https://en.wikipedia.org/wiki/Inode)
 
-However, much like the file table, the inode table doesn't exist. It's an abstraction, in reality, it's just references. Each filesystem contains it's own version of the inode table, called a superblock. We won't discuss the intricacies of particular file system superblock management here, we will instead stop at the discussing of the `struct inode`.
+However, much like the file table, the inode table doesn't really exist. It's an abstraction, in reality, it's just references. Each filesystem contains it's own version of the inode table, called a superblock. We won't discuss the intricacies of particular file system superblock management here, we will instead stop at the discussing of the `struct inode`.
 
 ```c
 struct inode {
@@ -236,11 +236,11 @@ There is so much to file descriptors (often referred to as **fide** from here in
    2. flags
    3. file description pointers, `flag ptr`
 
-These aren't completely outlandish, and give us a reasonable frame of reference to discuss the more important pieces of polling. With that, our view of the world resemebles the following.
+These aren't completely outlandish, and give us a reasonable frame of reference to discuss the more important pieces of polling. With that, our view of the world resembles the following.
 
 ![A diagram of the relationship between process file descriptor tables, file tables and inode tables. It displays four tables of varying colors, two process file descriptor tables and one for the each of the remaining two types. It establishes the major relationships, drawing arrows between shared file descriptors resulting from forks, individual file descriptors and the relationship between file and inode on disk.](../../assets/epoll/epoll_complex.png "A more realistic view of file descriptors")
 
-Now for understanding **epoll**, there are two additional concepts we need to discuss. Those being `fork()` [[8]](https://www.man7.org/linux/man-pages/man2/fork.2.html) and one of the flags for file descriptors called `O_CLOEXEC`, which stands for Open Close-on-Exec. Let's talk about `fork()` first. We need to extend our simplistic example a bit in order to discuss it. As a brief aside for process management, there are only a handful of ways to actually start a process in Linux, the most common of which are `fork()` and `exec()`. [[9]](https://www.man7.org/linux/man-pages/man3/exec.3.html) It's fairly uncommon to see one without the other, so we will be extend our simple process before and splitting up the opening of file descriptors, and the writing of file descriptors.
+Now for understanding epoll, there are two additional concepts we need to discuss. Those being `fork()` [[8]](https://www.man7.org/linux/man-pages/man2/fork.2.html) and one of the flags for file descriptors called `O_CLOEXEC`, which stands for Open Close-on-Exec. Let's talk about `fork()` first. We need to extend our simplistic example a bit in order to discuss it. As a brief aside for process management, there are only a handful of ways to actually start a process in Linux, the most common of which are `fork()` and `exec()`. [[9]](https://www.man7.org/linux/man-pages/man3/exec.3.html) It's fairly uncommon to see one without the other, so we will be extend our simple process before and splitting up the opening of file descriptors, and the writing of file descriptors.
 
 Let's start with our parent.
 
@@ -345,7 +345,9 @@ We still start with the same world view as before, only with the change to the _
 
 ![A diagram of the relationship between process file descriptor tables, file tables and inode tables. It displays four tables of varying colors, two process file descriptor tables and one for the each of the remaining two types. It establishes the major relationships, drawing arrows between shared file descriptors resulting from forks, individual file descriptors and the relationship between file and inode on disk. It has one of the entries gray out in the second file descriptor table, this has a counterpart in the first table where a CLO flag has been set](../../assets/epoll/epoll_close_post.png)
 
-So our writer can not write directly to our file descriptor after the `exec()` which results in the text `"foo"` only being written in the parent process, not in the child. While we have looked at the intricacies of the pieces that make up this diagram, and a simple example that writes to a file, it begs the question, what would a real interaction look like? The following is an example of a simple HTTP server that helps to better illustrate a real world use case.
+So our writer can not write directly to our file descriptor after the `exec()` which results in the text `"foo"` only being written in the parent process, not in the child. So why is this important for epoll? Well, there is a rather serious design flaw in epoll that requires special case handling. Since epoll registers the *file description*, not the **file descriptor**, you need careful handling to avoid sharing epoll-registered file descriptors in `exec()` or `dup()` calls. You could perform careful defensive programming with our `O_CLOEXEC`, or you can use the `EPOLLEXCLUSIVE` flag. Which is all to say, be wary about file descriptor management with epoll, as we will see later, it is a kernel space structure and does not directly interact with the process file table through the use of descriptors.
+
+So, while we have looked at the intricacies of the pieces that make up this diagram, and a simple example that writes to a file, it begs the question, what would a real interaction look like? The following is an example of a simple HTTP server that helps to better illustrate a real world use case.
 
 ```c
 void server_serve(server_t **server) {
@@ -414,11 +416,11 @@ In the above, we use file descriptors at the start of the while loop as part of 
 
 # Event triggers
 
-Interrupt Requests, or IRQs, are often broken into two classes, what is called a hard IRQ and what is called a soft IRQ. [[20]](https://en.wikipedia.org/wiki/Interrupt_request). We will be primarily focused on the interface for constructing hard IRQs for firing soft IRQ tasklets, and will ignore some of the mechanisms for creating softIRQ tasklets and focus exclusively on hardware triggers. If you are dissatisfied with this simplification, I would strongly encourage exploring [this article on this Linux networking stack](https://blog.packagecloud.io/monitoring-tuning-linux-networking-stack-receiving-data/) and [this presentation on IRQs](https://events.static.linuxfound.org/sites/events/files/slides/Chaiken_ELCE2016.pdf). So let's isolate this section to answering the following question.
+We notify programs that files and sockets have received information through interrupt requests. Interrupt Requests, or IRQs, are often broken into two classes, what is called a hard IRQ and what is called a soft IRQ. [[20]](https://en.wikipedia.org/wiki/Interrupt_request). We will be primarily focused on the **interface for constructing hard IRQs for firing soft IRQ tasklets**, and will ignore some of the mechanisms for creating soft IRQ tasklets and **focus exclusively on hardware triggers**. If you are dissatisfied with this simplification, I would strongly encourage exploring [this article on this Linux networking stack](https://blog.packagecloud.io/monitoring-tuning-linux-networking-stack-receiving-data/) and [this presentation on IRQs](https://events.static.linuxfound.org/sites/events/files/slides/Chaiken_ELCE2016.pdf). So let's isolate this section to answering the following question.
 
 > How does a inode know it has data ready to read from it's file descriptor?
 
-The answer to this question fundamentally boils down to trigger mechanisms. There are two classes of triggers in the IRQ space, level and edge triggers. Both have their respective use cases, here is a grab bag of example use cases:
+The answer to this question fundamentally boils down to trigger mechanisms. There are two classes of triggers in the IRQ space, level and edge triggers. Both have their respective use cases, here is a grab bag of example use cases that also rely on epoll:
 
 - Level Triggers
   - [Redis](https://github.com/redis/redis/blob/8.4.1/src/ae_epoll.c)
@@ -447,19 +449,23 @@ As you can see, each time data is added, we notify, but we don't notify for read
 
 # I/O Polling
 
-As you may already be aware, performing I/O is, begrudgingly, one of the major values of a computer. I have a saying that I often refer to, I don't know the origination but it amounts to the following: "Computers were perfect until we connected them together and let them talk". However, I also recognize that computers would be normal near as popular as they are today if they couldn't. So if we know what tracks events, and how events are triggered, how do we notify programs that they need to do something with these events? This is where the I/O polling syscalls come into play.
+As you may already be aware, performing I/O is one of the major values of a computer. I have a saying that I often refer to, I don't know the origination but it amounts to the following: 
+
+> "Computers were perfect until we connected them together and let them talk". 
+
+However, I also recognize that computers would not be near as popular as they are today if they couldn't talk to eachother. So if we know what tracks events, and how events are triggered, how do we notify programs that they need to do something with these events? This is where the I/O polling syscalls come into play.
 
 ## select and poll
 
-Before we start to talk about **epoll**, we need to discuss it's precursor `select()` and `poll()`. We will start by exploring `select()`.
+Before we start to talk about epoll, we need to discuss it's precursor `select()` and `poll()`. We will start by exploring `select()`.
 
 > select is a system call and application programming interface (API) in Unix-like and POSIX-compliant operating systems for examining the status of file descriptors of open input/output channels. [[11]](https://en.wikipedia.org/wiki/Select_%28Unix%29)
 
-`select()` is a system call for synchronous I/O multiplexing. Let's break that statement down a bit. We start with the word "synchronous", which is rather obviously counter to the asynchronous nature of Node.js and generally the nature of **epoll**. However, `select()` was one of the very first I/O management system calls, and as such, did not have anywhere near the same scale of problem that computing had today. It was introduced in 4.2BSD Unix in 1983! [[12]](https://daniel.haxx.se/docs/poll-vs-select.html) The second half of that original statement, **multiplexing**, refers to the idea of taking multiple signals and producing a single signal from them.
+`select()` is a system call for synchronous I/O multiplexing. Let's break that statement down a bit. We start with the word "synchronous", which is rather obviously counter to the asynchronous nature of Node.js and generally the nature of epoll. However, `select()` was one of the very first I/O management system calls, and as such, did not have anywhere near the same scale of problem that computing had today. It was introduced in 4.2BSD Unix in 1983! [[12]](https://daniel.haxx.se/docs/poll-vs-select.html) The second half of that original statement, **multiplexing**, refers to the idea of taking multiple signals and producing a single signal from them.
 
 > In computing, I/O multiplexing can also be used to refer to the concept of processing multiple input/output events from a single event loop, with system calls like poll and select (Unix). [[13]](https://en.wikipedia.org/wiki/Multiplexing)
 
-To rephrase our original definition. `select()` is a system call that will handle multiple I/O events and produce one event for processing when called. So, hat does this call end up looking like?
+To rephrase our original definition. `select()` is a system call that will handle multiple I/O events and produce one event for processing when called. So, what does this call end up looking like?
 
 ```c
 int select(
@@ -471,13 +477,13 @@ int select(
 );
 ```
 
-This interface highlights a few interesting ideas. The first is the use of file descriptors, in read, write and exception modes. Read and write make sense, but what's an "exceptional mode". Generally, exceptional modes break down into the following ideas:
+This interface highlights a few interesting ideas. The first is the use of file descriptors, in read, write and exception modes. Read and write make sense, but what's an *exceptional mode*? Generally, exceptional modes break down into the following ideas:
 
 - There is out-of-band data on a TCP socket [[14]](https://www.man7.org/linux/man-pages/man7/tcp.7.html)
 - A pseudoterminal boss in packet mode has seen a state change on the worker [[15]](https://www.man7.org/linux/man-pages/man2/ioctl_tty.2.html)
 - A cgroup.events file has been modified [[16]](https://www.man7.org/linux/man-pages/man7/cgroups.7.html)
 
-We won't really discuss those ideas in more detail. I encourage perusing the man pages if you have follow up questions here. However, I feel that's insufficient to describe select in detail. I try to make a habit of exploring code more deeply than just the interface layer, so let's try to break down more clearly what is happening.
+We won't really discuss those ideas in more detail. I encourage perusing the man pages if you have follow up questions here. With that being said, I feel that's insufficient to describe select in detail. I try to make a habit of exploring code more deeply than just the interface layer, so let's try to break down more clearly what is happening.
 
 ```c
 static int do_select(int n, fd_set_bits *fds, struct timespec64 *end_time) {
@@ -567,7 +573,7 @@ static int do_select(int n, fd_set_bits *fds, struct timespec64 *end_time) {
 }
 ```
 
-Note, a great deal of the code has been truncated to focus the conversation. As a fun fact, the last time this section of code, that was pulled from the `v6.8` kernel, was touched 5 years ago. There has been [one change since then which you can see here](https://github.com/torvalds/linux/commit/d000e073ca2a08ab70accc28e93dee8d70e89d2f), that change however, makes it harder to talk about the single function, so we will stick with `v6.8`. This function highlights why `select()` has failed to scale. `select()` will fundamentally iterate one by one over the file descriptors passed in and use that to determine if eventing has occurred. It uses the `retval = max_select_fd(n, fds)` to determine the number of file descriptors to loop over, then passed that to the top loop: `for (i = 0; i < n; ++rinp, ++routp, ++rexp) {`. From there, it determines the file descriptor to read, and it determines whether event handling notification is required.
+Note, a great deal of the code has been truncated to focus the conversation. As a fun fact, the last time this section of code, that was pulled from the `v6.8` kernel, was touched 5 years ago. There has been [one change since then which you can see here](https://github.com/torvalds/linux/commit/d000e073ca2a08ab70accc28e93dee8d70e89d2f), that change however, makes it harder to talk about the single function, so we will stick with `v6.8`. This function highlights why `select()` has failed to scale. `select()` will iterate one by one over the file descriptor space passed in and use that to determine if eventing has occurred. It uses the `retval = max_select_fd(n, fds)` to determine the number of file descriptors to loop over, then passed that to the top loop: `for (i = 0; i < n; ++rinp, ++routp, ++rexp) {`. This has the rather unfortuante problem that it is based on a bitset, so if we wanted to watch file descriptor `1` and `20`, we would likely pass the range from `1 -> 20`. From there, it determines the file descriptor to read, and it determines whether event handling notification is required.
 
 ```c
   /* ...truncated */
@@ -582,7 +588,7 @@ Note, a great deal of the code has been truncated to focus the conversation. As 
   /* ...truncated */
 ```
 
-How does this compare to it's newer counterpart `poll()`? `poll()` was introduced in SVR3 Unix in 1987. [[12]](https://daniel.haxx.se/docs/poll-vs-select.html) And it generally functions very similarly to `select()`. It is also a I/O multiplexing mechanism, but it has one major advantage over `select()` it performs far better on sparse file descriptors. The problem with `select()` was that the way you interacted with it was by giving it bitsets. Those bitsets meant that you enumerated file descriptors that you might not actually be interested processing. `poll()` mildly improves upon this by allowing you to pass explicit file descriptors, so the scan over the bitset becomes unnecessary. This is demonstrated in the interface.
+How does this compare to it's newer counterpart `poll()`? `poll()` was introduced in SVR3 Unix in 1987. [[12]](https://daniel.haxx.se/docs/poll-vs-select.html) And it generally functions very similarly to `select()`. It is also a I/O multiplexing mechanism, but it has one major advantage over `select()` it allows you to pass in an interest list of file descriptors. The problem with `select()` was that the way you interacted with it was by giving it bitsets. Those bitsets meant that you enumerated file descriptors that you might not actually be interested processing. `poll()` improves upon this by allowing you to pass an interest list, so the scan over the bitset becomes unnecessary. This is demonstrated in the interface.
 
 ```c
 int poll(
@@ -664,15 +670,15 @@ static int do_poll(struct poll_list *list, struct poll_wqueues *wait, struct tim
 }
 ```
 
-This is a lot like the `do_select()` function. We are doing a linear scan of arguments, the only change is that we do not do any bitset management for determining file descriptors to scan. We just iterate over the list we were initially passed. However, both `select()` and `poll()` has the same problem, they are linear in time. This is a serious problem as the number of watched file descriptors start to grow. Which is where **epoll** steps in.
+This is a lot like the `do_select()` function. We are doing a linear scan of arguments, the only change is that we do not do any bitset management for determining file descriptors to scan. We just iterate over the list we were initially passed. However, both `select()` and `poll()` has the same problem, they are linear in time. This is a serious problem as the number of watched file descriptors start to grow. Which is where epoll steps in.
 
 ## epoll
 
-**epoll** is not represented by a single interface, in fact, it's three separate interfaces. As a general note for this section, unlike the previous section, we will be stopping at the interface level. The functions here are not as contained as `poll()` and `select()` and often branch into other areas. As can be expected, as systems branch from simple linear scans of file descriptors, the underlying code gets more complex. So focusing on the interfaces, they are:
+epoll is not represented by a single interface, in fact, it's three separate interfaces. As a general note for this section, unlike the previous section, we will be stopping at the interface level for most functions. The functions here are not as contained as `poll()` and `select()` and often branch into other areas. So focusing on the interfaces, they are:
 
-- `epoll_create()` which is responsible for opening the **epoll** file descriptor [[17]](https://www.man7.org/linux/man-pages/man2/epoll_create.2.html)
-- `epoll_ctl()` which is a control interface for the **epoll** file descriptor [[18]](https://www.man7.org/linux/man-pages/man2/epoll_ctl.2.html)
-- `epoll_wait()` which is responsible for waiting for an I/O event on an **epoll** file descriptor [[19]](https://www.man7.org/linux/man-pages/man2/epoll_wait.2.html)
+- `epoll_create()` which is responsible for opening the epoll file descriptor [[17]](https://www.man7.org/linux/man-pages/man2/epoll_create.2.html)
+- `epoll_ctl()` which is a control interface for the epoll file descriptor [[18]](https://www.man7.org/linux/man-pages/man2/epoll_ctl.2.html)
+- `epoll_wait()` which is responsible for waiting for an I/O event on an epoll file descriptor [[19]](https://www.man7.org/linux/man-pages/man2/epoll_wait.2.html)
 
 If you notice, that really only talks about one file descriptor, so how does one file descriptor manage thousands of other file descriptors? The answer is that epoll is not just a system call, it's actually a data structure in the kernel. This data structure is given by the following.
 
@@ -730,7 +736,7 @@ struct eventpoll {
 };
 ```
 
-And we can create that data structure is created from by using the first interface we are going to be discussing `epoll_create()`.
+Note the use of `struct file` here and not the file descriptor. We are in kernel space now, not user space. We can create that data structure is created from by using the first interface: `epoll_create()`.
 
 ```c
 #include <sys/epoll.h>
@@ -747,7 +753,7 @@ The system call returns a file descriptor to the newly created epoll kernel data
 
 ![Complex File Descriptor View](../../assets/epoll/epoll_create_post.png)
 
-This file descriptor that has been returned can now be modify with the second in our syscall list, `epoll_ctl()`.
+This file descriptor that has been returned can now be modified with the second in our syscall list, `epoll_ctl()`.
 
 ```c
 #include <sys/epoll.h>
@@ -759,21 +765,21 @@ int epoll_ctl(
 );
 ```
 
-Going through the arguments, `epfd` is the file descriptor for the **epoll** data structure, `fd` is the file descriptor we want to add to the epoll list, `o` refers to the operation to be performed on the file descriptor and `event` is a pointer to a structure which stores the event we actually want to monitor for. In general, three operations are supported for the `op`:
+Going through the arguments, `epfd` is the file descriptor for the epoll data structure, `fd` is the file descriptor we want to add to the epoll list, `o` refers to the operation to be performed on the file descriptor and `event` is a pointer to a structure which stores the event we actually want to monitor for. In general, three operations are supported for the `op`:
 
-- `EPOLL_CTL_ADD` which registers fd with the **epoll** instance and get notified about events that occur on fd
-- `EPOLL_CTL_DEL` which deregisters the fd from the epoll instance. An important note is that if a file descriptor has been added to multiple **epoll** instances, then closing it will remove it from all of the epoll interest lists to which it was added.
-- `EPOLL_CTL_MOD` which modifies the events **epoll** is monitoring on the fd.
+- `EPOLL_CTL_ADD` which registers fd with the epoll instance and get notified about events that occur on fd
+- `EPOLL_CTL_DEL` which deregisters the fd from the epoll instance. An important note is that if a file descriptor has been added to multiple epoll instances, then closing it will remove it from all of the epoll interest lists to which it was added.
+- `EPOLL_CTL_MOD` which modifies the events epoll is monitoring on the fd.
 
 So let's look at a simple example where we add a bunch of file descriptors to be modified.
 
 ![Complex File Descriptor View](../../assets/epoll/epoll_ctl_pre.png)
 
-We generally start with the `epoll_ctl()` call on the **epoll** data structure, in this case, we call with several `EPOLL_CTL_ADD`.
+We generally start with the `epoll_ctl()` call on the epoll data structure, in this case, we call with several `EPOLL_CTL_ADD`.
 
 ![Complex File Descriptor View](../../assets/epoll/epoll_ctl_post.png)
 
-And then afterwards, our internal **epoll** data structure has been populated with the requisite file descriptors. So now, we need to know which file descriptors have the events that we are interested in, which brings us to the final syscall interface, `epoll_wait()`.
+And then afterwards, our internal epoll data structure has been populated with the requisite file descriptors. So now, we need to know which file descriptors have the events that we are interested in, which brings us to the final syscall interface, `epoll_wait()`.
 
 ```c
 #include <sys/epoll.h>
@@ -785,7 +791,7 @@ int epoll_wait(
 );
 ```
 
-Iterating through the arguments again, `epfd` is the file descriptor for the **epoll** data structure, `evlist` is an array of structures allocated by the calling process and populated by **epoll**, this is also called the ready list. `maxevents` is the length of `evlist` and `timeout` specifies how long we should block for. Some possibilities here are:
+Iterating through the arguments again, `epfd` is the file descriptor for the epoll data structure, `evlist` is an array of structures allocated by the calling process and populated by epoll, this is also called the ready list. `maxevents` is the length of `evlist` and `timeout` specifies how long we should block for. Some possibilities here are:
 
 - When the timeout is set to 0, `epoll_wait()` does not block but returns immediately after checking which file descriptors in the interest list for `epfd` are ready
 - When timeout is set to -1, `epoll_wait()` will block "forever". By "forever", `epoll_wait()` will block until one of the file descriptors becomes ready or a call is interrupted by a signal handler.
@@ -923,13 +929,15 @@ As part of this blog, I endeavored to recreate this benchmark for a more modern 
 - A number of requests (`R`) per file descriptor to run
 - A number of warmup requests (`W`) to ignore.
 
-For each file descriptor, there would be one open socket, and each socket was required to perform `R` requests. The server would handle them in kind, and respond asynchronously. The client would then watch the file descriptors and ascertain readiness. The benchmark did not include the construction of the sockets, nor the number of warmup requests `W`, which means that **epoll** performs incredibly well by comparison, highlighting a _O(1)_ time complexity, when compared to the _O(n)_ time complexity of `poll()` and `select()`. The measured output is the mean time per request as a function of `N`, with the variance calculated using the Welford Variance algorithm with the Bessel correction.
+For each file descriptor, there would be one open socket simulating a watched file descriptor. Only a portion of the file descriptors were active, these were clamped at a minimum of 10, and a maximum of 10% of the `N`. Each active socket was required to perform `R` requests. The server would handle them in kind, and respond asynchronously. The client would then watch the file descriptors and ascertain readiness. The benchmark did not include the construction of the sockets, nor the number of warmup requests `W`. The measured output is the mean time per request as a function of `N`, with the variance calculated using the Welford Variance algorithm with the Bessel correction. As an additional note, in order to circumvent the `FD_SETSIZE` limit in glibc, for the select implementation, there was a dynamic fd set constructed for managing the possible enumerable `select()` bitsets. This is generally not a smart way to use `select()`, but for the purposes of this benchmark, it was a reasonable enough approach to exceed the limits.
 
-![Graph that demonstrates the performance of a single asynchronous echo request for select, poll, and epoll over a number of open sockets, ranging from 0 to 10000](../../assets/epoll/epoll_benchmark_results.png)
+![Graph that demonstrates the performance of a single asynchronous echo request for select, poll, and epoll over a number of open sockets, ranging from 0 to 10000](../../assets/epoll/iopoll_benchmark_results.png)
 
-As an additional note, in order to circumvent the `FD_SETSIZE` limit in glibc, for the select implementation, there was a dynamic fd set constructed for managing the possible enumerable `select()` bitsets. This is generally not a smart way to use `select()` and the resulting file descriptor density means that `poll()` and `select()` perform very similarly.
+The dominant players in this graph are going to be `select()` and `poll()`. We can clearly see that both scale linearly, but the gap between the scale factors is rather wide. This is due to the sparse file descriptor space as part of the bounds of the benchmark. In dense file descriptor spaces, `select()` and `poll()` perform identically. The least interesting portion of the graph is a near linear performance in the case of epoll. Although it seems linear, the performance of epoll is technically going to be _O(log(n))_ because we delete and add file descriptors as part of each request handle, which is reasonably similar to how most systems would perform. The network request duration unfortunately far outweighs the performance impact of the file descriptor add and deletion at this scale. As we start to get progressively larger monitored file descriptor spaces, clamping at 90% instead of 10% active, and extend beyond the 10,000 limit, we start to observe the impact a bit more, but are still bound by the dominance of the network.
 
-Additionally, beyond just the performance benchmarks. There are handful of fundamental problems in **epoll** that required special edge case handling in order to make the system viable. These are discussed in better detail than I can present in the following posts and videos, I highly encourage them for those interested in understanding the pitfalls of epoll even deeper.
+![Graph that demonstrates the performance of a single asynchronous echo request for epoll over a number of open sockets, ranging from 0 to 22000](../../assets/epoll/epoll_benchmark_results.png)
+
+Even though the performance benchmarks tell a great story, there are handful of fundamental problems in epoll that required special edge case handling in order to make the system viable. I talked about one of the cases in the file descriptors section. These are discussed in better detail than I can present in the following posts and videos, I highly encourage them for those interested in understanding the pitfalls of epoll even deeper.
 
 1. [Epoll is fundamentally broken 1/2](https://idea.popcount.org/2017-02-20-epoll-is-fundamentally-broken-12/)
 2. [Epoll is fundamentally broken 2/2](https://idea.popcount.org/2017-03-20-epoll-is-fundamentally-broken-22/)
