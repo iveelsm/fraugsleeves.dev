@@ -5,6 +5,7 @@ pubDate: 2026-02-15
 shortDescription: "One of a series of posts around the inner workings of Node.js, focused on file descriptor polling with epoll."
 description: "One of a series of posts around the inner-workings of Node.js, this article seeks to provide a deeper understanding of the asynchronous I/O polling mechanism used by many systems called epoll. It explores the concepts of file descriptors, event trigger, select, poll and epoll and their limitations."
 author: "Mikey Sleevi"
+editors: ["Dan Zarrini"]
 image:
   url: "https://fraugsleeves.dev/images/epoll_header.png"
   alt: "A diagram of the relationship between process file descriptor tables, file tables and inode tables. It displays four tables of varying colors, two process file descriptor tables and one for the each of the remaining two types. It establishes the major relationships, drawing arrows between shared file descriptors resulting from forks, individual file descriptors and the relationship between file and inode on disk."
@@ -34,7 +35,7 @@ That is to say, if you are doing I/O, you are using a file descriptor. File desc
 ```c
 struct fdtable {
   unsigned int        max_fds;
-  struct file __rcu **fd;      /* current fd array */
+  struct file __rcu **fd;
   unsigned long      *close_on_exec;
   unsigned long      *open_fds;
   unsigned long      *full_fds_bits;
