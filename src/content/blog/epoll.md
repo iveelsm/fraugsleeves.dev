@@ -918,7 +918,18 @@ So just how well has epoll handled the C10K problem? In the Linux Programming In
 | 1000          |  35    |   35      | 0.53  |
 | 10000         | 990    |  930      | 0.66  |
 
-As part of this blog, I endeavored to recreate this benchmark for a more modern kernel, as these benchmarks were derived for `v2.6.x`.
+As part of this blog, I endeavored to recreate this benchmark for a more modern kernel, as these benchmarks were derived for `v2.6.x`. Before we get into these graphs, I want to talk about the methodology here. The benchmark suite was a UDP based echo client-server architecture, where each benchmark suite utilized the same echo server. The server and client would be given:
+
+* A number of file descriptors (`N`) to open 
+* A number of requests (`R`) per file descriptor to run
+* A number of warmup requests (`W`) to ignore.
+ 
+For each file descriptor, there would be one open socket, and each socket was required to perform `R` requests. The server would handle them in kind, and respond asynchronously. The client would then watch the file descriptors and ascertain readiness. The benchmark did not include the construction of the sockets, nor the number of warmup requests `W`, which means that **epoll** performs incredibly well by comparison, highlighting a *O(1)* time complexity, when compared to the *O(n)* time complexity of `poll()` and `select()`. The measured output is the mean time per request as a function of `N`, with the variance calculated using the Welford Variance algorithm with the Bessel correction.
+
+
+![Graph that demonstrates the performance of a single asynchronous echo request for select, poll, and epoll over a number of open sockets, ranging from 0 to 10000](../../assets/epoll/benchmark_results.png)
+
+As an additional note, in order to circumvent the `FD_SETSIZE` limit in glibc, for the select implementation, there was a dynamic fd set constructed for managing the possible enumerable `select()` bitsets. This is generally not a smart way to use `select()` and the resulting file descriptor density means that `poll()` and `select()` perform very similarly. 
 
 Additionally, beyond just the performance benchmarks. There are handful of fundamental problems in **epoll** that required special edge case handling in order to make the system viable. These are discussed in better detail than I can present in the following posts and videos, I highly encourage them for those interested in understanding the pitfalls of epoll even deeper.
 
