@@ -26,7 +26,7 @@ This quote comes from the initial introduction of epoll into the Linux kernel in
 
 # File descriptors
 
-There will be two very similar terms that we will be introducing, **file descriptors** and *file descriptions*. It’s very important to note that while these two ideas are related, they represent different concepts. A file descrition is fundamentally an internal data structure in the linux kernel, we will revisit them momentarily. The important part is **file descriptions are an internal data structure, not to be confused with the more common file descriptors**. We will see why this statement is important later. So what are **file descriptors**?
+There will be two very similar terms that we will be introducing, **file descriptors** and _file descriptions_. It’s very important to note that while these two ideas are related, they represent different concepts. A file descrition is fundamentally an internal data structure in the linux kernel, we will revisit them momentarily. The important part is **file descriptions are an internal data structure, not to be confused with the more common file descriptors**. We will see why this statement is important later. So what are **file descriptors**?
 
 > In Unix and related computer operating systems, a file descriptor (FD, less frequently fildes) is an abstract indicator (handle) used to access a file or other input/output resource, such as a pipe or network socket. [[4]](https://en.wikipedia.org/wiki/File_descriptor)
 
@@ -43,7 +43,7 @@ struct fdtable {
 };
 ```
 
-We can see some information about the maximum number of file descriptors. We have an array of  `file` structures called `fd`, then some extended information about some properties within the file descriptor table. So, how would this get populated with information? Let's start by breaking down the simplest example we can create.
+We can see some information about the maximum number of file descriptors. We have an array of `file` structures called `fd`, then some extended information about some properties within the file descriptor table. So, how would this get populated with information? Let's start by breaking down the simplest example we can create.
 
 ```c
 #include <unistd.h>
@@ -109,7 +109,7 @@ struct file {
 }
 ```
 
-As you can see from the above, there is some information about the flags for the file, the read ahead state of the file, the position, locks, etc. Rather curiously, there are epoll mechanisms contained within the struct as well. That is to say, there is a fair amount going on with this data structure. This is what is often referred to as a *file description*. This data structure was referenced previous in our process file descriptor table previously. The most important piece I want to call out is the `struct inode` reference in the file. This is the means by which file descriptors are able to reference filesystem elements known as `inodes`. [[21]](https://en.wikipedia.org/wiki/Inode) So what is an inode?
+As you can see from the above, there is some information about the flags for the file, the read ahead state of the file, the position, locks, etc. Rather curiously, there are epoll mechanisms contained within the struct as well. That is to say, there is a fair amount going on with this data structure. This is what is often referred to as a _file description_. This data structure was referenced previous in our process file descriptor table previously. The most important piece I want to call out is the `struct inode` reference in the file. This is the means by which file descriptors are able to reference filesystem elements known as `inodes`. [[21]](https://en.wikipedia.org/wiki/Inode) So what is an inode?
 
 ## inode table
 
@@ -318,7 +318,7 @@ int main(void) {
   pid_t pid = fork();
   if (pid == 0) {
     char fd_str[16];
-    snprintf(fd_str, sizeof(fd_str), "%d", fd);
+    sprintf(fd_str, "%d", fd);
     execl("./child", "child", fd_str, NULL);
   }
 
@@ -346,7 +346,7 @@ We still start with the same world view as before, only with the change to the _
 
 ![A diagram of the relationship between process file descriptor tables, file tables and inode tables. It displays four tables of varying colors, two process file descriptor tables and one for the each of the remaining two types. It establishes the major relationships, drawing arrows between shared file descriptors resulting from forks, individual file descriptors and the relationship between file and inode on disk. It has one of the entries gray out in the second file descriptor table, this has a counterpart in the first table where a CLO flag has been set](../../assets/epoll/epoll_close_post.png)
 
-So our writer can not write directly to our file descriptor after the `exec()` which results in the text `"foo"` only being written in the parent process, not in the child. So why is this important for epoll? Well, there is a rather serious design flaw in epoll that requires special case handling. Since epoll registers the *file description*, not the **file descriptor**, you need careful handling to avoid sharing epoll-registered file descriptors in `exec()` or `dup()` calls. You could perform careful defensive programming with our `O_CLOEXEC`, or you can use the `EPOLLEXCLUSIVE` flag. Which is all to say, be wary about file descriptor management with epoll, as we will see later, it is a kernel space structure and does not directly interact with the process file table through the use of descriptors.
+So our writer can not write directly to our file descriptor after the `exec()` which results in the text `"foo"` only being written in the parent process, not in the child. So why is this important for epoll? Well, there is a rather serious design flaw in epoll that requires special case handling. Since epoll registers the _file description_, not the **file descriptor**, you need careful handling to avoid sharing epoll-registered file descriptors in `exec()` or `dup()` calls. You could perform careful defensive programming with our `O_CLOEXEC`, or you can use the `EPOLLEXCLUSIVE` flag. Which is all to say, be wary about file descriptor management with epoll, as we will see later, it is a kernel space structure and does not directly interact with the process file table through the use of descriptors.
 
 So, while we have looked at the intricacies of the pieces that make up this diagram, and a simple example that writes to a file, it begs the question, what would a real interaction look like? The following is an example of a simple HTTP server that helps to better illustrate a real world use case.
 
@@ -450,9 +450,9 @@ As you can see, each time data is added, we notify, but we don't notify for read
 
 # I/O Polling
 
-As you may already be aware, performing I/O is one of the major values of a computer. I have a saying that I often refer to, I don't know the origination but it amounts to the following: 
+As you may already be aware, performing I/O is one of the major values of a computer. I have a saying that I often refer to, I don't know the origination but it amounts to the following:
 
-> "Computers were perfect until we connected them together and let them talk". 
+> "Computers were perfect until we connected them together and let them talk".
 
 However, I also recognize that computers would not be near as popular as they are today if they couldn't talk to eachother. So if we know what tracks events, and how events are triggered, how do we notify programs that they need to do something with these events? This is where the I/O polling syscalls come into play.
 
@@ -478,7 +478,7 @@ int select(
 );
 ```
 
-This interface highlights a few interesting ideas. The first is the use of file descriptors, in read, write and exception modes. Read and write make sense, but what's an *exceptional mode*? Generally, exceptional modes break down into the following ideas:
+This interface highlights a few interesting ideas. The first is the use of file descriptors, in read, write and exception modes. Read and write make sense, but what's an _exceptional mode_? Generally, exceptional modes break down into the following ideas:
 
 - There is out-of-band data on a TCP socket [[14]](https://www.man7.org/linux/man-pages/man7/tcp.7.html)
 - A pseudoterminal boss in packet mode has seen a state change on the worker [[15]](https://www.man7.org/linux/man-pages/man2/ioctl_tty.2.html)
