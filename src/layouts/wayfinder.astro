@@ -12,7 +12,7 @@ const article = {
 	publishedTime: frontmatter.pubDate
 		? new Date(frontmatter.pubDate).toISOString()
 		: new Date().toISOString(),
-	authors: frontmatter.author ? [frontmatter.author] : undefined,
+	authors: frontmatter.author ? [frontmatter.author] : [],
 	tags: frontmatter.tags,
 };
 ---
