@@ -43,14 +43,14 @@ struct fdtable {
 };
 ```
 
-We can see some information about the maximum number of file descriptors. We have an array of structures called `file`, then some extended information about some properties within the file descriptor table. So, how would this get populated with information? Let's start by breaking down the simplest example we can create.
+We can see some information about the maximum number of file descriptors. We have an array of  `file` structures called `fd`, then some extended information about some properties within the file descriptor table. So, how would this get populated with information? Let's start by breaking down the simplest example we can create.
 
 ```c
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdio.h>
 
-int main(int f, char *argv[]) {
+int main(void) {
   int fd = open("abc.txt", O_RDWR | O_CREAT | O_TRUNC, 0666);
   write(fd, "foo", 3);
   close(fd);
@@ -60,7 +60,7 @@ int main(int f, char *argv[]) {
 
 In this example, we start by opening a file `"abc.txt"`. This file is opened with the permissions `666`, which indicates that the owner, the group and other can all read and write. [[5]](https://en.wikipedia.org/wiki/File-system_permissions) It passes in three flags, represent three ideas: the file is opened in a read/write mode (`O_RDWR`); if the file does not exist, create it as a regular file (`O_CREAT`); if the file already exists and is a regular file, and the access mode allows writing, it will be truncated to length 0 (`O_TRUNC`). We then proceed to immediately write the data `"foo"` to the integer returned from the `open()` call. This integer represents a file descriptor, more specifically a small, nonnegative integer that is an index to an entry in the process's table of open file descriptors. [[6]](https://man7.org/linux/man-pages/man2/open.2.html) We finally wrap up by closing the open file descriptor, and our text file now contains the text `foo`. The question remains though, how do we get from an integer to writing data on a filesystem?
 
-We can start to answer that question with a simplistic view of the world, much like our previous test program. We can break down I/O interactions on Linux into three main components: file descriptors, file tables, and inode tables. Those relationships can be seen here. As a note, we are going to be focused on **file handling in Linux in this section**, a great deal of the concepts apply to pipes and sockets, however, it's just easier to view the world as files.
+We can start to answer that question with a simplistic view of the world, much like our previous test program. We can break down I/O interactions on Linux into three main components: file descriptors, file tables, and inode tables. Those relationships can be seen here. As a note, we are going to be focused on **file handling in Linux in this section**, a great deal of the concepts apply to pipes and sockets as well, it's just easier to view the world as files.
 
 ![A diagram representing three tables, a file descriptor table, a file table and an inode table. There are several entries in each along with arrows relating the left most table, the file descriptor table, to the middle table, the file table, and additional arrows relating the file table to the right most table, the inode table](../../assets/epoll/epoll_simple.png "Simplistic File Descriptor View")
 
@@ -109,18 +109,18 @@ struct file {
 }
 ```
 
-As you can see from the above, there is some information about the flags for the file, the read ahead state of the file, the position, locks, etc. Rather curiously, there are epoll mechanisms contained within the struct as well. That is to say, there is a fair amount going on with this data structure. This is what is often referred to as a *file description*. This data structure was referenced previous in our process file descriptor table previously. The most important piece I want to call out is the `struct inode` reference in the file. This is the means by which file descriptors are able to reference filesystem elements known as `inodes`. So what is an inode?
+As you can see from the above, there is some information about the flags for the file, the read ahead state of the file, the position, locks, etc. Rather curiously, there are epoll mechanisms contained within the struct as well. That is to say, there is a fair amount going on with this data structure. This is what is often referred to as a *file description*. This data structure was referenced previous in our process file descriptor table previously. The most important piece I want to call out is the `struct inode` reference in the file. This is the means by which file descriptors are able to reference filesystem elements known as `inodes`. [[21]](https://en.wikipedia.org/wiki/Inode) So what is an inode?
 
 ## inode table
 
-An inode is a representation of a file system object. This one of the four major components of any given filesystem in Linux. Those four being:
+An inode is a representation of a file system object. This one of the four major components of most filesystems in Linux. Those four being:
 
 1. superblock
 2. inode
 3. file
 4. dentry
 
-The formal definition highlights some additional pieces.
+Some filesystems like XFS, ZFS and others don't quite represent the four ideas in the same form as the likes of ext2/3/4 or others. However, they provide a reasonable starting point as the foundational ideas for more filesystems. The formal definition highlights some additional pieces.
 
 > An inode (index node) is a data structure in a Unix-style file system that describes a file-system object such as a file or a directory. Each inode stores the attributes and disk block locations of the object's data. File-system object attributes may include metadata (times of last change, access, modification), as well as owner and permission data. [[7]](https://en.wikipedia.org/wiki/Inode)
 
@@ -589,7 +589,7 @@ Note, a great deal of the code has been truncated to focus the conversation. As 
   /* ...truncated */
 ```
 
-How does this compare to it's newer counterpart `poll()`? `poll()` was introduced in SVR3 Unix in 1987. [[12]](https://daniel.haxx.se/docs/poll-vs-select.html) And it generally functions very similarly to `select()`. It is also a I/O multiplexing mechanism, but it has one major advantage over `select()` it allows you to pass in an interest list of file descriptors. The problem with `select()` was that the way you interacted with it was by giving it bitsets. Those bitsets meant that you enumerated file descriptors that you might not actually be interested processing. `poll()` improves upon this by allowing you to pass an interest list, so the scan over the bitset becomes unnecessary. This is demonstrated in the interface.
+How does this compare to it's newer counterpart `poll()`? `poll()` was introduced in SVR3 Unix in 1987. [[12]](https://daniel.haxx.se/docs/poll-vs-select.html) And it generally functions very similarly to `select()`. It is also a I/O multiplexing mechanism, but it has one major advantage over `select()` performs far better on sparse. The problem with `select()` was that the way you interacted with it was by giving it bitsets. Those bitsets meant that you enumerated file descriptors that you might not actually be interested processing. `poll()` improves upon this by allowing you to pass an interest list, so the scan over the bitset becomes unnecessary. This is demonstrated in the interface.
 
 ```c
 int poll(
@@ -977,3 +977,4 @@ This article, and it's related articles, started as a teach out session around e
 18. https://www.man7.org/linux/man-pages/man2/epoll_ctl.2.html
 19. https://www.man7.org/linux/man-pages/man2/epoll_wait.2.html
 20. https://en.wikipedia.org/wiki/Interrupt_request
+21. https://en.wikipedia.org/wiki/Inode
