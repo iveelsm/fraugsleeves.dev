@@ -8,6 +8,8 @@ import Mail from "./mail.svg";
 import RSS from "./rss.svg";
 import Search from "./search.svg";
 
+import Favicon from "./favicon.astro";
+
 export {
 	Close as CloseIcon,
 	Github as GithubIcon,
@@ -18,4 +20,5 @@ export {
 	Search as SearchIcon,
 	Logo as LogoIcon,
 	RSS as RSSIcon,
+	Favicon,
 };
