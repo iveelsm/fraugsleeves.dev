@@ -7,7 +7,7 @@ description: "One of a series of posts around the inner workings of Node.js, thi
 author: "Mikey Sleevi"
 editors: ["David Gitlen"]
 image:
-  url: "https://fraugsleeves.dev/images/event_loop_header.png"
+  url: "https://fraugsleeves.dev/images/libuv_header.png"
   alt: "A diagram containing the data structures representing linked lists, tables, queues and min-heaps, represented outside of a circle with seven boxes. The boxes have four colors those being yellow, orange, green and red. The loop has several text elements, one for each box representing one of the phases as well as the associated functions repsonsible for inserting and processing data structure elements."
 tags: ["node.js", "event-loop", "asynchronous", "c", "how-it-works"]
 ---
