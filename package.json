@@ -12,8 +12,13 @@
 		"preview": "astro preview",
 		"lint": "prettier --check . && eslint .",
 		"lint:fix": "prettier --write . && eslint . --fix",
-		"test": "vitest run",
-		"test:watch": "vitest",
+		"test": "vitest run --config test/vitest.config.ts",
+		"test:watch": "vitest --config test/vitest.config.ts",
+		"test:e2e": "playwright test",
+		"test:e2e:ui": "playwright test --ui",
+		"test:e2e:headed": "playwright test --headed",
+		"test:e2e:debug": "playwright test --debug",
+		"test:e2e:report": "playwright show-report",
 		"prelighthouse": "npm run build",
 		"lighthouse": "lhci autorun",
 		"lighthouse:collect": "lhci collect --staticDistDir=./dist"
@@ -31,6 +36,7 @@
 	"devDependencies": {
 		"@eslint/js": "^10.0.0",
 		"@lhci/cli": "^0.15.0",
+		"@playwright/test": "^1.50.0",
 		"@typescript-eslint/eslint-plugin": "^8.52.0",
 		"@typescript-eslint/parser": "^8.52.0",
 		"eslint": "^10.0.0",

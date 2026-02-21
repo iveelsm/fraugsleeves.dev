@@ -43,3 +43,20 @@ You can review the deployment build with:
 ```bash
 npm run preview
 ```
+
+### Testing
+
+> [!NOTE]
+> The end to end test suite requires `libavif16` on Linux to support the Desktop and Mobile Safari tests. The system will ignore tests if the requirements are not met.
+
+You can run the unit test suite with the following command.
+
+```bash
+npm run test
+```
+
+And to exercise the javascript which runs client side, run the end to end test suite with the following.
+
+```bash
+npm run test:e2e
+```
