@@ -1,5 +1,6 @@
-import { defineConfig, devices } from "@playwright/test";
 import { execSync } from "child_process";
+
+import { defineConfig, devices } from "@playwright/test";
 
 // Check if WebKit dependencies are available
 function isWebKitAvailable(): boolean {
@@ -8,7 +9,9 @@ function isWebKitAvailable(): boolean {
 	}
 
 	try {
-		execSync("npx playwright install --dry-run webkit 2>&1", { stdio: "pipe" });
+		execSync("npx playwright install --dry-run webkit 2>&1", {
+			stdio: "pipe",
+		});
 		if (process.platform === "linux") {
 			try {
 				execSync("ldconfig -p | grep -q libavif", { stdio: "pipe" });

@@ -4,13 +4,13 @@ This directory contains end-to-end tests using [Playwright](https://playwright.d
 
 ## Test Coverage
 
-| File | Feature | Description |
-|------|---------|-------------|
-| `search.spec.ts` | Search | Tests the search functionality including opening, typing, results, and keyboard shortcuts |
-| `toc.spec.ts` | Table of Contents | Tests TOC navigation, scroll spy, and active link highlighting |
-| `tag-filtering.spec.ts` | Tag Filtering | Tests blog post filtering by tags, URL updates, and browser history |
-| `heading-anchor.spec.ts` | Heading Anchors | Tests copying heading URLs to clipboard and visual feedback |
-| `mobile-navigation.spec.ts` | Mobile Navigation | Tests hamburger menu, overlay, and mobile-specific UI |
+| File                        | Feature           | Description                                                                               |
+| --------------------------- | ----------------- | ----------------------------------------------------------------------------------------- |
+| `search.spec.ts`            | Search            | Tests the search functionality including opening, typing, results, and keyboard shortcuts |
+| `toc.spec.ts`               | Table of Contents | Tests TOC navigation, scroll spy, and active link highlighting                            |
+| `tag-filtering.spec.ts`     | Tag Filtering     | Tests blog post filtering by tags, URL updates, and browser history                       |
+| `heading-anchor.spec.ts`    | Heading Anchors   | Tests copying heading URLs to clipboard and visual feedback                               |
+| `mobile-navigation.spec.ts` | Mobile Navigation | Tests hamburger menu, overlay, and mobile-specific UI                                     |
 
 ## Running Tests
 
@@ -82,26 +82,27 @@ Tests automatically start the preview server on `http://localhost:4321` before r
 import { test, expect } from "@playwright/test";
 
 test.describe("Feature Name", () => {
-	test.beforeEach(async ({ page }) => {
-		await page.goto("/path");
-	});
+  test.beforeEach(async ({ page }) => {
+    await page.goto("/path");
+  });
 
-	test("should do something", async ({ page }) => {
-		// Arrange
-		const element = page.locator(".selector");
+  test("should do something", async ({ page }) => {
+    // Arrange
+    const element = page.locator(".selector");
 
-		// Act
-		await element.click();
+    // Act
+    await element.click();
 
-		// Assert
-		await expect(element).toBeVisible();
-	});
+    // Assert
+    await expect(element).toBeVisible();
+  });
 });
 ```
 
 ## CI Integration
 
 In CI environments:
+
 - Tests run in headless mode
 - Failed tests are retried twice
 - Traces are captured on first retry for debugging

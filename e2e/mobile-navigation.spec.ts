@@ -23,7 +23,9 @@ test.describe("Mobile navigation should...", { tag: "@mobile" }, () => {
 		await expect(desktopNav).not.toBeVisible();
 	});
 
-	test("open mobile nav overlay when hamburger is clicked", async ({ page }) => {
+	test("open mobile nav overlay when hamburger is clicked", async ({
+		page,
+	}) => {
 		const hamburgerBtn = page.locator("#hamburger-btn");
 		const mobileOverlay = page.locator("#mobile-nav-overlay");
 

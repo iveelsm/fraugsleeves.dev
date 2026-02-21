@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("Table of contents should...",  { tag: "@desktop" }, () => {
+test.describe("Table of contents should...", { tag: "@desktop" }, () => {
 	test.beforeEach(async ({ page }) => {
 		await page.goto("/blog/epoll");
 	});

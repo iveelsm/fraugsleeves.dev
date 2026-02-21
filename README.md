@@ -47,7 +47,7 @@ npm run preview
 ### Testing
 
 > [!NOTE]
-> The end to end test suite requires `libavif16` on Linux to support the Desktop and Mobile Safari tests. The system will ignore tests if the requirements are not met. 
+> The end to end test suite requires `libavif16` on Linux to support the Desktop and Mobile Safari tests. The system will ignore tests if the requirements are not met.
 
 You can run the unit test suite with the following command.
 
