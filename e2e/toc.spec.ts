@@ -48,13 +48,16 @@ test.describe("Table of contents should...", { tag: "@desktop" }, () => {
 
 	test("update active link when scrolling manually", async ({ page }) => {
 		await page.evaluate(() => {
-			window.scrollBy(0, 500);
+			const heading = document.querySelectorAll("main h2[id]")[1];
+			if (heading) {
+				const top = heading.getBoundingClientRect().top + window.scrollY - 100;
+				window.scrollTo({ top, behavior: "instant" });
+			}
 		});
 
-		// Wait for intersection observer to process
-		await page.waitForTimeout(300);
+		// Wait for intersection observer to fire and apply the active class
 		const activeLink = page.locator(".article-toc a.active");
-		await expect(activeLink).toBeVisible();
+		await expect(activeLink).toBeVisible({ timeout: 2000 });
 	});
 
 	test("highlight last heading when scrolled to bottom", async ({ page }) => {

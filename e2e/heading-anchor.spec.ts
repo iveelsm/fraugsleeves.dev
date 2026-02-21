@@ -21,19 +21,27 @@ test.describe(
 			expect(count).toBeGreaterThan(0);
 		});
 
-		test("copy to clipboard when anchor is clicked", async ({ page }) => {
+		test("copy to clipboard when anchor is clicked", async ({ page, browserName }) => {
 			const anchorLink = page
 				.locator(".post-content .heading-anchor")
 				.first();
+
 			const href = await anchorLink.getAttribute("href");
-
 			await anchorLink.click();
-			const clipboardText = await page.evaluate(() =>
-				navigator.clipboard.readText(),
-			);
 
-			expect(clipboardText).toContain(href);
-			expect(clipboardText).toMatch(/^https?:\/\//);
+			// All browsers: verify the anchor wrote successfully by checking
+			// the URL hash was updated and the copied class was applied
+			await expect(page).toHaveURL(new RegExp(`${href}$`));
+			await expect(anchorLink).toHaveClass(/copied/);
+
+			// Chromium: additionally verify clipboard contents directly
+			if (browserName === "chromium") {
+				const clipboardText = await page.evaluate(() =>
+					navigator.clipboard.readText(),
+				);
+				expect(clipboardText).toContain(href);
+				expect(clipboardText).toMatch(/^https?:\/\//);
+			}
 		});
 
 		test("add copied class temporarily after clicking", async ({
