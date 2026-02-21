@@ -8,40 +8,34 @@ test.use({
 	hasTouch: true,
 });
 
-test.describe("Mobile Navigation dropdown", () => {
-	// Firefox doesn't support isMobile option
-	test.skip(({ browserName }) => browserName === "firefox", "Firefox doesn't support isMobile");
-
+test.describe("Mobile navigation should...", { tag: "@mobile" }, () => {
 	test.beforeEach(async ({ page }) => {
 		await page.goto("/");
 	});
 
-	test("should show hamburger button on mobile", async ({ page }) => {
+	test("show hamburger button on mobile", async ({ page }) => {
 		const hamburgerBtn = page.locator("#hamburger-btn");
 		await expect(hamburgerBtn).toBeVisible();
 	});
 
-	test("should hide desktop navigation on mobile", async ({ page }) => {
+	test("hide desktop navigation on mobile", async ({ page }) => {
 		const desktopNav = page.locator(".nav-links-desktop");
 		await expect(desktopNav).not.toBeVisible();
 	});
 
-	test("should open mobile nav overlay when hamburger is clicked", async ({
-		page,
-	}) => {
+	test("open mobile nav overlay when hamburger is clicked", async ({ page }) => {
 		const hamburgerBtn = page.locator("#hamburger-btn");
 		const mobileOverlay = page.locator("#mobile-nav-overlay");
 
 		// Initially overlay should not be visible
 		await expect(mobileOverlay).not.toBeVisible();
-
 		await hamburgerBtn.click();
 
 		// Overlay should now be visible
 		await expect(mobileOverlay).toBeVisible();
 	});
 
-	test("should show navigation links in overlay", async ({ page }) => {
+	test("show navigation links in overlay", async ({ page }) => {
 		const hamburgerBtn = page.locator("#hamburger-btn");
 
 		await hamburgerBtn.click();
@@ -57,9 +51,7 @@ test.describe("Mobile Navigation dropdown", () => {
 		}
 	});
 
-	test("should close overlay when hamburger is clicked again", async ({
-		page,
-	}) => {
+	test("close overlay when hamburger is clicked again", async ({ page }) => {
 		const hamburgerBtn = page.locator("#hamburger-btn");
 		const mobileOverlay = page.locator("#mobile-nav-overlay");
 
@@ -72,40 +64,34 @@ test.describe("Mobile Navigation dropdown", () => {
 		await expect(mobileOverlay).not.toBeVisible();
 	});
 
-	test("should update aria-expanded attribute", async ({ page }) => {
+	test("update aria-expanded attribute", async ({ page }) => {
 		const hamburgerBtn = page.locator("#hamburger-btn");
 
 		// Initially should be false
 		await expect(hamburgerBtn).toHaveAttribute("aria-expanded", "false");
-
 		await hamburgerBtn.click();
 
 		// Should be true when open
 		await expect(hamburgerBtn).toHaveAttribute("aria-expanded", "true");
-
 		await hamburgerBtn.click();
 
 		// Should be false again
 		await expect(hamburgerBtn).toHaveAttribute("aria-expanded", "false");
 	});
 
-	test("should navigate to page when nav link is clicked", async ({
-		page,
-	}) => {
+	test("navigate to page when nav link is clicked", async ({ page }) => {
 		const hamburgerBtn = page.locator("#hamburger-btn");
-
 		await hamburgerBtn.click();
 
 		// Find the blog link
 		const blogLink = page.locator('.mobile-nav-link[href="/blog"]');
-
 		if ((await blogLink.count()) > 0) {
 			await blogLink.click();
 			await expect(page).toHaveURL(/\/blog/);
 		}
 	});
 
-	test("should close overlay when navigating", async ({ page }) => {
+	test("close overlay when navigating", async ({ page }) => {
 		const hamburgerBtn = page.locator("#hamburger-btn");
 		const mobileOverlay = page.locator("#mobile-nav-overlay");
 
@@ -123,24 +109,7 @@ test.describe("Mobile Navigation dropdown", () => {
 		await expect(mobileOverlay).not.toBeVisible();
 	});
 
-	// Note: Active link highlighting is a known issue - the server-side
-	// rendering doesn't apply the active class correctly. Skipping this test.
-	test.skip("should highlight active page in navigation", async ({ page }) => {
-		await page.goto("/blog");
-
-		const hamburgerBtn = page.locator("#hamburger-btn");
-		await hamburgerBtn.click();
-
-		const blogLink = page.locator('.mobile-nav-link[href="/blog"]');
-
-		if ((await blogLink.count()) > 0) {
-			await expect(blogLink).toHaveClass(/active/);
-		}
-	});
-
-	test("should toggle between hamburger and close icons", async ({
-		page,
-	}) => {
+	test("toggle between hamburger and close icons", async ({ page }) => {
 		const hamburgerBtn = page.locator("#hamburger-btn");
 		const hamburgerIcon = page.locator(".hamburger-icon");
 		const closeIcon = page.locator("#hamburger-btn .close-icon");
@@ -157,10 +126,7 @@ test.describe("Mobile Navigation dropdown", () => {
 	});
 });
 
-test.describe("Mobile Search", () => {
-	// Firefox doesn't support isMobile option
-	test.skip(({ browserName }) => browserName === "firefox", "Firefox doesn't support isMobile");
-
+test.describe("Mobile search should...", { tag: "@mobile" }, () => {
 	test.beforeEach(async ({ page }) => {
 		await page.goto("/");
 	});
@@ -173,7 +139,6 @@ test.describe("Mobile Search", () => {
 	test("should open search overlay on mobile", async ({ page }) => {
 		// Mobile uses a different search toggle ID
 		const searchToggle = page.locator("#mobile-search-toggle");
-
 		await searchToggle.click();
 
 		// Mobile search overlay should be visible

@@ -88,5 +88,29 @@ jobs:
             - name: Install dependencies
               run: npm ci
 
-            - name: Lint
+            - name: Test
               run: npm run test
+
+    e2e:
+        name: End to End Tests
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v6
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version-file: .nvmrc
+                  cache: npm
+
+            - name: Configure NPM
+              run: |
+                  echo "@iveelsm:registry=https://npm.pkg.github.com" >> .npmrc
+                  echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Lint
+              run: npm run test:e2e

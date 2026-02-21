@@ -1,12 +1,14 @@
 import { defineConfig, devices } from "@playwright/test";
 import { execSync } from "child_process";
 
-// Check if WebKit dependencies are available (requires libavif16 on Linux)
+// Check if WebKit dependencies are available
 function isWebKitAvailable(): boolean {
-	if (process.env.CI) return true; // CI environments have all deps
+	if (process.env.CI) {
+		return true;
+	}
+
 	try {
 		execSync("npx playwright install --dry-run webkit 2>&1", { stdio: "pipe" });
-		// Try to detect if libavif is available on Linux
 		if (process.platform === "linux") {
 			try {
 				execSync("ldconfig -p | grep -q libavif", { stdio: "pipe" });
@@ -38,31 +40,36 @@ export default defineConfig({
 	},
 	projects: [
 		{
-			name: "chromium",
+			name: "Desktop Chrome",
+			grep: /@desktop/,
 			use: { ...devices["Desktop Chrome"] },
 		},
 		{
-			name: "firefox",
+			name: "Desktop Firefox",
+			grep: /@desktop/,
 			use: { ...devices["Desktop Firefox"] },
 		},
 		// WebKit requires system dependencies (libavif16) - skip if not available
 		...(webkitAvailable
 			? [
 					{
-						name: "webkit",
+						name: "Desktop Safari",
+						grep: /@desktop/,
 						use: { ...devices["Desktop Safari"] },
 					},
 				]
 			: []),
 		{
-			name: "mobile-chrome",
+			name: "Mobile Chrome",
+			grep: /@mobile/,
 			use: { ...devices["Pixel 5"] },
 		},
 		// Mobile Safari uses WebKit
 		...(webkitAvailable
 			? [
 					{
-						name: "mobile-safari",
+						name: "Mobile Safari",
+						grep: /@mobile/,
 						use: { ...devices["iPhone 12"] },
 					},
 				]

@@ -1,21 +1,16 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("Search functionality", () => {
-	// Desktop search uses #search-toggle - mobile has different components
-	test.skip(({ isMobile }) => isMobile, "Desktop search only");
-
+test.describe("Search should...", { tag: ["@desktop"] }, () => {
 	test.beforeEach(async ({ page }) => {
 		await page.goto("/");
 	});
 
-	test("should show search toggle button", async ({ page }) => {
+	test("show search toggle button", async ({ page }) => {
 		const searchToggle = page.locator("#search-toggle");
 		await expect(searchToggle).toBeVisible();
 	});
 
-	test("should open search input when toggle is clicked", async ({
-		page,
-	}) => {
+	test("open search input when toggle is clicked", async ({ page }) => {
 		const searchToggle = page.locator("#search-toggle");
 		const searchContainer = page.locator("#search-container");
 
@@ -25,7 +20,7 @@ test.describe("Search functionality", () => {
 		await expect(searchContainer).toHaveClass(/search-open/);
 	});
 
-	test("should show search results when typing", async ({ page }) => {
+	test("show search results when typing", async ({ page }) => {
 		const searchToggle = page.locator("#search-toggle");
 		const searchInput = page.locator("#search-input");
 		const searchDropdown = page.locator("#search-dropdown");
@@ -41,9 +36,7 @@ test.describe("Search functionality", () => {
 		await expect(searchResults).not.toBeEmpty();
 	});
 
-	test("should close search when clear button is clicked", async ({
-		page,
-	}) => {
+	test("close search when clear button is clicked", async ({ page }) => {
 		const searchToggle = page.locator("#search-toggle");
 		const searchInput = page.locator("#search-input");
 		const searchClear = page.locator("#search-clear");
@@ -59,7 +52,7 @@ test.describe("Search functionality", () => {
 		await expect(searchInput).toHaveValue("");
 	});
 
-	test("should navigate to search result on click", async ({ page }) => {
+	test("navigate to search result on click", async ({ page }) => {
 		const searchToggle = page.locator("#search-toggle");
 		const searchInput = page.locator("#search-input");
 
@@ -76,7 +69,7 @@ test.describe("Search functionality", () => {
 		await expect(page).toHaveURL(/\/blog\//);
 	});
 
-	test("should close search when pressing Escape", async ({ page }) => {
+	test("close search when pressing escape", async ({ page }) => {
 		const searchToggle = page.locator("#search-toggle");
 		const searchContainer = page.locator("#search-container");
 
@@ -89,7 +82,7 @@ test.describe("Search functionality", () => {
 		await expect(searchContainer).not.toHaveClass(/search-open/);
 	});
 
-	test("should close search when clicking outside", async ({ page }) => {
+	test("close search when clicking outside", async ({ page }) => {
 		const searchToggle = page.locator("#search-toggle");
 		const searchContainer = page.locator("#search-container");
 
