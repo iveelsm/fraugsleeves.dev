@@ -21,7 +21,10 @@ test.describe(
 			expect(count).toBeGreaterThan(0);
 		});
 
-		test("copy to clipboard when anchor is clicked", async ({ page, browserName }) => {
+		test("copy to clipboard when anchor is clicked", async ({
+			page,
+			browserName,
+		}) => {
 			const anchorLink = page
 				.locator(".post-content .heading-anchor")
 				.first();

@@ -50,7 +50,8 @@ test.describe("Table of contents should...", { tag: "@desktop" }, () => {
 		await page.evaluate(() => {
 			const heading = document.querySelectorAll("main h2[id]")[1];
 			if (heading) {
-				const top = heading.getBoundingClientRect().top + window.scrollY - 100;
+				const top =
+					heading.getBoundingClientRect().top + window.scrollY - 100;
 				window.scrollTo({ top, behavior: "instant" });
 			}
 		});
