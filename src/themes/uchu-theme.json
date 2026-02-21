@@ -42,59 +42,101 @@
 			}
 		},
 		{
+			"name": "Support Constants",
+			"scope": "support.constant",
+			"settings": {
+				"foreground": "#3984f2"
+			}
+		},
+		{
+			"name": "Support Variables",
+			"scope": "support.variable",
+			"settings": {
+				"foreground": "#6aa2f5"
+			}
+		},
+		{
 			"name": "Keywords",
-			"scope": "keyword, keyword.control, keyword.operator.new, keyword.operator.expression, keyword.operator.logical, storage.type, storage.modifier",
+			"scope": "keyword, keyword.control, keyword.operator.new, keyword.operator.expression, keyword.operator.logical, keyword.operator.sizeof, keyword.operator.address, keyword.operator.bitwise, storage.type, storage.modifier",
 			"settings": {
 				"foreground": "#ea3c65"
 			}
 		},
 		{
 			"name": "Operators",
-			"scope": "keyword.operator, keyword.operator.assignment, keyword.operator.arithmetic, keyword.operator.comparison, punctuation.accessor",
+			"scope": "keyword.operator.assignment, keyword.operator.arithmetic, keyword.operator.comparison, punctuation.accessor",
 			"settings": {
 				"foreground": "#e3e5e5"
+			}
+		},
+		{
+			"name": "Address and Pointer Operators",
+			"scope": "keyword.operator.address, keyword.operator.bitwise, storage.modifier.pointer, storage.modifier.reference, keyword.operator.address-of, punctuation.definition.pointer, keyword.operator.dereference",
+			"settings": {
+				"foreground": "#ea3c65"
 			}
 		},
 		{
 			"name": "Functions",
-			"scope": "entity.name.function, meta.function-call, support.function",
-			"settings": {
-				"foreground": "#ac83de"
-			}
-		},
-		{
-			"name": "Function Parameters",
-			"scope": "variable.parameter, meta.parameter",
-			"settings": {
-				"foreground": "#e3e5e5"
-			}
-		},
-		{
-			"name": "Classes and Types",
-			"scope": "entity.name.class, entity.name.type, support.class, support.type, entity.other.inherited-class",
-			"settings": {
-				"foreground": "#ac83de"
-			}
-		},
-		{
-			"name": "Interfaces",
-			"scope": "entity.name.type.interface",
+			"scope": "entity.name.function, support.function",
 			"settings": {
 				"foreground": "#ac83de"
 			}
 		},
 		{
 			"name": "Variables",
-			"scope": "variable, variable.other, variable.other.readwrite",
+			"scope": "variable",
+			"settings": {
+				"foreground": "#e3e5e5"
+			}
+		},
+		{
+			"name": "Function Parameters",
+			"scope": "variable.parameter, variable.parameter.function, meta.parameter",
+			"settings": {
+				"foreground": "#ffb783"
+			}
+		},
+		{
+			"name": "Classes",
+			"scope": "entity.name.class, support.class, entity.other.inherited-class",
+			"settings": {
+				"foreground": "#ac83de"
+			}
+		},
+		{
+			"name": "Types",
+			"scope": "entity.name.type, support.type",
+			"settings": {
+				"foreground": "#6aa2f5"
+			}
+		},
+		{
+			"name": "Interfaces",
+			"scope": "entity.name.type.interface",
+			"settings": {
+				"foreground": "#6aa2f5"
+			}
+		},
+		{
+			"name": "Variables (other)",
+			"scope": "variable.other, variable.other.readwrite",
 			"settings": {
 				"foreground": "#e3e5e5"
 			}
 		},
 		{
 			"name": "Object Properties",
-			"scope": "variable.other.property, variable.other.object.property, meta.object-literal.key",
+			"scope": "variable.other.property, variable.other.object.property",
 			"settings": {
-				"foreground": "#3984f2"
+				"foreground": "#e3e5e5"
+			}
+		},
+		{
+			"name": "Object Keys",
+			"scope": "meta.object-literal.key",
+			"settings": {
+				"foreground": "#6aa2f5"
 			}
 		},
 		{

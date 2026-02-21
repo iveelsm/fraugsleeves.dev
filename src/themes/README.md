@@ -8,21 +8,22 @@ The theme is built using colors from the uchu color system, which uses OKLCH col
 
 ### Base Colors
 
-| Element     | Hex       | Description                      |
-| ----------- | --------- | -------------------------------- |
-| Background  | `#202225` | Deep neutral dark (uchu-yin-9)   |
-| Foreground  | `#e3e5e5` | Light gray text (uchu-gray-2)    |
-| Comments    | `#9b9b9d` | Muted gray, italic (uchu-gray-7) |
-| Punctuation | `#cbcdcd` | Subtle light gray (uchu-gray-4)  |
+| Element     | Hex       | Description                       |
+| ----------- | --------- | --------------------------------- |
+| Background  | `#202225` | Deep neutral dark (uchu-yin-9)    |
+| Foreground  | `#e3e5e5` | Light gray text (uchu-gray-2)     |
+| White       | `#f0f0f2` | Bright white text (uchu-gray-1)   |
+| Comments    | `#9b9b9d` | Muted gray, italic (uchu-gray-7)  |
+| Punctuation | `#cbcdcd` | Subtle light gray (uchu-gray-4)   |
 
 ### Syntax Colors
 
 | Element    | Hex       | Uchu Source   | Usage                                             |
 | ---------- | --------- | ------------- | ------------------------------------------------- |
-| Red        | `#ea3c65` | uchu-red-4    | Keywords, storage types, import/export            |
-| Purple     | `#ac83de` | uchu-purple-3 | Functions, classes, types, decorators, attributes |
-| Blue       | `#3984f2` | uchu-blue-4   | Constants, numbers, properties, headings          |
-| Blue Light | `#6aa2f5` | uchu-blue-3   | Strings, regex                                    |
+| Red        | `#ea3c65` | uchu-red-4    | Keywords, storage types, sizeof, import/export    |
+| Purple     | `#ac83de` | uchu-purple-3 | Functions, classes, decorators, attributes        |
+| Blue       | `#3984f2` | uchu-blue-4   | Constants, numbers, support constants, headings   |
+| Blue Light | `#6aa2f5` | uchu-blue-3   | Strings, types, interfaces, support variables     |
 | Green      | `#64d970` | uchu-green-4  | Tags (HTML/JSX), escape characters, CSS selectors |
 
 ## Token Mappings
@@ -36,8 +37,9 @@ The theme is built using colors from the uchu color system, which uses OKLCH col
 ### Functions & Types
 
 - **Functions** (`entity.name.function`, `support.function`): Purple `#ac83de`
-- **Classes & Types** (`entity.name.class`, `support.type`): Purple `#ac83de`
-- **Interfaces** (`entity.name.type.interface`): Purple `#ac83de`
+- **Classes** (`entity.name.class`, `support.class`): Purple `#ac83de`
+- **Types** (`entity.name.type`, `support.type`): Light Blue `#6aa2f5`
+- **Interfaces** (`entity.name.type.interface`): Light Blue `#6aa2f5`
 - **Decorators** (`meta.decorator`): Purple `#ac83de`
 
 ### Data & Values
@@ -45,7 +47,9 @@ The theme is built using colors from the uchu color system, which uses OKLCH col
 - **Strings** (`string`, `string.quoted`): Light Blue `#6aa2f5`
 - **Numbers** (`constant.numeric`): Blue `#3984f2`
 - **Constants** (`constant.language`, `variable.language`): Blue `#3984f2`
-- **Object Properties** (`variable.other.property`): Blue `#3984f2`
+- **Support Constants** (`support.constant`): Blue `#3984f2`
+- **Support Variables** (`support.variable`): Light Blue `#6aa2f5`
+- **Object Properties** (`variable.other.property`): Foreground `#e3e5e5`
 
 ### Markup & Tags
 
@@ -57,7 +61,7 @@ The theme is built using colors from the uchu color system, which uses OKLCH col
 ### Variables
 
 - **Variables** (`variable`, `variable.other`): Foreground `#e3e5e5`
-- **Parameters** (`variable.parameter`): Foreground `#e3e5e5`
+- **Parameters** (`variable.parameter`): White `#f0f0f2`
 
 ## Color Mapping
 
