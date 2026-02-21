@@ -117,7 +117,7 @@ jobs:
               run: npx playwright install --with-deps
 
             - name: Download build artifact
-              uses: actions/download-artifact@v6
+              uses: actions/download-artifact@v7
               with:
                   name: dist
                   path: dist/
@@ -126,7 +126,7 @@ jobs:
               run: npm run test:e2e
 
             - name: Upload playwright report
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v6
               if: ${{ !cancelled() }}
               with:
                   name: playwright-report
