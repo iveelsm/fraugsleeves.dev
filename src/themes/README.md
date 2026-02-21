@@ -13,42 +13,42 @@ The theme is built using colors from the uchu color system, which uses OKLCH col
 | Background | `#202225` | Deep neutral dark (uchu-yin-9) |
 | Foreground | `#e3e5e5` | Light gray text (uchu-gray-2) |
 | Comments | `#9b9b9d` | Muted gray, italic (uchu-gray-7) |
-| Punctuation | `#c8c9cb` | Subtle light gray (uchu-gray-4) |
+| Punctuation | `#cbcdcd` | Subtle light gray (uchu-gray-4) |
 
 ### Syntax Colors
 
 | Element | Hex | Uchu Source | Usage |
 |---------|-----|-------------|-------|
-| Red | `#e8626a` | uchu-red-4 | Keywords, storage types, import/export |
-| Purple | `#a371e8` | uchu-purple-4 | Functions, classes, types, decorators, attributes |
-| Blue | `#5ba3e0` | uchu-blue-4 | Constants, numbers, properties, headings |
+| Red | `#ea3c65` | uchu-red-4 | Keywords, storage types, import/export |
+| Purple | `#ac83de` | uchu-purple-3 | Functions, classes, types, decorators, attributes |
+| Blue | `#3984f2` | uchu-blue-4 | Constants, numbers, properties, headings |
 | Blue Light | `#6aa2f5` | uchu-blue-3 | Strings, regex |
-| Green | `#5ebd6a` | uchu-green-5 | Tags (HTML/JSX), escape characters, CSS selectors |
+| Green | `#64d970` | uchu-green-4 | Tags (HTML/JSX), escape characters, CSS selectors |
 
 ## Token Mappings
 
 ### Keywords & Control Flow
-- **Keywords** (`keyword`, `storage.type`, `storage.modifier`): Red `#e8626a`
-- **Import/Export** (`keyword.control.import`, `keyword.control.export`): Red `#e8626a`
+- **Keywords** (`keyword`, `storage.type`, `storage.modifier`): Red `#ea3c65`
+- **Import/Export** (`keyword.control.import`, `keyword.control.export`): Red `#ea3c65`
 - **Operators**: Foreground `#e3e5e5`
 
 ### Functions & Types
-- **Functions** (`entity.name.function`, `support.function`): Purple `#a371e8`
-- **Classes & Types** (`entity.name.class`, `support.type`): Purple `#a371e8`
-- **Interfaces** (`entity.name.type.interface`): Purple `#a371e8`
-- **Decorators** (`meta.decorator`): Purple `#a371e8`
+- **Functions** (`entity.name.function`, `support.function`): Purple `#ac83de`
+- **Classes & Types** (`entity.name.class`, `support.type`): Purple `#ac83de`
+- **Interfaces** (`entity.name.type.interface`): Purple `#ac83de`
+- **Decorators** (`meta.decorator`): Purple `#ac83de`
 
 ### Data & Values
 - **Strings** (`string`, `string.quoted`): Light Blue `#6aa2f5`
-- **Numbers** (`constant.numeric`): Blue `#5ba3e0`
-- **Constants** (`constant.language`, `variable.language`): Blue `#5ba3e0`
-- **Object Properties** (`variable.other.property`): Blue `#5ba3e0`
+- **Numbers** (`constant.numeric`): Blue `#3984f2`
+- **Constants** (`constant.language`, `variable.language`): Blue `#3984f2`
+- **Object Properties** (`variable.other.property`): Blue `#3984f2`
 
 ### Markup & Tags
-- **HTML/JSX Tags** (`entity.name.tag`): Green `#5ebd6a`
-- **Tag Attributes** (`entity.other.attribute-name`): Purple `#a371e8`
-- **Markdown Headings** (`markup.heading`): Blue `#5ba3e0`, bold
-- **Markdown Code** (`markup.inline.raw`): Blue `#5ba3e0`
+- **HTML/JSX Tags** (`entity.name.tag`): Green `#64d970`
+- **Tag Attributes** (`entity.other.attribute-name`): Purple `#ac83de`
+- **Markdown Headings** (`markup.heading`): Blue `#3984f2`, bold
+- **Markdown Code** (`markup.inline.raw`): Blue `#3984f2`
 
 ### Variables
 - **Variables** (`variable`, `variable.other`): Foreground `#e3e5e5`
