@@ -18,13 +18,16 @@ The theme is built using colors from the uchu color system, which uses OKLCH col
 
 ### Syntax Colors
 
-| Element    | Hex       | Uchu Source   | Usage                                             |
-| ---------- | --------- | ------------- | ------------------------------------------------- |
-| Red        | `#ea3c65` | uchu-red-4    | Keywords, storage types, sizeof, import/export    |
-| Purple     | `#ac83de` | uchu-purple-3 | Functions, classes, decorators, attributes        |
-| Blue       | `#3984f2` | uchu-blue-4   | Constants, numbers, support constants, headings   |
-| Blue Light | `#6aa2f5` | uchu-blue-3   | Strings, types, interfaces, support variables     |
-| Green      | `#64d970` | uchu-green-4  | Tags (HTML/JSX), escape characters, CSS selectors |
+| Element      | Hex       | Uchu Source   | Usage                                              |
+| ------------ | --------- | ------------- | -------------------------------------------------- |
+| Red          | `#ea3c65` | uchu-red-4    | Keywords, storage types, sizeof, import/export     |
+| Pink         | `#f59cb1` | uchu-red-2    | Invalid/error tokens                               |
+| Purple       | `#ac83de` | uchu-purple-3 | Functions, classes, decorators, attributes         |
+| Blue         | `#3984f2` | uchu-blue-4   | Constants, numbers, support constants, headings    |
+| Blue Light   | `#6aa2f5` | uchu-blue-3   | Strings, types, interfaces, support, meta          |
+| Blue Lighter | `#ccdefc` | uchu-blue-1   | Regex, links                                       |
+| Green        | `#64d970` | uchu-green-4  | Tags (HTML/JSX), escape chars, CSS selectors, diff |
+| Orange       | `#ffb783` | uchu-orange-3 | Function parameters, markdown list punctuation     |
 
 ## Token Mappings
 
