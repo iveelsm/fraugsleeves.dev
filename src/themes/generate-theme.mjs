@@ -22,25 +22,25 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 // ---------------------------------------------------------------------------
 const PALETTE = {
 	// Base
-	background:  "#202225", // uchu-yin-9
-	foreground:  "#e3e5e5", // uchu-gray-2
-	comment:     "#9b9b9d", // uchu-gray-7
+	background: "#202225", // uchu-yin-9
+	foreground: "#e3e5e5", // uchu-gray-2
+	comment: "#9b9b9d", // uchu-gray-7
 	punctuation: "#cbcdcd", // uchu-gray-4
 
 	// Syntax
-	red:         "#ea3c65", // uchu-red-4    — keywords, storage, operators
-	pink:        "#f59cb1", // uchu-red-2    — invalid/error tokens
-	purple:      "#ac83de", // uchu-purple-3 — functions, classes, decorators
-	blue:        "#3984f2", // uchu-blue-4   — constants, numbers, headings
-	blueLight:   "#6aa2f5", // uchu-blue-3   — strings, types, support, meta
+	red: "#ea3c65", // uchu-red-4    — keywords, storage, operators
+	pink: "#f59cb1", // uchu-red-2    — invalid/error tokens
+	purple: "#ac83de", // uchu-purple-3 — functions, classes, decorators
+	blue: "#3984f2", // uchu-blue-4   — constants, numbers, headings
+	blueLight: "#6aa2f5", // uchu-blue-3   — strings, types, support, meta
 	blueLighter: "#ccdefc", // uchu-blue-1   — regex, links
-	green:       "#64d970", // uchu-green-4  — tags, escape chars, diff insert
-	orange:      "#ffb783", // uchu-orange-3 — parameters, markdown list
+	green: "#64d970", // uchu-green-4  — tags, escape chars, diff insert
+	orange: "#ffb783", // uchu-orange-3 — parameters, markdown list
 
 	// Diff backgrounds
 	diffDeletedBg: "#8c0c2b", // uchu-red-9
 	diffInsertedBg: "#297f34", // uchu-green-9
-	diffChangedBg:  "#9c5524", // uchu-orange-9
+	diffChangedBg: "#9c5524", // uchu-orange-9
 };
 
 // ---------------------------------------------------------------------------
@@ -375,17 +375,26 @@ const theme = {
 		{
 			name: "Diff Deleted",
 			scope: "markup.deleted, meta.diff.header.from-file, punctuation.definition.deleted",
-			settings: { foreground: PALETTE.pink, background: PALETTE.diffDeletedBg },
+			settings: {
+				foreground: PALETTE.pink,
+				background: PALETTE.diffDeletedBg,
+			},
 		},
 		{
 			name: "Diff Inserted",
 			scope: "markup.inserted, meta.diff.header.to-file, punctuation.definition.inserted",
-			settings: { foreground: PALETTE.green, background: PALETTE.diffInsertedBg },
+			settings: {
+				foreground: PALETTE.green,
+				background: PALETTE.diffInsertedBg,
+			},
 		},
 		{
 			name: "Diff Changed",
 			scope: "markup.changed, punctuation.definition.changed",
-			settings: { foreground: PALETTE.orange, background: PALETTE.diffChangedBg },
+			settings: {
+				foreground: PALETTE.orange,
+				background: PALETTE.diffChangedBg,
+			},
 		},
 		{
 			name: "Diff Range",
@@ -414,11 +423,13 @@ const theme = {
 		{
 			name: "Links",
 			scope: "constant.other.reference.link, string.other.link",
-			settings: { foreground: PALETTE.blueLighter, fontStyle: "underline" },
+			settings: {
+				foreground: PALETTE.blueLighter,
+				fontStyle: "underline",
+			},
 		},
 	],
 };
 
 const outPath = join(__dirname, "uchu-theme.json");
 writeFileSync(outPath, JSON.stringify(theme, null, "\t") + "\n");
-console.log(`Written: ${outPath}`);

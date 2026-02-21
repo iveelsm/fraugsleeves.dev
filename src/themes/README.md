@@ -8,13 +8,13 @@ The theme is built using colors from the uchu color system, which uses OKLCH col
 
 ### Base Colors
 
-| Element     | Hex       | Description                       |
-| ----------- | --------- | --------------------------------- |
-| Background  | `#202225` | Deep neutral dark (uchu-yin-9)    |
-| Foreground  | `#e3e5e5` | Light gray text (uchu-gray-2)     |
-| White       | `#f0f0f2` | Bright white text (uchu-gray-1)   |
-| Comments    | `#9b9b9d` | Muted gray, italic (uchu-gray-7)  |
-| Punctuation | `#cbcdcd` | Subtle light gray (uchu-gray-4)   |
+| Element     | Hex       | Description                      |
+| ----------- | --------- | -------------------------------- |
+| Background  | `#202225` | Deep neutral dark (uchu-yin-9)   |
+| Foreground  | `#e3e5e5` | Light gray text (uchu-gray-2)    |
+| White       | `#f0f0f2` | Bright white text (uchu-gray-1)  |
+| Comments    | `#9b9b9d` | Muted gray, italic (uchu-gray-7) |
+| Punctuation | `#cbcdcd` | Subtle light gray (uchu-gray-4)  |
 
 ### Syntax Colors
 
