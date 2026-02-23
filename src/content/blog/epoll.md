@@ -26,7 +26,7 @@ This quote comes from the initial introduction of epoll into the Linux kernel in
 
 # File descriptors
 
-There will be two very similar terms that we will be introducing, **file descriptors** and _file descriptions_. It’s very important to note that while these two ideas are related, they represent different concepts. A file descrition is fundamentally an internal data structure in the linux kernel, we will revisit them momentarily. The important part is **file descriptions are an internal data structure, not to be confused with the more common file descriptors**. We will see why this statement is important later. So what are **file descriptors**?
+There will be two very similar terms that we will be introducing, **file descriptors** and _file descriptions_. It’s very important to note that while these two ideas are related, they represent different concepts. A file description is fundamentally an internal data structure in the linux kernel, we will revisit them momentarily. The important part is **file descriptions are an internal data structure, not to be confused with the more common file descriptors**. We will see why this statement is important later. So what are **file descriptors**?
 
 > In Unix and related computer operating systems, a file descriptor (FD, less frequently fildes) is an abstract indicator (handle) used to access a file or other input/output resource, such as a pipe or network socket. [[4]](https://en.wikipedia.org/wiki/File_descriptor)
 
