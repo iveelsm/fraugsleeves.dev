@@ -8,7 +8,7 @@ author: "Mikey Sleevi"
 editors: ["David Gitlen"]
 image:
   url: "https://fraugsleeves.dev/images/libuv_header.png"
-  alt: "A diagram containing the data structures representing linked lists, tables, queues and min-heaps, represented outside of a circle with seven boxes. The boxes have four colors those being yellow, orange, green and red. The loop has several text elements, one for each box representing one of the phases as well as the associated functions repsonsible for inserting and processing data structure elements."
+  alt: "A diagram containing the data structures representing linked lists, tables, queues and min-heaps, represented outside of a circle with seven boxes. The boxes have four colors those being yellow, orange, green and red. The loop has several text elements, one for each box representing one of the phases as well as the associated functions responsible for inserting and processing data structure elements."
 tags: ["node.js", "event-loop", "asynchronous", "c", "how-it-works"]
 ---
 
@@ -180,7 +180,7 @@ Node.js only has commonly been referred to as having only four phases, those bei
 
 This diagram has several core data structures in play. There are queues, min-heaps, linked lists and tables. We will be discussing each of these in detail except for the **tables** and the center queue. For more information on that, you should read the [epoll](/blog/epoll) and [promises](/blog/promises) post. This diagram is my own personal representation of the Node.js event loop. It applies beyond just the context of libuv and incorporates several other concepts that are vital to Node.js as well. However, since this is focused on libuv, so let's isolate that diagram to just what we will be discussing through this post.
 
-![A diagram containing the same data structures as the previous, those being linked lists, tables, queues and min-heaps, represented outside the circle. But the circle has been extended to seven phases, but the four colors remain, those being yellow, orange, green and red. The loop has several text elements, one for each box representing one of the phases as well as the associated functions repsonsible for inserting and processing data structure elements.](../../assets/libuv/libuv_loop.png "Libuv Event Loop Definition")
+![A diagram containing the same data structures as the previous, those being linked lists, tables, queues and min-heaps, represented outside the circle. But the circle has been extended to seven phases, but the four colors remain, those being yellow, orange, green and red. The loop has several text elements, one for each box representing one of the phases as well as the associated functions responsible for inserting and processing data structure elements.](../../assets/libuv/libuv_loop.png "Libuv Event Loop Definition")
 
 We have removed the data structure in the center have been removed and we have expanded some of the colored sections to incorporate all the individual phases that comprise it. We will be using this as our guide throughout the remainder of the post, but as you explore more [node.js](/blog?tag=node.js) topics on the blog, keep the overall event diagram loop in mind.
 
@@ -596,7 +596,7 @@ You can see our prior references to pending for errors, as well as the relativel
 
 # Summary
 
-This article, and it's related articles, started as a teach out session around early-2020 for developers interested in starting to develop in Node.js. The goal was to teach the intricacies of the platform in a way that broke down a complex asynchronous event system, into a digestable procedurable based approach. The libuv library has a great deal more than what was explored here. We only tackled a fraction of the functionality by glimpsing into the core of the code. This core is encompassed by 7 distinct phases of processing: timers, pending, idle, prepare, io, check and close. However, Node.js effectively only utilize four of these phases, with a fifth being used for a unique edge case. If you find yourself with an interested in exploring more deeply, the following is a list of valuable content that wasn't directly referenced. This list, in addition to the reference content, helped solidify my understanding of the event loop.
+This article, and it's related articles, started as a teach out session around early-2020 for developers interested in starting to develop in Node.js. The goal was to teach the intricacies of the platform in a way that broke down a complex asynchronous event system, into a digestible procedural based approach. The libuv library has a great deal more than what was explored here. We only tackled a fraction of the functionality by glimpsing into the core of the code. This core is encompassed by 7 distinct phases of processing: timers, pending, idle, prepare, io, check and close. However, Node.js effectively only utilize four of these phases, with a fifth being used for a unique edge case. If you find yourself with an interested in exploring more deeply, the following is a list of valuable content that wasn't directly referenced. This list, in addition to the reference content, helped solidify my understanding of the event loop.
 
 1. [Event loop in JavaScript](https://acemood.github.io/2016/02/01/event-loop-in-javascript/)
 2. [NodeConf EU | A deep dive into libuv](https://www.youtube.com/watch?v=sGTRmPiXD4Y)
