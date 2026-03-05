@@ -3,11 +3,13 @@ import "../styles/home.css";
 
 import { RecentBlogs } from "../components/blogs";
 import { RecentWayfinders } from "../components/wayfinders";
+import WebSiteStructuredData from "../components/structured-data/WebSiteStructuredData.astro";
 import { DEFAULT_TITLE, SOCIAL_LINKS } from "../constants";
 import { Searchable } from "../layouts/";
 ---
 
 <Searchable title={DEFAULT_TITLE}>
+	<WebSiteStructuredData slot="head" />
 	<div class="index-container">
 		<section class="welcome-section">
 			<h1 class="welcome-title">Welcome!</h1>

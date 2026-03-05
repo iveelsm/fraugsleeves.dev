@@ -2,15 +2,16 @@
 import "../styles/blog-list.css";
 
 import { BlogPosts, BlogFilterHeader } from "../components/blogs";
-import { Searchable } from "../layouts";
+import { Standard } from "../layouts";
 ---
 
-<Searchable title="Blog">
+<Standard>
+	<meta slot="head" name="robots" content="noindex" />
 	<div class="blog-container">
 		<BlogFilterHeader />
 		<BlogPosts />
 	</div>
-</Searchable>
+</Standard>
 
 <script>
 	import { initTagFilter } from "../scripts/tagFilters";

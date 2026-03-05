@@ -2,12 +2,12 @@
 import "../styles/tags.css";
 
 import { getUniqueOccurences } from "../components/tags";
-import { Searchable } from "../layouts";
+import { Searchable, Standard } from "../layouts";
 
 const uniqueTags = await getUniqueOccurences();
 ---
 
-<Searchable>
+<Standard>
 	<div class="tags-container">
 		<h1 class="tags-title">Tags</h1>
 		<div class="tags-list">
@@ -25,4 +25,4 @@ const uniqueTags = await getUniqueOccurences();
 		</div>
 		{uniqueTags.length === 0 && <p class="no-tags">No tags found.</p>}
 	</div>
-</Searchable>
+</Standard>
