@@ -21,7 +21,14 @@ export default defineConfig({
 			filter: IVEELSM_FONTS_FILTER,
 		}),
 		pagefind(),
-		sitemap(),
+		sitemap({
+			filter: (page) =>
+				!page.endsWith("/wayfinders") &&
+				!page.endsWith("/blog") &&
+				!page.endsWith("/tags") &&
+				!page.includes("/404") &&
+				!page.includes("/503"),
+		}),
 	],
 	build: {
 		format: "file",

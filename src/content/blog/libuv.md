@@ -2,7 +2,7 @@
 layout: ../../layouts/blog.astro
 title: "How libuv works"
 pubDate: 2026-02-06
-shortDescription: "One of a series of posts around the inner workings of Node.js, focused on the event loop provided by libuv"
+shortDescription: "Exploring the Node.js event loop, provided by libuv and it's various phases."
 description: "One of a series of posts around the inner workings of Node.js, this article seeks to provide a deeper understanding of the event loop provided by the libuv library. It explores the concepts of timers, I/O poll queues, check and closing handlers and how they relate to the four primary phases of Node.js."
 author: "Mikey Sleevi"
 editors: ["David Gitlen"]
