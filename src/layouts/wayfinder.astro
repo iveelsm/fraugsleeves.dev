@@ -1,10 +1,10 @@
 ---
 import "../styles/wayfinder.css";
 
+import ArticleStructuredData from "../components/structured-data/ArticleStructuredData.astro";
 import Searchable from "./searchable.astro";
 
 import { WayfinderHeader } from "../components/wayfinders";
-import ArticleStructuredData from "../components/structured-data/ArticleStructuredData.astro";
 
 const { frontmatter } = Astro.props;
 const { minutesRead } = frontmatter;
