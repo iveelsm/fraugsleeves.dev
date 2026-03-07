@@ -4,10 +4,10 @@
 			"staticDistDir": "./dist",
 			"url": [
 				"/",
-				"/blog.html",
+				"/blog/epoll.html",
+				"/blog/golang-context.html",
 				"/blog/libuv.html",
-				"/wayfinders.html",
-				"/tags.html"
+				"/wayfinders/nodejs.html"
 			],
 			"numberOfRuns": 3
 		},
