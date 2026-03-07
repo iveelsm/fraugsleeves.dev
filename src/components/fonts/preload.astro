@@ -17,8 +17,9 @@ const preloadFonts: Array<{ filename: string }> = fontsPackageInfo
 const desktopPreloadFonts: Array<{ filename: string }> = fontsPackageInfo
 	? getAvailableFonts(fontsPackageInfo.fontsDir).filter(
 			(font: { filename: string }) =>
-				["ebgaramond-bold.woff2",]
-					.some((name) => font.filename.toLowerCase().includes(name)),
+				["ebgaramond-bold.woff2"].some((name) =>
+					font.filename.toLowerCase().includes(name),
+				),
 		)
 	: [];
 ---
