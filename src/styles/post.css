@@ -429,7 +429,7 @@
 	}
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 640px) {
 	.post-header-fixed {
 		padding: var(--space-md);
 	}
