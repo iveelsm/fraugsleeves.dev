@@ -1,6 +1,7 @@
 ---
 import "../styles/wayfinder.css";
 
+import ArticleStructuredData from "../components/structured-data/ArticleStructuredData.astro";
 import Searchable from "./searchable.astro";
 
 import { WayfinderHeader } from "../components/wayfinders";
@@ -24,6 +25,15 @@ const article = {
 	article={article}
 	class="wayfinder-layout"
 >
+	<ArticleStructuredData
+		slot="head"
+		title={frontmatter.title}
+		description={frontmatter.description}
+		pubDate={frontmatter.pubDate}
+		author={frontmatter.author}
+		tags={frontmatter.tags}
+	/>
+
 	<WayfinderHeader
 		title={frontmatter.title}
 		description={frontmatter.description}

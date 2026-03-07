@@ -2,7 +2,7 @@
 layout: ../../layouts/blog.astro
 title: "How epoll works"
 pubDate: 2026-02-15
-shortDescription: "One of a series of posts around the inner workings of Node.js, focused on file descriptor polling with epoll."
+shortDescription: "Exploring the mechanisms of I/O polling, file descriptors and epoll."
 description: "One of a series of posts around the inner-workings of Node.js, this article seeks to provide a deeper understanding of the asynchronous I/O polling mechanism used by many systems called epoll. It explores the concepts of file descriptors, event trigger, select, poll and epoll and their limitations."
 author: "Mikey Sleevi"
 editors: ["Dan Zarrini"]

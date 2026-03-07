@@ -1,0 +1,33 @@
+---
+import { SITE_URL } from "../../constants";
+
+interface Props {
+	title: string;
+	description: string;
+	pubDate: string | Date;
+	author: string;
+	tags?: string[];
+}
+
+const { title, description, pubDate, author, tags } = Astro.props;
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site ?? SITE_URL).href;
+const datePublished = new Date(pubDate).toISOString();
+---
+
+<script
+	type="application/ld+json"
+	set:html={JSON.stringify({
+		"@context": "https://schema.org",
+		"@type": "Article",
+		headline: title,
+		description,
+		datePublished,
+		url: pageUrl,
+		author: {
+			"@type": "Person",
+			name: author,
+		},
+		keywords: tags,
+	})}
+/>

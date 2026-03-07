@@ -1,6 +1,7 @@
 ---
 import "../styles/post.css";
 
+import ArticleStructuredData from "../components/structured-data/ArticleStructuredData.astro";
 import Searchable from "./searchable.astro";
 
 import { BlogHeader } from "../components/blogs";
@@ -26,6 +27,14 @@ const article = {
 	article={article}
 	class="blog-layout"
 >
+	<ArticleStructuredData
+		slot="head"
+		title={frontmatter.title}
+		description={frontmatter.description}
+		pubDate={frontmatter.pubDate}
+		author={frontmatter.author}
+		tags={frontmatter.tags}
+	/>
 	<BlogHeader
 		title={frontmatter.title}
 		description={frontmatter.description}

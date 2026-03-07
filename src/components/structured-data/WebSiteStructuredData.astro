@@ -1,0 +1,14 @@
+---
+import { DEFAULT_TITLE, DEFAULT_DESCRIPTION, SITE_URL } from "../../constants";
+---
+
+<script
+	type="application/ld+json"
+	set:html={JSON.stringify({
+		"@context": "https://schema.org",
+		"@type": "WebSite",
+		name: DEFAULT_TITLE,
+		description: DEFAULT_DESCRIPTION,
+		url: SITE_URL,
+	})}
+/>
