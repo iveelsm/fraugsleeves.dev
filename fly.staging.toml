@@ -3,12 +3,6 @@ primary_region = "dfw"
 kill_signal = "SIGINT"
 kill_timeout = "5m0s"
 
-[experimental]
-	auto_rollback = true
-
-	[experimental.attached]
-		secrets = { }
-
 [http_service]
 	internal_port = 80
 	force_https = true
@@ -19,13 +13,8 @@ kill_timeout = "5m0s"
 
 [[services]]
 	internal_port = 80
-	processes = ["app"]
+	processes = [ "app" ]
 	protocol = "tcp"
-
-	[services.concurrency]
-		hard_limit = 25
-		soft_limit = 20
-		type = "connections"
 
 	[[services.ports]]
 		handlers = [ "http" ]
