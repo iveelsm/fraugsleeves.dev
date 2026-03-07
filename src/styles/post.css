@@ -34,7 +34,7 @@
 .post-header-main .post-title {
 	margin: 0;
 	color: var(--color-text-heading);
-	font-weight: var(--font-bold);
+	font-weight: var(--font-semibold);
 	font-size: var(--text-3xl);
 	line-height: var(--leading-tight);
 	font-family: var(--font-serif);
@@ -210,7 +210,7 @@
 	margin-bottom: var(--space-md);
 	scroll-margin-top: 120px;
 	color: var(--color-text-heading);
-	font-weight: var(--font-bold);
+	font-weight: var(--font-semibold);
 	font-family: var(--font-serif);
 }
 

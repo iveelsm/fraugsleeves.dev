@@ -18,7 +18,7 @@
 .welcome-title {
 	margin-bottom: var(--space-md);
 	color: var(--color-text-heading);
-	font-weight: var(--font-bold);
+	font-weight: var(--font-semibold);
 	font-size: var(--text-4xl);
 	font-family: var(--font-serif);
 }
@@ -42,7 +42,7 @@
 }
 
 .posts-section .section-title {
-	font-weight: var(--font-bold);
+	font-weight: var(--font-semibold);
 	font-family: var(--font-serif);
 }
 
@@ -51,7 +51,7 @@
 }
 
 .post-link .post-title {
-	font-weight: var(--font-bold);
+	font-weight: var(--font-semibold);
 	font-family: var(--font-serif);
 }
 
@@ -60,7 +60,7 @@
 }
 
 .wayfinders-section .section-title {
-	font-weight: var(--font-bold);
+	font-weight: var(--font-semibold);
 	font-family: var(--font-serif);
 }
 
