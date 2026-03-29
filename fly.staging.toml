@@ -3,12 +3,6 @@ primary_region = "dfw"
 kill_signal = "SIGINT"
 kill_timeout = "5m0s"
 
-[experimental]
-	auto_rollback = true
-
-	[experimental.attached]
-		secrets = { }
-
 [http_service]
 	internal_port = 80
 	force_https = true
