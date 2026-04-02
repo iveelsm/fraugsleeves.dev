@@ -1,5 +1,9 @@
 // @ts-check
+import fs from "node:fs";
+import path from "node:path";
+
 import { defineConfig } from "astro/config";
+import react from "@astrojs/react";
 import pagefind from "astro-pagefind";
 import sitemap from "@astrojs/sitemap";
 import { remarkReadingTime } from "./src/remark-reading-time";
@@ -16,6 +20,7 @@ const site = process.env.SITE_URL || "https://fraugsleeves.dev";
 export default defineConfig({
 	site,
 	integrations: [
+		react(),
 		fontsIntegration({
 			packages: ["@iveelsm/fonts"],
 			filter: IVEELSM_FONTS_FILTER,
@@ -32,6 +37,45 @@ export default defineConfig({
 	],
 	build: {
 		format: "file",
+	},
+	vite: {
+		plugins: [
+			{
+				name: "serve-pagefind",
+				configureServer(server) {
+					const MIME_TYPES = {
+						".js": "application/javascript",
+						".wasm": "application/wasm",
+						".css": "text/css",
+						".json": "application/json",
+					};
+
+					server.middlewares.use((req, res, next) => {
+						if (!req.url?.startsWith("/pagefind/")) return next();
+
+						const filePath = path.join(
+							process.cwd(),
+							"dist",
+							req.url,
+						);
+						fs.readFile(filePath, (err, data) => {
+							if (err) return next();
+							const ext = path.extname(filePath);
+							res.setHeader(
+								"Content-Type",
+								MIME_TYPES[ext] || "application/octet-stream",
+							);
+							res.end(data);
+						});
+					});
+				},
+			},
+		],
+		build: {
+			rollupOptions: {
+				external: ["/pagefind/pagefind.js"],
+			},
+		},
 	},
 	markdown: {
 		remarkPlugins: [remarkReadingTime],

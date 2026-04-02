@@ -24,12 +24,17 @@
 		"lighthouse:collect": "lhci collect --staticDistDir=./dist"
 	},
 	"dependencies": {
+		"@astrojs/react": "^5.0.2",
 		"@astrojs/rss": "^4.0.15",
 		"@astrojs/sitemap": "^3.6.1",
+		"@types/react": "^19.2.14",
+		"@types/react-dom": "^19.2.3",
 		"astro": "^6.0.0",
 		"astro-font-loader": "^0.1.2",
 		"astro-pagefind": "^1.8.5",
 		"astro-seo": "^1.1.0",
+		"react": "^19.2.4",
+		"react-dom": "^19.2.4",
 		"rehype-autolink-headings": "^7.1.0",
 		"rehype-slug": "^6.0.0"
 	},
