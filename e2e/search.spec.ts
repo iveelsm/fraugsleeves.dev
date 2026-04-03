@@ -1,8 +1,11 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Search should...", { tag: ["@desktop"] }, () => {
+	test.describe.configure({ timeout: 10_000 });
+
 	test.beforeEach(async ({ page }) => {
 		await page.goto("/");
+		await page.waitForSelector("#search-container[data-ready]");
 	});
 
 	test("show search toggle button", async ({ page }) => {

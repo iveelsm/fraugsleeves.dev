@@ -9,6 +9,10 @@ export default function DesktopSearch() {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
 
+	useEffect(() => {
+		containerRef.current?.setAttribute("data-ready", "");
+	}, []);
+
 	const open = useCallback(() => {
 		setIsOpen(true);
 		setTimeout(() => inputRef.current?.focus(), 150);
@@ -53,9 +57,11 @@ export default function DesktopSearch() {
 	return (
 		<div
 			ref={containerRef}
+			id="search-container"
 			className={`search-container${isOpen ? " search-open" : ""}`}
 		>
 			<button
+				id="search-toggle"
 				className="search-toggle"
 				type="button"
 				aria-label="Open search"
@@ -78,7 +84,7 @@ export default function DesktopSearch() {
 				<SearchIcon width={18} height={18} />
 			</button>
 
-			<div className="search-input-wrapper search-desktop">
+			<div id="search-input-wrapper" className="search-input-wrapper search-desktop">
 				<SearchIcon
 					className="search-input-icon"
 					width={16}
@@ -86,6 +92,7 @@ export default function DesktopSearch() {
 				/>
 				<input
 					ref={inputRef}
+					id="search-input"
 					type="text"
 					className="search-input"
 					placeholder="Search..."
@@ -93,6 +100,7 @@ export default function DesktopSearch() {
 					onChange={(e) => search(e.target.value)}
 				/>
 				<button
+					id="search-clear"
 					className="search-clear"
 					type="button"
 					aria-label="Close search"
@@ -103,9 +111,10 @@ export default function DesktopSearch() {
 			</div>
 
 			<div
+				id="search-dropdown"
 				className={`search-dropdown search-desktop${hasDropdown ? " visible" : ""}`}
 			>
-				<div className="search-results">
+				<div id="search-results" className="search-results">
 					{status === "error" && (
 						<div className="search-no-results">
 							Search unavailable

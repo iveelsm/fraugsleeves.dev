@@ -7,6 +7,11 @@ export default function MobileSearch() {
 	const [isOpen, setIsOpen] = useState(false);
 	const { results, status, search, clear } = usePagefind(10);
 	const inputRef = useRef<HTMLInputElement>(null);
+	const containerRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		containerRef.current?.setAttribute("data-ready", "");
+	}, []);
 
 	const open = useCallback(() => {
 		setIsOpen(true);
@@ -36,8 +41,9 @@ export default function MobileSearch() {
 	}, [isOpen, close]);
 
 	return (
-		<>
+		<div ref={containerRef}>
 			<button
+				id="mobile-search-toggle"
 				className="search-toggle"
 				type="button"
 				aria-label="Open search"
@@ -46,11 +52,12 @@ export default function MobileSearch() {
 				<SearchIcon width={18} height={18} />
 			</button>
 
-			<div className={`search-overlay${isOpen ? " active" : ""}`}>
+			<div id="search-overlay" className={`search-overlay${isOpen ? " active" : ""}`}>
 				<div className="search-overlay-container">
 					<div className="search-overlay-header">
 						<h1 className="search-overlay-title">Search</h1>
 						<button
+							id="search-overlay-close"
 							className="search-overlay-close"
 							type="button"
 							aria-label="Close search"
@@ -68,6 +75,7 @@ export default function MobileSearch() {
 							/>
 							<input
 								ref={inputRef}
+								id="search-overlay-input"
 								type="text"
 								className="search-overlay-input"
 								placeholder="What are you looking for?"
@@ -76,7 +84,7 @@ export default function MobileSearch() {
 							/>
 						</div>
 					</div>
-					<div className="search-overlay-results">
+					<div id="search-overlay-results" className="search-overlay-results">
 						{status === "error" && (
 							<div className="search-no-results">
 								Search unavailable
@@ -113,6 +121,6 @@ export default function MobileSearch() {
 					</div>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 }
