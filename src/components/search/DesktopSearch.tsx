@@ -84,7 +84,10 @@ export default function DesktopSearch() {
 				<SearchIcon width={18} height={18} />
 			</button>
 
-			<div id="search-input-wrapper" className="search-input-wrapper search-desktop">
+			<div
+				id="search-input-wrapper"
+				className="search-input-wrapper search-desktop"
+			>
 				<SearchIcon
 					className="search-input-icon"
 					width={16}

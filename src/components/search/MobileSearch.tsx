@@ -52,7 +52,10 @@ export default function MobileSearch() {
 				<SearchIcon width={18} height={18} />
 			</button>
 
-			<div id="search-overlay" className={`search-overlay${isOpen ? " active" : ""}`}>
+			<div
+				id="search-overlay"
+				className={`search-overlay${isOpen ? " active" : ""}`}
+			>
 				<div className="search-overlay-container">
 					<div className="search-overlay-header">
 						<h1 className="search-overlay-title">Search</h1>
@@ -84,7 +87,10 @@ export default function MobileSearch() {
 							/>
 						</div>
 					</div>
-					<div id="search-overlay-results" className="search-overlay-results">
+					<div
+						id="search-overlay-results"
+						className="search-overlay-results"
+					>
 						{status === "error" && (
 							<div className="search-no-results">
 								Search unavailable

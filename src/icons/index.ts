@@ -7,6 +7,7 @@ import Logo from "./logo.svg";
 import Mail from "./mail.svg";
 import RSS from "./rss.svg";
 import Search from "./search.svg";
+
 import { svgWithAttrs } from "./icons";
 import type { IconProps } from "./icons";
 
@@ -23,6 +24,4 @@ export {
 	svgWithAttrs,
 };
 
-export type {
-	IconProps
-}
+export type { IconProps };

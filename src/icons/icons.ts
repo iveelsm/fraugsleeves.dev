@@ -4,7 +4,10 @@ export interface IconProps {
 	className?: string;
 }
 
-export function svgWithAttrs(raw: string, { width, height, className }: IconProps) {
+export function svgWithAttrs(
+	raw: string,
+	{ width, height, className }: IconProps,
+) {
 	let svg = raw.trim();
 	if (width !== undefined) {
 		svg = svg.replace(/width="[^"]*"/, `width="${width}"`);
