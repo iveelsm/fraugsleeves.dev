@@ -7,6 +7,8 @@ import Logo from "./logo.svg";
 import Mail from "./mail.svg";
 import RSS from "./rss.svg";
 import Search from "./search.svg";
+import { svgWithAttrs } from "./icons";
+import type { IconProps } from "./icons";
 
 export {
 	Close as CloseIcon,
@@ -18,4 +20,9 @@ export {
 	Search as SearchIcon,
 	Logo as LogoIcon,
 	RSS as RSSIcon,
+	svgWithAttrs,
 };
+
+export type {
+	IconProps
+}
