@@ -51,15 +51,21 @@ export default defineConfig({
 					};
 
 					server.middlewares.use((req, res, next) => {
-						if (!req.url?.startsWith("/pagefind/")) return next();
+						if (!req.url?.startsWith("/pagefind/")) {
+							return next();
+						}
 
 						const filePath = path.join(
+							// eslint-disable-next-line
 							process.cwd(),
 							"dist",
 							req.url,
 						);
 						fs.readFile(filePath, (err, data) => {
-							if (err) return next();
+							if (err) {
+								return next();
+							}
+
 							const ext = path.extname(filePath);
 							res.setHeader(
 								"Content-Type",

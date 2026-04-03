@@ -25,7 +25,11 @@ export default function DesktopSearch() {
 
 	useEffect(() => {
 		function handleClickOutside(e: MouseEvent) {
-			if (isOpen && containerRef.current && !containerRef.current.contains(e.target as Node)) {
+			if (
+				isOpen &&
+				containerRef.current &&
+				!containerRef.current.contains(e.target as Node)
+			) {
 				close();
 			}
 		}
