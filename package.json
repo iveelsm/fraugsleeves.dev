@@ -28,7 +28,7 @@
 		"@astrojs/rss": "^4.0.15",
 		"@astrojs/sitemap": "^3.6.1",
 		"astro": "^6.0.0",
-		"astro-font-loader": "^0.1.2",
+		"astro-font-loader": "^0.2.0",
 		"astro-pagefind": "^1.8.5",
 		"astro-seo": "^1.1.0",
 		"react": "^19.2.4",
