@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface SearchResult {
 	url: string;
@@ -46,7 +46,9 @@ export function usePagefind(maxResults: number = 5) {
 
 	const search = useCallback(
 		(query: string) => {
-			if (debounceRef.current) clearTimeout(debounceRef.current);
+			if (debounceRef.current) {
+				clearTimeout(debounceRef.current);
+			}
 
 			if (!query.trim()) {
 				setResults([]);
@@ -55,44 +57,63 @@ export function usePagefind(maxResults: number = 5) {
 			}
 
 			debounceRef.current = setTimeout(async () => {
-				const pf = await loadPagefind();
-				if (!pf) {
+				try {
+					const pf = await loadPagefind();
+					if (!pf) {
+						setResults([]);
+						setStatus("error");
+						return;
+					}
+
+					const searchResponse = await pf.search(query);
+
+					if (searchResponse.results.length === 0) {
+						setResults([]);
+						setStatus("no-results");
+						return;
+					}
+
+					const data = await Promise.all(
+						searchResponse.results
+							.slice(0, maxResults)
+							.map((r) => r.data()),
+					);
+
+					setResults(
+						data.map((r) => ({
+							url: r.url,
+							title:
+								r.meta?.title ||
+								r.meta?.name ||
+								r.title ||
+								r.url,
+							excerpt: r.excerpt,
+						})),
+					);
+					setStatus("idle");
+				} catch {
 					setResults([]);
 					setStatus("error");
-					return;
 				}
-
-				const searchResponse = await pf.search(query);
-
-				if (searchResponse.results.length === 0) {
-					setResults([]);
-					setStatus("no-results");
-					return;
-				}
-
-				const data = await Promise.all(
-					searchResponse.results
-						.slice(0, maxResults)
-						.map((r) => r.data()),
-				);
-
-				setResults(
-					data.map((r) => ({
-						url: r.url,
-						title:
-							r.meta?.title || r.meta?.name || r.title || r.url,
-						excerpt: r.excerpt,
-					})),
-				);
-				setStatus("idle");
 			}, 200);
 		},
 		[loadPagefind, maxResults],
 	);
 
 	const clear = useCallback(() => {
+		if (debounceRef.current) {
+			clearTimeout(debounceRef.current);
+		}
 		setResults([]);
 		setStatus("idle");
+	}, []);
+
+	useEffect(() => {
+		return () => {
+			if (debounceRef.current) {
+				clearTimeout(debounceRef.current);
+			}
+		};
 	}, []);
 
 	return { results, status, search, clear };

@@ -50,17 +50,26 @@ export default defineConfig({
 						".json": "application/json",
 					};
 
+					// eslint-disable-next-line
+					const pagefindDir = path.resolve(process.cwd(), "dist", "pagefind");
 					server.middlewares.use((req, res, next) => {
 						if (!req.url?.startsWith("/pagefind/")) {
 							return next();
 						}
 
-						const filePath = path.join(
-							// eslint-disable-next-line
-							process.cwd(),
-							"dist",
-							req.url,
-						);
+						let pathname;
+						try {
+							pathname = new URL(req.url, "http://localhost").pathname;
+						} catch {
+							return next();
+						}
+
+						const relativePath = pathname.slice("/pagefind/".length);
+						const filePath = path.resolve(pagefindDir, relativePath);
+						if (!filePath.startsWith(pagefindDir + path.sep) && filePath !== pagefindDir) {
+							return next();
+						}
+
 						fs.readFile(filePath, (err, data) => {
 							if (err) {
 								return next();

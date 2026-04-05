@@ -12,7 +12,7 @@ export default [
 		ignores: ["dist/", "node_modules/", ".astro/"],
 	},
 	{
-		files: ["**/*.astro", "**/*.ts", "**/*.js"],
+		files: ["**/*.astro", "**/*.ts", "**/*.tsx", "**/*.js"],
 		plugins: {
 			perfectionist,
 		},

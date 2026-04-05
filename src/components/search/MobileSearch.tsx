@@ -13,15 +13,18 @@ export default function MobileSearch() {
 		containerRef.current?.setAttribute("data-ready", "");
 	}, []);
 
+	const prevOverflowRef = useRef<string>("");
+
 	const open = useCallback(() => {
 		setIsOpen(true);
+		prevOverflowRef.current = document.body.style.overflow;
 		document.body.style.overflow = "hidden";
 		setTimeout(() => inputRef.current?.focus(), 150);
 	}, []);
 
 	const close = useCallback(() => {
 		setIsOpen(false);
-		document.body.style.overflow = "";
+		document.body.style.overflow = prevOverflowRef.current;
 		clear();
 
 		if (inputRef.current) {
@@ -40,6 +43,12 @@ export default function MobileSearch() {
 		return () => document.removeEventListener("keydown", handleEscape);
 	}, [isOpen, close]);
 
+	useEffect(() => {
+		return () => {
+			document.body.style.overflow = prevOverflowRef.current;
+		};
+	}, []);
+
 	return (
 		<div ref={containerRef}>
 			<button
@@ -47,6 +56,8 @@ export default function MobileSearch() {
 				className="search-toggle"
 				type="button"
 				aria-label="Open search"
+				aria-expanded={isOpen}
+				aria-controls="search-overlay"
 				onClick={open}
 			>
 				<SearchIcon width={18} height={18} />
