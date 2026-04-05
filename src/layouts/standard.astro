@@ -1,8 +1,10 @@
 ---
+import FontLoader from "astro-font-loader/FontLoader.astro";
+
 import Rss from "../components/rss.astro";
 import Body from "./body.astro";
 
-import { Font, Preload } from "../components/fonts";
+import { IVEELSM_FONTS_FILTER, IVEELSM_FONTS_PRELOAD } from "../constants/fonts";
 
 interface Props {
 	class?: string;
@@ -31,8 +33,11 @@ const { class: className } = Astro.props;
 		/>
 		<meta name="apple-mobile-web-app-title" content="fraugsleeves.dev" />
 		<link rel="manifest" href="/site.webmanifest" />
-		<Preload />
-		<Font />
+		<FontLoader
+			packages={["@iveelsm/fonts"]}
+			filter={IVEELSM_FONTS_FILTER}
+			preload={IVEELSM_FONTS_PRELOAD}
+		/>
 		<Rss />
 		<slot name="head" />
 	</head>
