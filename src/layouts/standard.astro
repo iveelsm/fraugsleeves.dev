@@ -1,10 +1,12 @@
 ---
-import FontLoader from "astro-font-loader/FontLoader.astro";
-
 import Rss from "../components/rss.astro";
 import Body from "./body.astro";
+import FontLoader from "astro-font-loader/FontLoader.astro";
 
-import { IVEELSM_FONTS_FILTER, IVEELSM_FONTS_PRELOAD } from "../constants/fonts";
+import {
+	IVEELSM_FONTS_FILTER,
+	IVEELSM_FONTS_PRELOAD,
+} from "../constants/fonts";
 
 interface Props {
 	class?: string;
