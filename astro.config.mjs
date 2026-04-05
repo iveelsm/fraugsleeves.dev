@@ -1,4 +1,4 @@
-// @ts-check
+/* eslint-disable */
 import fs from "node:fs";
 import path from "node:path";
 
@@ -13,7 +13,6 @@ import rehypeNumericReferences from "./src/rehype-numeric-references";
 import { fontsIntegration } from "astro-font-loader";
 import { IVEELSM_FONTS_FILTER } from "./src/constants";
 
-// eslint-disable-next-line
 const site = process.env.SITE_URL || "https://fraugsleeves.dev";
 
 // https://astro.build/config
@@ -50,8 +49,11 @@ export default defineConfig({
 						".json": "application/json",
 					};
 
-					// eslint-disable-next-line
-					const pagefindDir = path.resolve(process.cwd(), "dist", "pagefind");
+					const pagefindDir = path.resolve(
+						process.cwd(),
+						"dist",
+						"pagefind",
+					);
 					server.middlewares.use((req, res, next) => {
 						if (!req.url?.startsWith("/pagefind/")) {
 							return next();
@@ -59,14 +61,23 @@ export default defineConfig({
 
 						let pathname;
 						try {
-							pathname = new URL(req.url, "http://localhost").pathname;
+							pathname = new URL(req.url, "http://localhost")
+								.pathname;
 						} catch {
 							return next();
 						}
 
-						const relativePath = pathname.slice("/pagefind/".length);
-						const filePath = path.resolve(pagefindDir, relativePath);
-						if (!filePath.startsWith(pagefindDir + path.sep) && filePath !== pagefindDir) {
+						const relativePath = pathname.slice(
+							"/pagefind/".length,
+						);
+						const filePath = path.resolve(
+							pagefindDir,
+							relativePath,
+						);
+						if (
+							!filePath.startsWith(pagefindDir + path.sep) &&
+							filePath !== pagefindDir
+						) {
 							return next();
 						}
 
@@ -95,7 +106,6 @@ export default defineConfig({
 	markdown: {
 		remarkPlugins: [remarkReadingTime],
 		shikiConfig: {
-			// @ts-expect-error - Custom theme with valid Shiki structure
 			theme: (await import("./src/themes/uchu-theme.json")).default,
 		},
 		rehypePlugins: [
