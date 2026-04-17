@@ -12,6 +12,7 @@ test.describe(
 				]);
 			}
 			await page.goto("/blog/epoll");
+			await page.locator(".post-content[data-hydrated]").waitFor();
 		});
 
 		test("display anchor links on headings", async ({ page }) => {
@@ -110,6 +111,7 @@ test.describe("Heading links should not...", () => {
 	}) => {
 		await context.clearPermissions();
 		await page.goto("/blog/epoll");
+		await page.locator(".post-content[data-hydrated]").waitFor();
 
 		const anchorLink = page
 			.locator(".post-content .heading-anchor")

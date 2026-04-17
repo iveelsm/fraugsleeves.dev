@@ -11,6 +11,7 @@ test.use({
 test.describe("Mobile navigation should...", { tag: "@mobile" }, () => {
 	test.beforeEach(async ({ page }) => {
 		await page.goto("/");
+		await page.locator("#hamburger-btn[data-hydrated]").waitFor();
 	});
 
 	test("show hamburger button on mobile", async ({ page }) => {

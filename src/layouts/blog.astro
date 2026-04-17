@@ -5,7 +5,9 @@ import ArticleStructuredData from "../components/structured-data/ArticleStructur
 import Searchable from "./searchable.astro";
 
 import { BlogHeader } from "../components/blogs";
+import HeadingAnchors from "../components/blogs/HeadingAnchors";
 import { Sidebar } from "../components/toc";
+import ScrollSpy from "../components/toc/ScrollSpy";
 
 const { frontmatter, headings } = Astro.props;
 const { minutesRead } = frontmatter;
@@ -52,21 +54,6 @@ const article = {
 		</main>
 	</div>
 
-	<script>
-		import { initHeadingAnchors } from "../scripts/headingAnchors";
-		import { initScrollSpy } from "../scripts/scrollSpy";
-
-		function initBlogPost() {
-			initScrollSpy();
-			initHeadingAnchors();
-		}
-
-		if (document.readyState === "loading") {
-			document.addEventListener("DOMContentLoaded", initBlogPost);
-		} else {
-			initBlogPost();
-		}
-
-		document.addEventListener("astro:page-load", initBlogPost);
-	</script>
+	<ScrollSpy client:idle />
+	<HeadingAnchors client:idle />
 </Searchable>
