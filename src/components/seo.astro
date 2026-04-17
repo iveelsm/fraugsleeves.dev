@@ -35,7 +35,10 @@ const {
 } = Astro.props;
 
 const pathname = Astro.url.pathname;
-const normalizedPath = pathname === "/" ? "/" : pathname.replace(/\/$/, "");
+const normalizedPath = pathname
+	.replace(/\.html$/, "")
+	.replace(/\/$/, "")
+	.replace(/\/index$/, "/");
 
 const canonicalUrl = `${SITE_URL}${normalizedPath}`;
 ---

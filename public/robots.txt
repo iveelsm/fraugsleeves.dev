@@ -2,7 +2,6 @@
 
 User-agent: *
 Allow: /
-Crawl-delay: 10
 
 Sitemap: https://fraugsleeves.dev/sitemap-index.xml
 
