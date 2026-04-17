@@ -5,9 +5,9 @@ import ArticleStructuredData from "../components/structured-data/ArticleStructur
 import Searchable from "./searchable.astro";
 
 import { BlogHeader } from "../components/blogs";
+import HeadingAnchors from "../components/blogs/HeadingAnchors";
 import { Sidebar } from "../components/toc";
 import ScrollSpy from "../components/toc/ScrollSpy";
-import HeadingAnchors from "../components/blogs/HeadingAnchors";
 
 const { frontmatter, headings } = Astro.props;
 const { minutesRead } = frontmatter;
