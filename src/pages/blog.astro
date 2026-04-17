@@ -2,6 +2,7 @@
 import "../styles/blog-list.css";
 
 import { BlogPosts, BlogFilterHeader } from "../components/blogs";
+import TagFilter from "../components/blogs/TagFilter";
 import { Standard } from "../layouts";
 ---
 
@@ -11,17 +12,5 @@ import { Standard } from "../layouts";
 		<BlogFilterHeader />
 		<BlogPosts />
 	</div>
+	<TagFilter client:idle />
 </Standard>
-
-<script>
-	import { initTagFilter } from "../scripts/tagFilters";
-
-	if (document.readyState === "loading") {
-		document.addEventListener("DOMContentLoaded", initTagFilter);
-	} else {
-		initTagFilter();
-	}
-
-	document.addEventListener("astro:page-load", initTagFilter);
-	window.addEventListener("popstate", initTagFilter);
-</script>

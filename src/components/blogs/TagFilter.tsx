@@ -1,4 +1,6 @@
-export function initTagFilter() {
+import { useEffect } from "react";
+
+function applyTagFilter() {
 	const params = new URLSearchParams(window.location.search);
 	const tagFilter = params.get("tag");
 
@@ -25,9 +27,10 @@ export function initTagFilter() {
 
 	let visibleCount = 0;
 	postItems.forEach((item) => {
-		const tags = JSON.parse(item.getAttribute("data-tags") || "[]");
+		const el = item as HTMLElement;
+		const tags = JSON.parse(el.getAttribute("data-tags") || "[]");
 		const isVisible = !tagFilter || tags.includes(tagFilter);
-		item.style.display = isVisible ? "" : "none";
+		el.style.display = isVisible ? "" : "none";
 
 		if (isVisible) {
 			visibleCount++;
@@ -35,14 +38,14 @@ export function initTagFilter() {
 	});
 
 	if (visibleCount === 0) {
-		noPosts.style.display = "block";
+		(noPosts as HTMLElement).style.display = "block";
 		noPosts.textContent = tagFilter
 			? `No posts found for tag "${tagFilter}".`
 			: "No posts found.";
-		postsList.style.display = "none";
+		(postsList as HTMLElement).style.display = "none";
 	} else {
-		noPosts.style.display = "none";
-		postsList.style.display = "";
+		(noPosts as HTMLElement).style.display = "none";
+		(postsList as HTMLElement).style.display = "";
 	}
 
 	tagLinks.forEach((link) => {
@@ -53,4 +56,20 @@ export function initTagFilter() {
 			link.classList.remove("active");
 		}
 	});
+}
+
+export default function TagFilter() {
+	useEffect(() => {
+		applyTagFilter();
+
+		const postsList = document.getElementById("posts-list");
+		postsList?.setAttribute("data-hydrated", "");
+
+		window.addEventListener("popstate", applyTagFilter);
+		return () => {
+			window.removeEventListener("popstate", applyTagFilter);
+		};
+	}, []);
+
+	return null;
 }

@@ -6,6 +6,7 @@ test.describe(
 	() => {
 		test.beforeEach(async ({ page }) => {
 			await page.goto("/blog");
+			await page.locator("#posts-list[data-hydrated]").waitFor();
 		});
 
 		test("display all posts by default", async ({ page }) => {
@@ -43,6 +44,7 @@ test.describe(
 			const tagName = await tagLink.getAttribute("data-tag");
 
 			await tagLink.click();
+			await page.locator("#posts-list[data-hydrated]").waitFor();
 			const visiblePosts = page.locator(
 				'.post-item:visible, .post-item[style=""]',
 			);
