@@ -6,7 +6,7 @@
 		{
 			customType: "regex",
 			description: "Update Playwright Docker image in CI workflows",
-			fileMatch: ["\\.github/workflows/.+\\.ya?ml$"],
+			managerFilePatterns: ["/\\.github/workflows/.+\\.ya?ml$/"],
 			matchStrings: [
 				"image:\\s*mcr\\.microsoft\\.com/playwright:v(?<currentValue>[\\d.]+)-\\w+\\n",
 			],
@@ -25,10 +25,7 @@
 		{
 			groupName: "playwright monorepo",
 			description: "Keep @playwright/test and Playwright Docker image in sync",
-			matchPackageNames: [
-				"@playwright/test",
-				"mcr.microsoft.com/playwright",
-			],
+			matchPackageNames: ["@playwright/test", "mcr.microsoft.com/playwright"],
 		},
 		{
 			description: "Update custom packages when available",
