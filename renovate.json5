@@ -25,7 +25,10 @@
 		{
 			groupName: "playwright monorepo",
 			description: "Keep @playwright/test and Playwright Docker image in sync",
-			matchPackageNames: ["@playwright/test", "mcr.microsoft.com/playwright"],
+			matchPackageNames: [
+				"@playwright/test",
+				"mcr.microsoft.com/playwright",
+			],
 		},
 		{
 			description: "Update custom packages when available",
