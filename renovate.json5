@@ -2,19 +2,6 @@
 	extends: ["config:recommended"],
 	minimumReleaseAge: "14 days",
 	dependencyDashboard: true,
-	customManagers: [
-		{
-			customType: "regex",
-			description: "Update Playwright Docker image in CI workflows",
-			managerFilePatterns: ["/\\.github/workflows/.+\\.ya?ml$/"],
-			matchStrings: [
-				"image:\\s*mcr\\.microsoft\\.com/playwright:v(?<currentValue>[\\d.]+)-\\w+\\n",
-			],
-			depNameTemplate: "mcr.microsoft.com/playwright",
-			datasourceTemplate: "docker",
-			versioningTemplate: "docker",
-		},
-	],
 	packageRules: [
 		{
 			groupName: "all npm patch dependencies",
@@ -23,18 +10,10 @@
 			matchUpdateTypes: ["patch"],
 		},
 		{
-			groupName: "playwright",
-			description: "Keep @playwright/test and Playwright Docker image in sync",
-			matchPackageNames: [
-				"@playwright/test",
-				"mcr.microsoft.com/playwright",
-			],
-		},
-		{
-			groupName: "playwright",
-			description: "Skip minimum release age for Playwright Docker image",
-			matchPackageNames: ["mcr.microsoft.com/playwright"],
-			minimumReleaseAge: "0 days",
+			// See: https://github.com/renovatebot/renovate/discussions/23889
+			description: "Disable all Playwright updates",
+			matchPackageNames: ["@playwright/test", "mcr.microsoft.com/playwright"],
+			enabled: false,
 		},
 		{
 			description: "Update custom packages when available",
