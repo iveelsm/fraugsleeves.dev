@@ -12,7 +12,10 @@
 		{
 			// See: https://github.com/renovatebot/renovate/discussions/23889
 			description: "Disable all Playwright updates",
-			matchPackageNames: ["@playwright/test", "mcr.microsoft.com/playwright"],
+			matchPackageNames: [
+				"@playwright/test",
+				"mcr.microsoft.com/playwright",
+			],
 			enabled: false,
 		},
 		{
