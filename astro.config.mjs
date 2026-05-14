@@ -1,16 +1,17 @@
 /* eslint-disable */
-import fs from "node:fs";
 import path from "node:path";
+import fs from "node:fs";
 
-import { defineConfig } from "astro/config";
-import react from "@astrojs/react";
-import pagefind from "astro-pagefind";
-import sitemap from "@astrojs/sitemap";
-import { remarkReadingTime } from "./src/remark-reading-time";
-import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import rehypeNumericReferences from "./src/rehype-numeric-references";
+import { defineConfig, svgoOptimizer } from "astro/config";
 import { fontsIntegration } from "astro-font-loader";
+import sitemap from "@astrojs/sitemap";
+import pagefind from "astro-pagefind";
+import rehypeSlug from "rehype-slug";
+import react from "@astrojs/react";
+
+import rehypeNumericReferences from "./src/rehype-numeric-references";
+import { remarkReadingTime } from "./src/remark-reading-time";
 import { IVEELSM_FONTS_FILTER } from "./src/constants";
 
 const site = process.env.SITE_URL || "https://fraugsleeves.dev";
@@ -164,6 +165,6 @@ export default defineConfig({
 		],
 	},
 	experimental: {
-		svgo: true,
+		svgOptimizer: svgoOptimizer(),
 	},
 });
