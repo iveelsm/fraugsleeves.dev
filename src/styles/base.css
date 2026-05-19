@@ -154,7 +154,7 @@ body {
 .post-tag.active {
 	border-color: var(--color-accent);
 	background-color: var(--color-accent);
-	color: #fff;
+	color: var(--uchu-yang);
 }
 
 .view-all-link {
