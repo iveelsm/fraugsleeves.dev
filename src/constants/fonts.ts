@@ -7,10 +7,9 @@ export const IVEELSM_FONTS_FILTER = (filename: string) =>
 export const IVEELSM_FONTS_PRELOAD: PreloadConfig[] = [
 	{
 		filter: (filename: string) =>
-			[
-				"ebgaramond-semibold.woff2",
-				"berkeleymonov2-variable.woff2",
-			].some((name) => filename.toLowerCase().includes(name)),
+			["ebgaramond-semibold.woff2", "berkeleymonov2-variable.woff2"].some(
+				(name) => filename.toLowerCase().includes(name),
+			),
 	},
 	{
 		filter: (filename: string) =>
