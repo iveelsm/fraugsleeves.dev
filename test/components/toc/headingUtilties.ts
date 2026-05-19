@@ -1,4 +1,4 @@
-import { Heading } from "../../../src/components/toc/header";
+import type { Heading } from "../../../src/components/toc/header";
 
 export function h(depth: number, text: string, slug?: string): Heading {
 	return {
