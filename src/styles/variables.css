@@ -97,7 +97,7 @@
 	--uchu-yang: oklch(99.4% 0 0);
 
 	--font-mono:
-		"Berkeley Mono Variable", ui-monospace, SFMono-Regular, Monaco,
+		"Berkeley Mono v2 Variable", ui-monospace, SFMono-Regular, Monaco,
 		Consolas, monospace;
 	--font-serif:
 		"EB Garamond", ui-serif, Garamond, Georgia, "Times New Roman", Times,
@@ -117,7 +117,7 @@
 	--leading-normal: 1.65;
 	--leading-relaxed: 1.75;
 
-	--font-ultralight: 100;
+	--font-ultralight: 300;
 	--font-regular: 400;
 	--font-semibold: 600;
 	--font-bold: 700;
