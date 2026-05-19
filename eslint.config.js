@@ -17,6 +17,7 @@ export default [
 			perfectionist,
 		},
 		rules: {
+			"@typescript-eslint/no-explicit-any": "off",
 			"perfectionist/sort-imports": [
 				"error",
 				{
