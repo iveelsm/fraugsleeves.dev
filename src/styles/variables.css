@@ -96,9 +96,9 @@
 	--uchu-yin: oklch(14.38% 0.007 256.88);
 	--uchu-yang: oklch(99.4% 0 0);
 
-	--uchu-yin-transparent-1: oklch(14.38% 0.007 256.88 / 0.08);
-	--uchu-yin-transparent-2: oklch(14.38% 0.007 256.88 / 0.12);
-	--uchu-yin-transparent-3: oklch(14.38% 0.007 256.88 / 0.15);
+	--uchu-yin-transparent-1: oklch(14.38% 0.007 256.88 / 0.15);
+	--uchu-yin-transparent-2: oklch(14.38% 0.007 256.88 / 0.30);
+	--uchu-yin-transparent-3: oklch(14.38% 0.007 256.88 / 0.65);
 
 	--font-mono:
 		"Berkeley Mono v2 Variable", ui-monospace, SFMono-Regular, Monaco,
@@ -121,10 +121,10 @@
 	--leading-normal: 1.65;
 	--leading-relaxed: 1.75;
 
-	--font-ultralight: 300;
+	--font-ultralight: 200;
 	--font-regular: 400;
 	--font-semibold: 600;
-	--font-bold: 700;
+	--font-bold: 800;
 
 	--color-bg: var(--uchu-yang);
 	--color-bg-alt: var(--uchu-gray-1);
@@ -167,8 +167,9 @@
 	--radius-lg: 8px;
 	--radius-full: 9999px;
 
-	--shadow-sm: 0 1px 4px var(--uchu-yin-transparent-1);
-	--shadow-md: 0 2px 8px var(--uchu-yin-transparent-1);
+	--shadow-sm: 0 2px 4px var(--uchu-yin-transparent-1);
+	--shadow-md: 0 4px 12px var(--uchu-yin-transparent-2);
+	--shadow-lg: 0 10px 40px var(--uchu-yin-transparent-3);
 
 	--transition-fast: 0.2s ease;
 	--transition-normal: 0.3s ease;
