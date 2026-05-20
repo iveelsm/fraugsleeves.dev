@@ -54,7 +54,7 @@
 	align-items: center;
 	transition: all var(--transition-fast);
 	border-radius: var(--radius-full);
-	background: rgba(0, 0, 0, 0.08);
+	background: var(--uchu-gray-5);
 	padding: 0 var(--space-xs);
 	min-width: 1.25rem;
 	height: 1.25rem;
@@ -64,7 +64,7 @@
 
 .tag-link:hover .tag-count {
 	background: var(--color-accent);
-	color: #fff;
+	color: var(--uchu-yang);
 }
 
 .no-tags {

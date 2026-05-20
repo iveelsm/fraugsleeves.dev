@@ -16,7 +16,7 @@ html {
 	background-color: var(--color-bg);
 	scroll-behavior: smooth;
 	color: var(--color-text);
-	font-weight: var(--font-ultralight);
+	font-weight: var(--font-regular);
 	font-size: 16px;
 	line-height: var(--leading-normal);
 	font-family: var(--font-mono);
@@ -34,6 +34,10 @@ body {
 	background-size: 16px 16px;
 	background-attachment: fixed;
 	overflow-x: hidden;
+}
+
+strong {
+	font-weight: var(--font-bold);
 }
 
 .main-content {
@@ -154,7 +158,7 @@ body {
 .post-tag.active {
 	border-color: var(--color-accent);
 	background-color: var(--color-accent);
-	color: #fff;
+	color: var(--uchu-yang);
 }
 
 .view-all-link {
