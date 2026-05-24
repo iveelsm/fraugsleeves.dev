@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 import { CloseIcon, SearchIcon } from "./icons";
 import { usePagefind } from "./usePagefind";
@@ -7,20 +7,7 @@ export default function MobileSearch() {
 	const [isOpen, setIsOpen] = useState(false);
 	const { results, status, search, clear } = usePagefind(10);
 	const inputRef = useRef<HTMLInputElement>(null);
-	const containerRef = useRef<HTMLDivElement>(null);
-
-	useEffect(() => {
-		containerRef.current?.setAttribute("data-ready", "");
-	}, []);
-
 	const prevOverflowRef = useRef<string>("");
-
-	const open = useCallback(() => {
-		setIsOpen(true);
-		prevOverflowRef.current = document.body.style.overflow;
-		document.body.style.overflow = "hidden";
-		setTimeout(() => inputRef.current?.focus(), 150);
-	}, []);
 
 	const close = useCallback(() => {
 		setIsOpen(false);
@@ -32,25 +19,15 @@ export default function MobileSearch() {
 		}
 	}, [clear]);
 
-	useEffect(() => {
-		function handleEscape(e: KeyboardEvent) {
-			if (e.key === "Escape" && isOpen) {
-				close();
-			}
-		}
-
-		document.addEventListener("keydown", handleEscape);
-		return () => document.removeEventListener("keydown", handleEscape);
-	}, [isOpen, close]);
-
-	useEffect(() => {
-		return () => {
-			document.body.style.overflow = prevOverflowRef.current;
-		};
+	const open = useCallback(() => {
+		setIsOpen(true);
+		prevOverflowRef.current = document.body.style.overflow;
+		document.body.style.overflow = "hidden";
+		setTimeout(() => inputRef.current?.focus(), 150);
 	}, []);
 
 	return (
-		<div ref={containerRef}>
+		<div ref={(el) => el?.setAttribute("data-ready", "")}>
 			<button
 				id="mobile-search-toggle"
 				className="search-toggle"
@@ -95,6 +72,9 @@ export default function MobileSearch() {
 								placeholder="What are you looking for?"
 								autoComplete="off"
 								onChange={(e) => search(e.target.value)}
+								onKeyDown={(e) => {
+									if (e.key === "Escape") close();
+								}}
 							/>
 						</div>
 					</div>
