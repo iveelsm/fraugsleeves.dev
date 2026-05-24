@@ -47,6 +47,8 @@ export default function DesktopSearchIsland() {
 	const wrapperRef = useCallback(
 		(el: HTMLDivElement | null) => {
 			if (!el) return;
+			const container = document.getElementById("search-container");
+			container?.setAttribute("data-ready", "");
 			const toggle = document.getElementById("search-toggle");
 			toggle?.addEventListener("click", open);
 		},
@@ -76,6 +78,7 @@ export default function DesktopSearchIsland() {
 			<div
 				id="search-input-wrapper"
 				className="search-input-wrapper search-desktop"
+				style={{ position: "relative", zIndex: 300 }}
 			>
 				<SearchIcon
 					className="search-input-icon"
@@ -90,6 +93,9 @@ export default function DesktopSearchIsland() {
 					placeholder="Search..."
 					autoComplete="off"
 					onChange={(e) => search(e.target.value)}
+					onKeyDown={(e) => {
+						if (e.key === "Escape") close();
+					}}
 				/>
 				<button
 					id="search-clear"
