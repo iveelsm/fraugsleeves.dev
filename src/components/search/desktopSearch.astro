@@ -2,6 +2,7 @@
 import "../../styles/search.css";
 
 import DesktopSearchIsland from "./DesktopSearchIsland";
+import DesktopOnly from "../media/DesktopOnly.astro";
 ---
 
 <div id="search-container" class="search-container">
@@ -28,5 +29,7 @@ import DesktopSearchIsland from "./DesktopSearchIsland";
 			</svg>
 		</span>
 	</button>
-	<DesktopSearchIsland client:media="(min-width: 640px)" />
+	<DesktopOnly>
+		<DesktopSearchIsland client:idle />
+	</DesktopOnly>
 </div>

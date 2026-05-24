@@ -2,6 +2,7 @@
 import "../../styles/search.css";
 
 import MobileSearchIsland from "./MobileSearchIsland";
+import MobileOnly from "../media/MobileOnly.astro";
 ---
 
 <button
@@ -29,4 +30,6 @@ import MobileSearchIsland from "./MobileSearchIsland";
 		</svg>
 	</span>
 </button>
-<MobileSearchIsland client:media="(max-width: 640px)" />
+<MobileOnly>
+	<MobileSearchIsland client:idle />
+</MobileOnly>
