@@ -6,6 +6,7 @@ import { usePagefind } from "./usePagefind";
 export default function DesktopSearch() {
 	const [isOpen, setIsOpen] = useState(false);
 	const { results, status, search, clear } = usePagefind(5);
+	const containerRef = useRef<HTMLDivElement>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
 
 	const close = useCallback(() => {
@@ -19,6 +20,7 @@ export default function DesktopSearch() {
 
 	const open = useCallback(() => {
 		setIsOpen(true);
+		containerRef.current?.focus();
 		setTimeout(() => inputRef.current?.focus(), 150);
 	}, []);
 
@@ -37,9 +39,17 @@ export default function DesktopSearch() {
 				/>
 			)}
 			<div
-				ref={(el) => el?.setAttribute("data-ready", "")}
+				ref={(el) => {
+					containerRef.current = el;
+					el?.setAttribute("data-ready", "");
+				}}
 				id="search-container"
 				className={`search-container${isOpen ? " search-open" : ""}`}
+				style={isOpen ? { position: "relative", zIndex: 300 } : undefined}
+				tabIndex={-1}
+				onKeyDown={(e) => {
+					if (e.key === "Escape") close();
+				}}
 			>
 				<button
 					id="search-toggle"
@@ -82,11 +92,6 @@ export default function DesktopSearch() {
 						placeholder="Search..."
 						autoComplete="off"
 						onChange={(e) => search(e.target.value)}
-						onKeyDown={(e) => {
-							if (e.key === "Escape") {
-								close();
-							}
-						}}
 					/>
 					<button
 						id="search-clear"
