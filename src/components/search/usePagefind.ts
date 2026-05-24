@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 interface SearchResult {
 	url: string;
@@ -66,7 +66,6 @@ export function usePagefind(maxResults: number = 5) {
 					}
 
 					const searchResponse = await pf.search(query);
-
 					if (searchResponse.results.length === 0) {
 						setResults([]);
 						setStatus("no-results");
@@ -104,16 +103,9 @@ export function usePagefind(maxResults: number = 5) {
 		if (debounceRef.current) {
 			clearTimeout(debounceRef.current);
 		}
+
 		setResults([]);
 		setStatus("idle");
-	}, []);
-
-	useEffect(() => {
-		return () => {
-			if (debounceRef.current) {
-				clearTimeout(debounceRef.current);
-			}
-		};
 	}, []);
 
 	return { results, status, search, clear };

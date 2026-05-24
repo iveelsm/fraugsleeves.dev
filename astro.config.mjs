@@ -1,7 +1,4 @@
 /* eslint-disable */
-import path from "node:path";
-import fs from "node:fs";
-
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import { defineConfig, svgoOptimizer } from "astro/config";
 import { fontsIntegration } from "astro-font-loader";
@@ -39,65 +36,6 @@ export default defineConfig({
 		format: "file",
 	},
 	vite: {
-		plugins: [
-			{
-				name: "serve-pagefind",
-				configureServer(server) {
-					const MIME_TYPES = {
-						".js": "application/javascript",
-						".wasm": "application/wasm",
-						".css": "text/css",
-						".json": "application/json",
-					};
-
-					const pagefindDir = path.resolve(
-						process.cwd(),
-						"dist",
-						"pagefind",
-					);
-					server.middlewares.use((req, res, next) => {
-						if (!req.url?.startsWith("/pagefind/")) {
-							return next();
-						}
-
-						let pathname;
-						try {
-							pathname = new URL(req.url, "http://localhost")
-								.pathname;
-						} catch {
-							return next();
-						}
-
-						const relativePath = pathname.slice(
-							"/pagefind/".length,
-						);
-						const filePath = path.resolve(
-							pagefindDir,
-							relativePath,
-						);
-						if (
-							!filePath.startsWith(pagefindDir + path.sep) &&
-							filePath !== pagefindDir
-						) {
-							return next();
-						}
-
-						fs.readFile(filePath, (err, data) => {
-							if (err) {
-								return next();
-							}
-
-							const ext = path.extname(filePath);
-							res.setHeader(
-								"Content-Type",
-								MIME_TYPES[ext] || "application/octet-stream",
-							);
-							res.end(data);
-						});
-					});
-				},
-			},
-		],
 		build: {
 			rollupOptions: {
 				external: ["/pagefind/pagefind.js"],
