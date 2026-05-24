@@ -8,7 +8,6 @@ import MobileNavigationOverlay from "./mobileNavigationOverlay.astro";
 import { NAVIGATION_ITEMS } from "../../constants";
 import { LogoIcon } from "../../icons";
 import HamburgerMenu from "./HamburgerMenu";
-import MobileOnly from "../media/MobileOnly.astro";
 
 const currentPath = Astro.url.pathname;
 ---
@@ -32,6 +31,4 @@ const currentPath = Astro.url.pathname;
 	navItems={NAVIGATION_ITEMS}
 />
 
-<MobileOnly>
-	<HamburgerMenu client:idle />
-</MobileOnly>
+<HamburgerMenu client:idle />

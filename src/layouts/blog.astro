@@ -8,7 +8,6 @@ import { BlogHeader } from "../components/blogs";
 import HeadingAnchors from "../components/blogs/HeadingAnchors";
 import { Sidebar } from "../components/toc";
 import ScrollSpy from "../components/toc/ScrollSpy";
-import DesktopOnly from "../components/media/DesktopOnly.astro";
 
 const { frontmatter, headings } = Astro.props;
 const { minutesRead } = frontmatter;
@@ -55,8 +54,6 @@ const article = {
 		</main>
 	</div>
 
-	<DesktopOnly>
-		<ScrollSpy client:idle />
-	</DesktopOnly>
+	<ScrollSpy client:idle />
 	<HeadingAnchors client:idle />
 </Searchable>
