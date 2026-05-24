@@ -48,9 +48,17 @@ const { title, date, description, minutesRead, author, editors, tags } =
 					<strong>Published:</strong>
 					{new Date(date).toDateString()}
 				</span>
-				<ul class="post-tags">
-					{tags.map((tag) => <li class="tag">#{tag}</li>)}
-				</ul>
+				<div class="post-tags">
+					{tags.map((tag) => (
+						<a
+							href={`/blog?tag=${encodeURIComponent(tag)}`}
+							class="post-tag"
+							data-tag={tag}
+						>
+							{tag}
+						</a>
+					))}
+				</div>
 			</div>
 		</div>
 	</div>
