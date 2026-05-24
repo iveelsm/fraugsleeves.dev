@@ -12,6 +12,10 @@ on:
         branches:
             - main
 
+concurrency:
+    group: build-${{ github.ref }}
+    cancel-in-progress: true
+
 jobs:
     build:
         name: Astro Build
