@@ -11,13 +11,14 @@ on:
             - synchronize
             - reopened
 
+concurrency:
+    group: deploy-staging
+    cancel-in-progress: true
+
 jobs:
     deploy:
         name: Deploy to Staging
         runs-on: ubuntu-latest
-        concurrency:
-            group: deploy-staging-${{ github.event.pull_request.number }}
-            cancel-in-progress: true
         if: github.actor == 'iveelsm'
         steps:
             - name: Checkout
