@@ -2,8 +2,6 @@
    Navigation Component Styles
    =========================================== */
 
-@import "./base.css";
-
 .toolbar {
 	position: sticky;
 	top: 0;

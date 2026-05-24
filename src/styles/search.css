@@ -1,7 +1,6 @@
 /* ===========================================
    Search Component Styles
    =========================================== */
-@import "./base.css";
 
 .search-container {
 	display: flex;
