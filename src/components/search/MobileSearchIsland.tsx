@@ -3,7 +3,7 @@ import { useCallback, useRef, useState } from "react";
 import { CloseIcon, SearchIcon } from "./icons";
 import { usePagefind } from "./usePagefind";
 
-export default function MobileSearch() {
+export default function MobileSearchIsland() {
 	const [isOpen, setIsOpen] = useState(false);
 	const { results, status, search, clear } = usePagefind(10);
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -45,10 +45,7 @@ export default function MobileSearch() {
 
 	return (
 		<div ref={wrapperRef}>
-			<div
-				id="search-overlay"
-				className="search-overlay active"
-			>
+			<div id="search-overlay" className="search-overlay active">
 				<div className="search-overlay-container">
 					<div className="search-overlay-header">
 						<h1 className="search-overlay-title">Search</h1>

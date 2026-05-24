@@ -3,7 +3,7 @@ import { useCallback, useRef, useState } from "react";
 import { CloseIcon, SearchIcon } from "./icons";
 import { usePagefind } from "./usePagefind";
 
-export default function DesktopSearch() {
+export default function DesktopSearchIsland() {
 	const [isOpen, setIsOpen] = useState(false);
 	const { results, status, search, clear } = usePagefind(5);
 	const inputRef = useRef<HTMLInputElement>(null);
