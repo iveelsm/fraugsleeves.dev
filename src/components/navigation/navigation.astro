@@ -31,4 +31,4 @@ const currentPath = Astro.url.pathname;
 	navItems={NAVIGATION_ITEMS}
 />
 
-<HamburgerMenu client:idle />
+<HamburgerMenu client:media="(max-width: 640px)" />
