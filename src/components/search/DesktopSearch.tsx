@@ -45,7 +45,9 @@ export default function DesktopSearch() {
 				}}
 				id="search-container"
 				className={`search-container${isOpen ? " search-open" : ""}`}
-				style={isOpen ? { position: "relative", zIndex: 300 } : undefined}
+				style={
+					isOpen ? { position: "relative", zIndex: 300 } : undefined
+				}
 				tabIndex={-1}
 				onKeyDown={(e) => {
 					if (e.key === "Escape") close();
