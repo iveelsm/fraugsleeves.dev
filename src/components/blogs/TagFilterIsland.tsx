@@ -58,7 +58,7 @@ function applyTagFilter() {
 	});
 }
 
-export default function TagFilter() {
+export default function TagFilterIsland() {
 	useEffect(() => {
 		applyTagFilter();
 
