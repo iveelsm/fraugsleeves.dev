@@ -12,6 +12,8 @@ export default function MobileSearch() {
 	const close = useCallback(() => {
 		setIsOpen(false);
 		document.body.style.overflow = prevOverflowRef.current;
+		const toggle = document.getElementById("mobile-search-toggle");
+		toggle?.setAttribute("aria-expanded", "false");
 		clear();
 
 		if (inputRef.current) {
@@ -23,26 +25,29 @@ export default function MobileSearch() {
 		setIsOpen(true);
 		prevOverflowRef.current = document.body.style.overflow;
 		document.body.style.overflow = "hidden";
+		const toggle = document.getElementById("mobile-search-toggle");
+		toggle?.setAttribute("aria-expanded", "true");
 		setTimeout(() => inputRef.current?.focus(), 150);
 	}, []);
 
-	return (
-		<div ref={(el) => el?.setAttribute("data-ready", "")}>
-			<button
-				id="mobile-search-toggle"
-				className="search-toggle"
-				type="button"
-				aria-label="Open search"
-				aria-expanded={isOpen}
-				aria-controls="search-overlay"
-				onClick={open}
-			>
-				<SearchIcon width={18} height={18} />
-			</button>
+	const wrapperRef = useCallback(
+		(el: HTMLDivElement | null) => {
+			if (!el) return;
+			const toggle = document.getElementById("mobile-search-toggle");
+			toggle?.addEventListener("click", open);
+		},
+		[open],
+	);
 
+	if (!isOpen) {
+		return <div ref={wrapperRef} />;
+	}
+
+	return (
+		<div ref={wrapperRef}>
 			<div
 				id="search-overlay"
-				className={`search-overlay${isOpen ? " active" : ""}`}
+				className="search-overlay active"
 			>
 				<div className="search-overlay-container">
 					<div className="search-overlay-header">
