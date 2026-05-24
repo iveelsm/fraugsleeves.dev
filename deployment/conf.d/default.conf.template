@@ -34,6 +34,8 @@ server {
 		include includes/security-headers.conf;
 		try_files $uri $uri.html $uri/ =404;
 		add_header Cache-Control "public, max-age=0, must-revalidate";
+		add_header Link "</_astro/FontLoader.${BUILD_HASH}.css>; rel=preload; as=style";
+		add_header Link "</_astro/_slug_.${BUILD_HASH}.css>; rel=preload; as=style";
 		add_header Link "</fonts/BerkeleyMonoV2-Variable.woff2>; rel=preload; as=font; type=\"font/woff2\"; crossorigin";
 		add_header Link "</fonts/EBGaramond-SemiBold.woff2>; rel=preload; as=font; type=\"font/woff2\"; crossorigin";
 	}

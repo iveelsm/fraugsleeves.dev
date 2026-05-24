@@ -39,6 +39,15 @@ export default defineConfig({
 		build: {
 			rollupOptions: {
 				external: ["/pagefind/pagefind.js"],
+				output: {
+					assetFileNames: (assetInfo) => {
+						const hash = process.env.BUILD_HASH;
+						if (hash && assetInfo.names?.some((n) => n.endsWith(".css"))) {
+							return `_astro/[name].${hash}.css`;
+						}
+						return "_astro/[name].[hash][extname]";
+					},
+				},
 			},
 		},
 	},

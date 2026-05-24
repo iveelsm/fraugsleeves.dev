@@ -31,3 +31,6 @@ pnpm-debug.log*
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Generated from templates
+deployment/conf.d/default.conf

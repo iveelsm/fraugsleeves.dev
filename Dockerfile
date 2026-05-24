@@ -12,15 +12,24 @@ RUN --mount=type=secret,id=NPM_TOKEN \
 COPY . .
 
 ARG SITE_URL=https://fraugsleeves.dev
+ARG BUILD_HASH
 ENV SITE_URL=${SITE_URL}
+ENV BUILD_HASH=${BUILD_HASH}
 
 RUN npm run build
+
+FROM alpine:latest AS templates
+
+ARG BUILD_HASH
+
+COPY deployment/conf.d/ /templates/conf.d/
+RUN envsubst '${BUILD_HASH}' < /templates/conf.d/default.conf.template > /templates/conf.d/default.conf
 
 FROM nginx:alpine AS production
 
 COPY --from=build /app/dist /usr/share/nginx/html
 COPY deployment/nginx.conf /etc/nginx/nginx.conf
-COPY deployment/conf.d/ /etc/nginx/conf.d/
+COPY --from=templates /templates/conf.d/default.conf /etc/nginx/conf.d/default.conf
 COPY deployment/includes /etc/nginx/includes/
 
 EXPOSE 80
