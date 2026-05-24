@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export default function ScrollSpy() {
+export default function ScrollSpyIsland() {
 	useEffect(() => {
 		const tocLinks = document.querySelectorAll(".article-toc a");
 		const headings = document.querySelectorAll(

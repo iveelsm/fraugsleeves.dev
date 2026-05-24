@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export default function HamburgerMenu() {
+export default function HamburgerMenuIsland() {
 	useEffect(() => {
 		const hamburgerBtn = document.getElementById("hamburger-btn");
 		const mobileNavOverlay = document.getElementById("mobile-nav-overlay");

@@ -5,9 +5,9 @@ import ArticleStructuredData from "../components/structured-data/ArticleStructur
 import Searchable from "./searchable.astro";
 
 import { BlogHeader } from "../components/blogs";
-import HeadingAnchors from "../components/blogs/HeadingAnchors";
+import HeadingAnchorsIsland from "../components/blogs/HeadingAnchorsIsland";
 import { Sidebar } from "../components/toc";
-import ScrollSpy from "../components/toc/ScrollSpy";
+import ScrollSpyIsland from "../components/toc/ScrollSpyIsland";
 
 const { frontmatter, headings } = Astro.props;
 const { minutesRead } = frontmatter;
@@ -54,6 +54,6 @@ const article = {
 		</main>
 	</div>
 
-	<ScrollSpy client:idle />
-	<HeadingAnchors client:idle />
+	<ScrollSpyIsland client:media="(min-width: 641px)" />
+	<HeadingAnchorsIsland client:idle />
 </Searchable>

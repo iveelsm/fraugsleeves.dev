@@ -1,7 +1,6 @@
 /* ===========================================
    Upcoming Page Styles
    =========================================== */
-@import "./base.css";
 
 .upcoming-container {
 	display: flex;

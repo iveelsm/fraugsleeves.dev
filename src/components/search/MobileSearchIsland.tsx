@@ -3,7 +3,7 @@ import { useCallback, useRef, useState } from "react";
 import { CloseIcon, SearchIcon } from "./icons";
 import { usePagefind } from "./usePagefind";
 
-export default function MobileSearch() {
+export default function MobileSearchIsland() {
 	const [isOpen, setIsOpen] = useState(false);
 	const { results, status, search, clear } = usePagefind(10);
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -12,6 +12,8 @@ export default function MobileSearch() {
 	const close = useCallback(() => {
 		setIsOpen(false);
 		document.body.style.overflow = prevOverflowRef.current;
+		const toggle = document.getElementById("mobile-search-toggle");
+		toggle?.setAttribute("aria-expanded", "false");
 		clear();
 
 		if (inputRef.current) {
@@ -23,27 +25,27 @@ export default function MobileSearch() {
 		setIsOpen(true);
 		prevOverflowRef.current = document.body.style.overflow;
 		document.body.style.overflow = "hidden";
+		const toggle = document.getElementById("mobile-search-toggle");
+		toggle?.setAttribute("aria-expanded", "true");
 		setTimeout(() => inputRef.current?.focus(), 150);
 	}, []);
 
-	return (
-		<div ref={(el) => el?.setAttribute("data-ready", "")}>
-			<button
-				id="mobile-search-toggle"
-				className="search-toggle"
-				type="button"
-				aria-label="Open search"
-				aria-expanded={isOpen}
-				aria-controls="search-overlay"
-				onClick={open}
-			>
-				<SearchIcon width={18} height={18} />
-			</button>
+	const wrapperRef = useCallback(
+		(el: HTMLDivElement | null) => {
+			if (!el) return;
+			const toggle = document.getElementById("mobile-search-toggle");
+			toggle?.addEventListener("click", open);
+		},
+		[open],
+	);
 
-			<div
-				id="search-overlay"
-				className={`search-overlay${isOpen ? " active" : ""}`}
-			>
+	if (!isOpen) {
+		return <div ref={wrapperRef} />;
+	}
+
+	return (
+		<div ref={wrapperRef}>
+			<div id="search-overlay" className="search-overlay active">
 				<div className="search-overlay-container">
 					<div className="search-overlay-header">
 						<h1 className="search-overlay-title">Search</h1>

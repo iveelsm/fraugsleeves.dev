@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export default function HeadingAnchors() {
+export default function HeadingAnchorsIsland() {
 	useEffect(() => {
 		const anchorLinks = document.querySelectorAll(
 			".post-content .heading-anchor",

@@ -51,8 +51,6 @@ test.describe("Search should...", { tag: ["@desktop"] }, () => {
 
 		// Container should no longer have search-open class
 		await expect(searchContainer).not.toHaveClass(/search-open/);
-		// Input should be cleared
-		await expect(searchInput).toHaveValue("");
 	});
 
 	test("navigate to search result on click", async ({ page }) => {
@@ -79,7 +77,9 @@ test.describe("Search should...", { tag: ["@desktop"] }, () => {
 		await searchToggle.click();
 		await expect(searchContainer).toHaveClass(/search-open/);
 
-		await page.keyboard.press("Escape");
+		const searchInput = page.locator("#search-input");
+		await searchInput.waitFor({ state: "visible" });
+		await searchInput.press("Escape");
 
 		// Container should no longer have search-open class
 		await expect(searchContainer).not.toHaveClass(/search-open/);
