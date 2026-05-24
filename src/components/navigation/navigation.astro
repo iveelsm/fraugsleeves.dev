@@ -1,7 +1,6 @@
 ---
 import "../../styles/navigation.css";
 
-import MobileOnly from "../media/MobileOnly.astro";
 import DesktopNavigation from "./desktopNavigation.astro";
 import MobileNavigation from "./mobileNavigation.astro";
 import MobileNavigationOverlay from "./mobileNavigationOverlay.astro";
@@ -9,6 +8,7 @@ import MobileNavigationOverlay from "./mobileNavigationOverlay.astro";
 import { NAVIGATION_ITEMS } from "../../constants";
 import { LogoIcon } from "../../icons";
 import HamburgerMenu from "./HamburgerMenu";
+import MobileOnly from "../media/MobileOnly.astro";
 
 const currentPath = Astro.url.pathname;
 ---
