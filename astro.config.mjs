@@ -9,7 +9,7 @@ import react from "@astrojs/react";
 
 import rehypeNumericReferences from "./src/rehype-numeric-references";
 import { remarkReadingTime } from "./src/remark-reading-time";
-import { IVEELSM_FONTS_FILTER } from "./src/constants";
+import { FONT_OUTPUT } from "./src/constants";
 
 const site = process.env.SITE_URL || "https://fraugsleeves.dev";
 
@@ -19,8 +19,35 @@ export default defineConfig({
 	integrations: [
 		react(),
 		fontsIntegration({
-			packages: ["@iveelsm/fonts"],
-			filter: IVEELSM_FONTS_FILTER,
+			outputDirectory: FONT_OUTPUT,
+			fonts: [
+				{
+					family: "Berkeley Mono",
+					source: { type: "package", package: "@iveelsm/fonts" },
+					variants: [
+						{
+							name: "BerkeleyMonoV2-Variable",
+							weight: [100, 900],
+							styles: ["normal", "oblique"],
+						},
+					],
+				},
+				{
+					family: "EB Garamond",
+					source: { type: "package", package: "@iveelsm/fonts" },
+					variants: [
+						{
+							name: "EBGaramond-SemiBold",
+							weight: 600,
+							styles: ["normal"]
+						},
+						{ name: "EBGaramond-Bold",
+							weight: 700,
+							styles: ["normal"]
+						},
+					],
+				},
+			],
 		}),
 		pagefind(),
 		sitemap({

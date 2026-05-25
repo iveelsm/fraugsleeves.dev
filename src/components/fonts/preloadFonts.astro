@@ -1,0 +1,35 @@
+---
+import FontLoader from "astro-font-loader/FontLoader.astro";
+import { FONTS, FONT_OUTPUT } from "../../constants";
+
+const berkeleyMono = FONTS.find((f) => f.family === "Berkeley Mono")!;
+const ebGaramond = FONTS.find((f) => f.family === "EB Garamond")!;
+
+const ebGaramondSemiBold = ebGaramond.variants.find((v) => v.name === "EBGaramond-SemiBold")!;
+const ebGaramondBold = ebGaramond.variants.find((v) => v.name === "EBGaramond-Bold")!;
+---
+
+{berkeleyMono.variants.map((variant) => (
+	<FontLoader
+		variant={variant}
+		source={berkeleyMono.source}
+		family={berkeleyMono.family}
+		outputDirectory={FONT_OUTPUT}
+		mode="preload"
+	/>
+))}
+<FontLoader
+	variant={ebGaramondSemiBold}
+	source={ebGaramond.source}
+	family={ebGaramond.family}
+	outputDirectory={FONT_OUTPUT}
+	mode="preload"
+/>
+<FontLoader
+	variant={ebGaramondBold}
+	source={ebGaramond.source}
+	family={ebGaramond.family}
+	outputDirectory={FONT_OUTPUT}
+	mode="preload"
+	media="(min-width: 641px)"
+/>
