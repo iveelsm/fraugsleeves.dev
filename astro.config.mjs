@@ -26,7 +26,7 @@ export default defineConfig({
 					source: { type: "package", package: "@iveelsm/fonts" },
 					variants: [
 						{
-							name: "BerkeleyMonoV2-Variable",
+							name: "Berkeley Mono v2 Variable",
 							weight: [100, 900],
 							styles: ["normal", "oblique"],
 						},
@@ -37,13 +37,14 @@ export default defineConfig({
 					source: { type: "package", package: "@iveelsm/fonts" },
 					variants: [
 						{
-							name: "EBGaramond-SemiBold",
+							name: "EB Garamond",
 							weight: 600,
-							styles: ["normal"]
+							styles: ["normal"],
 						},
-						{ name: "EBGaramond-Bold",
+						{
+							name: "EB Garamond",
 							weight: 700,
-							styles: ["normal"]
+							styles: ["normal"],
 						},
 					],
 				},

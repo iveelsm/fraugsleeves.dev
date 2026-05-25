@@ -10,7 +10,6 @@ const DEFAULT_ALT =
 	"A black and white image of a majestic Tyrannosaurus Rex symbolizing how cool this blog is";
 const FONT_OUTPUT = "fonts/";
 
-
 export {
 	SOCIAL_LINKS,
 	NAVIGATION_ITEMS,

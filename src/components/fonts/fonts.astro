@@ -1,16 +1,10 @@
 ---
 import FontLoader from "astro-font-loader/FontLoader.astro";
-import { FONTS, FONT_OUTPUT } from "../../constants";
+import { FONT_OUTPUT } from "../../constants";
+import { FONT_CONFIGURATION } from "./fontConfiguration";
 ---
 
-{FONTS.flatMap((font) =>
-	font.variants.map((variant) => (
-		<FontLoader
-			variant={variant}
-			source={font.source}
-			family={font.family}
-			outputDirectory={FONT_OUTPUT}
-			mode="css"
-		/>
-	))
-)}
+<FontLoader
+	fonts={FONT_CONFIGURATION}
+	outputDirectory={FONT_OUTPUT}
+/>
