@@ -2,7 +2,7 @@
 import "../styles/blog-list.css";
 
 import { BlogPosts, BlogFilterHeader } from "../components/blogs";
-import TagFilterIsland from "../components/blogs/TagFilterIsland";
+import TagFilter from "../components/blogs/TagFilter.astro";
 import { Standard } from "../layouts";
 ---
 
@@ -12,5 +12,5 @@ import { Standard } from "../layouts";
 		<BlogFilterHeader />
 		<BlogPosts />
 	</div>
-	<TagFilterIsland />
+	<TagFilter />
 </Standard>
