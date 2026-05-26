@@ -5,7 +5,11 @@ const FONT_CONFIGURATION = [
 		family: "Berkeley Mono",
 		source: { type: "package" as const, package: "@iveelsm/fonts" },
 		variants: [
-			{ name: "Berkeley Mono v2 Variable", weight: [100, 900], styles: ["normal", "oblique"] },
+			{
+				name: "Berkeley Mono v2 Variable",
+				weight: [100, 900],
+				styles: ["normal", "oblique"],
+			},
 		],
 	},
 	{
@@ -18,6 +22,4 @@ const FONT_CONFIGURATION = [
 	},
 ] as FontConfig[];
 
-export {
-	FONT_CONFIGURATION
-}
+export { FONT_CONFIGURATION };
