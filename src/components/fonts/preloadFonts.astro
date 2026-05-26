@@ -1,0 +1,16 @@
+---
+import FontLoader from "astro-font-loader/FontLoader.astro";
+
+import { FONT_OUTPUT } from "../../constants";
+import { FONT_CONFIGURATION } from "./fontConfiguration";
+---
+
+<FontLoader
+	fonts={FONT_CONFIGURATION}
+	outputDirectory={FONT_OUTPUT}
+	preload={[
+		{ variant: "Berkeley Mono v2 Variable" },
+		{ variant: "EB Garamond", weight: 600 },
+		{ variant: "EB Garamond", weight: 700, media: "(min-width: 641px)" },
+	]}
+/>
