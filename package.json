@@ -9,6 +9,7 @@
 	"scripts": {
 		"dev": "astro dev",
 		"build": "astro build",
+		"postbuild": "node scripts/generate-early-hints.js",
 		"preview": "astro preview",
 		"lint": "prettier --check . && eslint .",
 		"lint:fix": "prettier --write . && eslint . --fix",

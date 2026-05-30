@@ -1,5 +1,6 @@
 # build output
 dist/
+deployment/includes/early-hints.conf
 
 # generated types
 .astro/
