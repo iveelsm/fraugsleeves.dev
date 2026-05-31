@@ -62,6 +62,7 @@ export default defineConfig({
 	],
 	build: {
 		format: "file",
+		inlineStylesheets: "always",
 	},
 	vite: {
 		build: {
