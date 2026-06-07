@@ -1,18 +1,16 @@
 {
 	"ci": {
 		"collect": {
-			"startServerCommand": "npx astro preview --port 8080",
-			"startServerReadyPattern": "Local",
 			"url": [
-				"http://localhost:8080/",
-				"http://localhost:8080/blog",
-				"http://localhost:8080/blog/epoll",
-				"http://localhost:8080/blog/golang-context",
-				"http://localhost:8080/blog/libuv",
-				"http://localhost:8080/wayfinders",
-				"http://localhost:8080/wayfinders/nodejs",
-				"http://localhost:8080/blog?tag=polling",
-				"http://localhost:8080/tags"
+				"https://staging.fraugsleeves.dev/",
+				"https://staging.fraugsleeves.dev/blog",
+				"https://staging.fraugsleeves.dev/blog/epoll",
+				"https://staging.fraugsleeves.dev/blog/golang-context",
+				"https://staging.fraugsleeves.dev/blog/libuv",
+				"https://staging.fraugsleeves.dev/wayfinders",
+				"https://staging.fraugsleeves.dev/wayfinders/nodejs",
+				"https://staging.fraugsleeves.dev/blog?tag=polling",
+				"https://staging.fraugsleeves.dev/tags"
 			],
 			"numberOfRuns": 3
 		},
