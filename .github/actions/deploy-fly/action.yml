@@ -1,0 +1,46 @@
+name: Deploy to Fly.io
+description: Deploy the application to a Fly.io environment and purge Cloudflare cache
+
+inputs:
+    fly-api-token:
+        description: Fly.io API token
+        required: true
+    npm-token:
+        description: NPM token for private package installs
+        required: true
+    cloudflare-zone-id:
+        description: Cloudflare Zone ID
+        required: true
+    cloudflare-api-token:
+        description: Cloudflare API token
+        required: true
+    cloudflare-hosts:
+        description: JSON array of hosts to purge from Cloudflare cache
+        required: true
+    fly-config:
+        description: Path to Fly.io config file (defaults to fly.toml)
+        required: true
+    site-url:
+        description: Site URL build arg passed to the Dockerfile
+        required: true
+
+runs:
+    using: composite
+    steps:
+        - name: Setup Fly
+          uses: superfly/flyctl-actions/setup-flyctl@fc53c09e1bc3be6f54706524e3b82c4f462f77be # 1.5
+
+        - name: Deploy
+          shell: bash
+          run: |
+              flyctl deploy --no-cache --remote-only --build-secret NPM_TOKEN=${{ inputs.npm-token }} --config ${{ inputs.fly-config }} --build-arg SITE_URL=${{ inputs.site-url }}
+          env:
+              FLY_API_TOKEN: ${{ inputs.fly-api-token }}
+
+        - name: Purge Cloudflare Cache
+          shell: bash
+          run: |
+              curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ inputs.cloudflare-zone-id }}/purge_cache" \
+                -H "Authorization: Bearer ${{ inputs.cloudflare-api-token }}" \
+                -H "Content-Type: application/json" \
+                --data '{"hosts": ${{ inputs.cloudflare-hosts }}}'
