@@ -1,13 +1,29 @@
-{
 	extends: ["config:recommended", "helpers:pinGitHubActionDigests"],
 	minimumReleaseAge: "14 days",
 	dependencyDashboard: true,
 	packageRules: [
 		{
-			groupName: "all npm patch dependencies",
-			description: "Regular npm patch updates",
+			groupName: "npm dependencies",
+			description: "Bundle all non-major npm updates into one weekly update",
 			matchDatasources: ["npm"],
-			matchUpdateTypes: ["patch"],
+			matchUpdateTypes: ["minor", "patch", "pin", "digest"],
+			schedule: ["before 9am on tuesday"],
+		},
+		{
+			groupName: "github actions",
+			description: "Bundle all GitHub Actions updates into one weekly update",
+			matchManagers: ["github-actions"],
+			matchUpdateTypes: ["major", "minor", "patch", "pin", "digest"],
+			schedule: ["before 9am on tuesday"],
+		},
+		{
+			description: "Major updates flow normally, gated only by the minimumReleaseAge",
+			matchUpdateTypes: ["major"],
+		},
+		{
+			groupName: "docker and node updates",
+			description: "Bundle Docker image and Node.js version updates together",
+			matchDatasources: ["docker", "node"],
 		},
 		{
 			// See: https://github.com/renovatebot/renovate/discussions/23889
@@ -25,4 +41,3 @@
 			minimumReleaseAge: "0 days",
 		},
 	],
-}
