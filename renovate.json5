@@ -24,10 +24,9 @@
 		{
 			groupName: "docker and node updates",
 			description: "Bundle Docker image and Node.js version updates together",
-			matchDatasources: ["docker", "node"],
+			matchDatasources: ["docker", "node-version"],
 		},
 		{
-			// See: https://github.com/renovatebot/renovate/discussions/23889
 			description: "Disable all Playwright updates",
 			matchPackageNames: [
 				"@playwright/test",
