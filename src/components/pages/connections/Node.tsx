@@ -1,8 +1,7 @@
-import type { CSSProperties } from 'react';
+import type { CSSProperties } from "react";
 
-import { flashType } from './flash.ts';
-import { barToneClass, connModifierClass, nodeModifierClass } from './cssModifiers.ts';
-
+import { barToneClass, connModifierClass, nodeModifierClass } from "./cssModifiers.ts";
+import { flashType } from "./flash.ts";
 
 interface Conn {
 	id: number;
@@ -55,9 +54,7 @@ export function Node(props: NodeProps) {
 									: `idle ${(idleFor / 1000).toFixed(1)}s / ${idleTimeoutMs / 1000}s`
 							}
 						>
-							<span
-								className={`csim-conn-dot ${dead ? "csim-bg-red csim-conn-dot--dead" : "csim-bg-green"}`}
-							/>
+							<span className={`csim-conn-dot ${dead ? "csim-bg-red csim-conn-dot--dead" : "csim-bg-green"}`} />
 							<span className="csim-conn-track">
 								<span
 									className={`csim-conn-bar ${barToneClass(dead, freshness)}`}

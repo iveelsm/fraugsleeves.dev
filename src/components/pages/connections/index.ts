@@ -1,5 +1,3 @@
 import ConnectionSimulator from "./ConnectionSimulator";
 
-export {
-	ConnectionSimulator
-}
+export { ConnectionSimulator };

@@ -1,7 +1,7 @@
-import { useRef, useState } from 'react';
+import { useRef, useState } from "react";
 
-import type { SimulatorConfig, SimState, } from './state.ts';
-import { fireRequest, makeState } from './state.ts';
+import type { SimulatorConfig, SimState } from "./state.ts";
+import { fireRequest, makeState } from "./state.ts";
 
 const DEFAULTS: SimulatorConfig = {
 	nodes: 4,

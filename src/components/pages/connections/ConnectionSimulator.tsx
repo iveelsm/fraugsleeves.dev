@@ -1,11 +1,11 @@
-import { formatClock } from './formatClock.ts';
-import { Header } from './Header.tsx';
-import { LegendItem } from './LegendItem.tsx';
-import { LoadBalancer } from './LoadBalancer.tsx';
-import { Node } from './Node.tsx';
-import { Stat } from './Stat.tsx';
-import type { SimulatorConfig } from './state.ts';
-import { useConnectionSimulator } from './useConnectionSimulator.ts';
+import { formatClock } from "./formatClock.ts";
+import { Header } from "./Header.tsx";
+import { LegendItem } from "./LegendItem.tsx";
+import { LoadBalancer } from "./LoadBalancer.tsx";
+import { Node } from "./Node.tsx";
+import { Stat } from "./Stat.tsx";
+import type { SimulatorConfig } from "./state.ts";
+import { useConnectionSimulator } from "./useConnectionSimulator.ts";
 
 export default function ConnectionSimulator(props: Partial<SimulatorConfig>) {
 	const hook = useConnectionSimulator(props);
@@ -23,7 +23,11 @@ export default function ConnectionSimulator(props: Partial<SimulatorConfig>) {
 				<Stat label="used pool" value={state.stats.poolUses} />
 				<Stat label="failed" value={state.stats.failures} tone="red" />
 				<Stat label="fail rate (pool)" value={`${metadata.poolFailPct}%`} tone={state.stats.failures > 0 ? "red" : "muted"} />
-				<Stat label="dead now" value={`${metadata.deadNow}/${metadata.totalConns}`} tone={metadata.deadNow > 0 ? "amber" : "green"} />
+				<Stat
+					label="dead now"
+					value={`${metadata.deadNow}/${metadata.totalConns}`}
+					tone={metadata.deadNow > 0 ? "amber" : "green"}
+				/>
 			</div>
 
 			<LoadBalancer requestsPerSecond={config.requestsPerSecond} lastDispatch={state.lastDispatch} now={metadata.now} />
