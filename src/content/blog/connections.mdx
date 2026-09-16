@@ -1,0 +1,20 @@
+---
+layout: ../../layouts/blog.astro
+title: "The probability of connection failures"
+pubDate: 2026-09-15
+shortDescription: "Explores the probability of connection failures in distributed systems."
+description: "Discussing the impact of connection failures for databases by exploring the probability of connection failures in distributed systems against a variety of connection modes, throughput and refresh intervals."
+author: "Mikey Sleevi"
+image:
+  url: "https://fraugsleeves.dev/images/epoll_header.png"
+  alt: "A diagram of the relationship between process file descriptor tables, file tables and inode tables. It displays four tables of varying colors, two process file descriptor tables and one for the each of the remaining two types. It establishes the major relationships, drawing arrows between shared file descriptors resulting from forks, individual file descriptors and the relationship between file and inode on disk."
+tags: ["node.js", "asynchronous", "polling", "linux", "c", "how-it-works"]
+---
+
+import ConnectionSimulator from '../../components/pages/connections/ConnectionSimulator.tsx';
+
+Test above
+
+<ConnectionSimulator client:only="react" />
+
+Test below
