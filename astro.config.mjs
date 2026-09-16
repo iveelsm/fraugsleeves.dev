@@ -6,6 +6,7 @@ import sitemap from "@astrojs/sitemap";
 import pagefind from "astro-pagefind";
 import rehypeSlug from "rehype-slug";
 import react from "@astrojs/react";
+import mdx from "@astrojs/mdx";
 
 import rehypeNumericReferences from "./src/rehype-numeric-references";
 import { remarkReadingTime } from "./src/remark-reading-time";
@@ -18,6 +19,7 @@ export default defineConfig({
 	site,
 	integrations: [
 		react(),
+		mdx(),
 		fontsIntegration({
 			outputDirectory: FONT_OUTPUT,
 			fonts: [
