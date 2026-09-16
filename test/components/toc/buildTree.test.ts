@@ -89,12 +89,7 @@ describe("buildTree", () => {
 
 	describe("complex mixed structures", () => {
 		it("should handle h2, h3, h3, h2 pattern", () => {
-			const headings = [
-				h(2, "First Section"),
-				h(3, "Subsection A"),
-				h(3, "Subsection B"),
-				h(2, "Second Section"),
-			];
+			const headings = [h(2, "First Section"), h(3, "Subsection A"), h(3, "Subsection B"), h(2, "Second Section")];
 			const result = buildTree(headings);
 
 			expect(result).toHaveLength(2);
@@ -105,13 +100,7 @@ describe("buildTree", () => {
 		});
 
 		it("should handle h2, h3, h4, h3, h2 pattern", () => {
-			const headings = [
-				h(2, "Section One"),
-				h(3, "Sub One"),
-				h(4, "Deep One"),
-				h(3, "Sub Two"),
-				h(2, "Section Two"),
-			];
+			const headings = [h(2, "Section One"), h(3, "Sub One"), h(4, "Deep One"), h(3, "Sub Two"), h(2, "Section Two")];
 			const result = buildTree(headings);
 
 			expect(result).toHaveLength(2);
@@ -191,15 +180,7 @@ describe("buildTree", () => {
 			expect(totalInTree).toBe(headings.length);
 
 			const texts = collectTexts(result);
-			expect(texts).toEqual([
-				"Section 1",
-				"Sub 1.1",
-				"Sub 1.1.1",
-				"Sub 1.1.2",
-				"Sub 1.2",
-				"Section 2",
-				"Sub 2.1",
-			]);
+			expect(texts).toEqual(["Section 1", "Sub 1.1", "Sub 1.1.1", "Sub 1.1.2", "Sub 1.2", "Section 2", "Sub 2.1"]);
 		});
 
 		it("should handle consecutive deep nesting without duplication", () => {

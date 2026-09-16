@@ -92,10 +92,7 @@ export default function MobileSearchIsland() {
 						))}
 					</div>
 					<div className="search-overlay-hint">
-						<p>
-							Try searching for topics like &quot;golang&quot;, &quot;microservices&quot;, or
-							&quot;context&quot;
-						</p>
+						<p>Try searching for topics like &quot;golang&quot;, &quot;microservices&quot;, or &quot;context&quot;</p>
 					</div>
 				</div>
 			</div>

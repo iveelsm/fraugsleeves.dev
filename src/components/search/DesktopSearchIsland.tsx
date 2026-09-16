@@ -75,11 +75,7 @@ export default function DesktopSearchIsland() {
 				}}
 				onClick={close}
 			/>
-			<div
-				id="search-input-wrapper"
-				className="search-input-wrapper search-desktop"
-				style={{ position: "relative", zIndex: 300 }}
-			>
+			<div id="search-input-wrapper" className="search-input-wrapper search-desktop" style={{ position: "relative", zIndex: 300 }}>
 				<SearchIcon className="search-input-icon" width={16} height={16} />
 				<input
 					ref={inputRef}
@@ -93,13 +89,7 @@ export default function DesktopSearchIsland() {
 						if (e.key === "Escape") close();
 					}}
 				/>
-				<button
-					id="search-clear"
-					className="search-clear"
-					type="button"
-					aria-label="Close search"
-					onClick={close}
-				>
+				<button id="search-clear" className="search-clear" type="button" aria-label="Close search" onClick={close}>
 					<CloseIcon width={16} height={16} />
 				</button>
 			</div>

@@ -3,9 +3,7 @@ import { getCollection } from "astro:content";
 
 import Card from "./card.astro";
 
-const allWayfinders = (await getCollection("wayfinders")).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+const allWayfinders = (await getCollection("wayfinders")).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 const recentWayfinders = allWayfinders.slice(0, 3);
 ---
