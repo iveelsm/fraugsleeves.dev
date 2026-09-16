@@ -111,23 +111,13 @@ export function Node(props: NodeProps) {
 		<div
 			style={{
 				...sx.node,
-				...(nodeFlash === "fail"
-					? sx.nodeFail
-					: nodeFlash === "hit"
-						? sx.nodeHit
-						: nodeFlash === "bypass"
-							? sx.nodeBypass
-							: {}),
+				...(nodeFlash === "fail" ? sx.nodeFail : nodeFlash === "hit" ? sx.nodeHit : nodeFlash === "bypass" ? sx.nodeBypass : {}),
 			}}
 		>
 			<div style={sx.nodeHeader}>
 				<span style={sx.nodeName}>node-{node.id}</span>
 				<span style={sx.nodeMeta}>
-					{node.failures > 0 && (
-						<span style={{ color: palette.red }}>
-							{node.failures}✕{" "}
-						</span>
-					)}
+					{node.failures > 0 && <span style={{ color: palette.red }}>{node.failures}✕ </span>}
 					{node.requests}
 				</span>
 			</div>
@@ -135,47 +125,26 @@ export function Node(props: NodeProps) {
 				{node.conns.map((conn) => {
 					const idleFor = now - conn.lastUsed;
 					const dead = idleFor > idleTimeoutMs;
-					const freshness = Math.max(
-						0,
-						Math.min(1, 1 - idleFor / idleTimeoutMs),
-					);
+					const freshness = Math.max(0, Math.min(1, 1 - idleFor / idleTimeoutMs));
 					const connFlash = flashType(conn.lastEvent, now);
-					const barColor = dead
-						? palette.faint
-						: freshness > 0.5
-							? palette.green
-							: freshness > 0.2
-								? palette.amber
-								: palette.red;
+					const barColor = dead ? palette.faint : freshness > 0.5 ? palette.green : freshness > 0.2 ? palette.amber : palette.red;
 					return (
 						<div
 							key={conn.id}
 							style={{
 								...sx.conn,
-								...(connFlash === "fail"
-									? sx.connFail
-									: connFlash === "hit"
-										? sx.connHit
-										: {}),
+								...(connFlash === "fail" ? sx.connFail : connFlash === "hit" ? sx.connHit : {}),
 							}}
 							title={
 								dead
-									? `closed by server (idle ${(
-											idleFor / 1000
-										).toFixed(
-											1,
-										)}s) — client doesn't know yet`
-									: `idle ${(idleFor / 1000).toFixed(1)}s / ${
-											idleTimeoutMs / 1000
-										}s`
+									? `closed by server (idle ${(idleFor / 1000).toFixed(1)}s) — client doesn't know yet`
+									: `idle ${(idleFor / 1000).toFixed(1)}s / ${idleTimeoutMs / 1000}s`
 							}
 						>
 							<span
 								style={{
 									...sx.connDot,
-									background: dead
-										? palette.red
-										: palette.green,
+									background: dead ? palette.red : palette.green,
 									...(dead ? sx.connDotDead : {}),
 								}}
 							/>
@@ -188,11 +157,7 @@ export function Node(props: NodeProps) {
 									}}
 								/>
 							</span>
-							{conn.deaths > 0 && (
-								<span style={sx.connDeaths}>
-									{conn.deaths}✕
-								</span>
-							)}
+							{conn.deaths > 0 && <span style={sx.connDeaths}>{conn.deaths}✕</span>}
 						</div>
 					);
 				})}

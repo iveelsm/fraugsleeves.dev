@@ -13,20 +13,8 @@ import { useConnectionSimulator } from "./useConnectionSimulator";
 const SPEEDS = [1, 2, 4, 8];
 
 export default function ConnectionSimulator(props: Partial<SimulatorConfig>) {
-	const {
-		cfg,
-		state,
-		now,
-		deadNow,
-		totalConns,
-		poolFailPct,
-		running,
-		speed,
-		toggleRunning,
-		setSpeed,
-		reset,
-		rootRef,
-	} = useConnectionSimulator(props);
+	const { cfg, state, now, deadNow, totalConns, poolFailPct, running, speed, toggleRunning, setSpeed, reset, rootRef } =
+		useConnectionSimulator(props);
 
 	return (
 		<div ref={rootRef} style={sx.root}>
@@ -45,39 +33,16 @@ export default function ConnectionSimulator(props: Partial<SimulatorConfig>) {
 				<Stat label="sim time" value={formatClock(now)} />
 				<Stat label="requests" value={state.stats.total} />
 				<Stat label="used pool" value={state.stats.poolUses} />
-				<Stat
-					label="failed"
-					value={state.stats.failures}
-					color={palette.red}
-				/>
-				<Stat
-					label="fail rate (pool)"
-					value={`${poolFailPct}%`}
-					color={
-						state.stats.failures > 0 ? palette.red : palette.muted
-					}
-				/>
-				<Stat
-					label="dead now"
-					value={`${deadNow}/${totalConns}`}
-					color={deadNow > 0 ? palette.amber : palette.green}
-				/>
+				<Stat label="failed" value={state.stats.failures} color={palette.red} />
+				<Stat label="fail rate (pool)" value={`${poolFailPct}%`} color={state.stats.failures > 0 ? palette.red : palette.muted} />
+				<Stat label="dead now" value={`${deadNow}/${totalConns}`} color={deadNow > 0 ? palette.amber : palette.green} />
 			</div>
 
-			<LoadBalancer
-				requestsPerSecond={cfg.requestsPerSecond}
-				lastDispatch={state.lastDispatch}
-				now={now}
-			/>
+			<LoadBalancer requestsPerSecond={cfg.requestsPerSecond} lastDispatch={state.lastDispatch} now={now} />
 
 			<div style={sx.nodeRow}>
 				{state.nodes.map((node) => (
-					<Node
-						key={node.id}
-						node={node}
-						now={now}
-						idleTimeoutMs={cfg.idleTimeoutMs}
-					/>
+					<Node key={node.id} node={node} now={now} idleTimeoutMs={cfg.idleTimeoutMs} />
 				))}
 			</div>
 
@@ -85,14 +50,8 @@ export default function ConnectionSimulator(props: Partial<SimulatorConfig>) {
 				<LegendItem color={palette.green} label="fresh" />
 				<LegendItem color={palette.amber} label="aging" />
 				<LegendItem color={palette.red} label="near timeout / failed" />
-				<LegendItem
-					color={palette.faint}
-					label="dead (server closed it)"
-				/>
-				<LegendItem
-					color={palette.blue}
-					label="request bypassed pool"
-				/>
+				<LegendItem color={palette.faint} label="dead (server closed it)" />
+				<LegendItem color={palette.blue} label="request bypassed pool" />
 			</div>
 		</div>
 	);

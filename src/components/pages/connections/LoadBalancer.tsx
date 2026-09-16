@@ -42,12 +42,7 @@ export function LoadBalancer(props: LoadBalancerProps) {
 				load balancer
 				<span style={sx.lbInfo}>
 					round-robin · {props.requestsPerSecond} req/s
-					{lastDispatch && isRecent(lastDispatch.at, now) && (
-						<span style={sx.lbDispatch}>
-							{" "}
-							→ node-{lastDispatch.node}
-						</span>
-					)}
+					{lastDispatch && isRecent(lastDispatch.at, now) && <span style={sx.lbDispatch}> → node-{lastDispatch.node}</span>}
 				</span>
 			</div>
 		</div>

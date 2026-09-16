@@ -21,7 +21,7 @@ const sx: { stat: CSSProperties; value: CSSProperties; label: CSSProperties } = 
 	value: {
 		fontFamily: "var(--font-mono)",
 		fontSize: 15,
-		fontWeight: "var(--font-semibold)"
+		fontWeight: "var(--font-semibold)",
 	},
 	label: {
 		color: "var(--uchu-gray-7)",
@@ -35,12 +35,8 @@ const sx: { stat: CSSProperties; value: CSSProperties; label: CSSProperties } = 
 export function Stat(props: StatProps) {
 	return (
 		<div style={sx.stat}>
-			<div style={{ ...sx.value, color: props.color || DEFAULT_COLOR }}>
-				{props.value}
-			</div>
-			<div style={sx.label}>
-				{props.label}
-			</div>
+			<div style={{ ...sx.value, color: props.color || DEFAULT_COLOR }}>{props.value}</div>
+			<div style={sx.label}>{props.label}</div>
 		</div>
 	);
 }

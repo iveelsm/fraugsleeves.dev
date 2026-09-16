@@ -167,9 +167,7 @@ export function useConnectionSimulator(props?: Partial<SimulatorConfig>) {
 	const now = state.simTime;
 	const deadNow = state.nodes.reduce((acc, n) => acc + n.conns.filter((c) => now - c.lastUsed > cfg.idleTimeoutMs).length, 0);
 	const totalConns = cfg.nodes * cfg.connectionsPerNode;
-	const poolFailPct = state.stats.poolUses > 0
-			? ((state.stats.failures / state.stats.poolUses) * 100).toFixed(1)
-			: "0.0";
+	const poolFailPct = state.stats.poolUses > 0 ? ((state.stats.failures / state.stats.poolUses) * 100).toFixed(1) : "0.0";
 
 	return {
 		cfg,

@@ -9,13 +9,13 @@ const sx: { item: CSSProperties; swatch: CSSProperties } = {
 	item: {
 		display: "inline-flex",
 		alignItems: "center",
-		gap: 5
+		gap: 5,
 	},
 	swatch: {
 		width: 8,
 		height: 8,
 		borderRadius: 2,
-		display: "inline-block"
+		display: "inline-block",
 	},
 };
 

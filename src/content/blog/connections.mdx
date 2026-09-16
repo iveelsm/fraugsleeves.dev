@@ -5,12 +5,12 @@ shortDescription: "Explores the probability of connection failures in distribute
 description: "Discussing the impact of connection failures for databases by exploring the probability of connection failures in distributed systems against a variety of connection modes, throughput and refresh intervals."
 author: "Mikey Sleevi"
 image:
-  url: "https://fraugsleeves.dev/images/epoll_header.png"
-  alt: "A diagram of the relationship between process file descriptor tables, file tables and inode tables. It displays four tables of varying colors, two process file descriptor tables and one for the each of the remaining two types. It establishes the major relationships, drawing arrows between shared file descriptors resulting from forks, individual file descriptors and the relationship between file and inode on disk."
+    url: "https://fraugsleeves.dev/images/epoll_header.png"
+    alt: "A diagram of the relationship between process file descriptor tables, file tables and inode tables. It displays four tables of varying colors, two process file descriptor tables and one for the each of the remaining two types. It establishes the major relationships, drawing arrows between shared file descriptors resulting from forks, individual file descriptors and the relationship between file and inode on disk."
 tags: ["node.js", "asynchronous", "polling", "linux", "c", "how-it-works"]
 ---
 
-import ConnectionSimulator from '../../components/pages/connections/ConnectionSimulator.tsx';
+import ConnectionSimulator from "../../components/pages/connections/ConnectionSimulator.tsx";
 
 # Introduction
 
@@ -21,7 +21,6 @@ import ConnectionSimulator from '../../components/pages/connections/ConnectionSi
 ## Least Connections
 
 ## Random
-
 
 # The impact of connection methods
 
@@ -34,4 +33,3 @@ import ConnectionSimulator from '../../components/pages/connections/ConnectionSi
 <ConnectionSimulator client:only="react" />
 
 # Estimating your failure rate
-
