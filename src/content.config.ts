@@ -4,7 +4,7 @@ import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 
 const blog = defineCollection({
-	loader: glob({ pattern: "**/*.md", base: "./src/content/blog" }),
+	loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/blog" }),
 	schema: z.object({
 		title: z.string(),
 		description: z.string(),
@@ -23,7 +23,7 @@ const blog = defineCollection({
 });
 
 const wayfinders = defineCollection({
-	loader: glob({ pattern: "**/*.md", base: "./src/content/wayfinders" }),
+	loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/wayfinders" }),
 	schema: z.object({
 		title: z.string(),
 		description: z.string(),
