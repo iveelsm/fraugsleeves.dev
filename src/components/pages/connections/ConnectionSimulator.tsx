@@ -7,11 +7,12 @@ import { LoadBalancer } from "./LoadBalancer";
 import { Node } from "./Node";
 import { palette } from "./palette";
 import { Stat } from "./Stat";
+import type { SimulatorConfig } from "./useConnectionSimulator";
 import { useConnectionSimulator } from "./useConnectionSimulator";
 
 const SPEEDS = [1, 2, 4, 8];
 
-export default function ConnectionSimulator(props) {
+export default function ConnectionSimulator(props: Partial<SimulatorConfig>) {
 	const {
 		cfg,
 		state,
@@ -24,10 +25,11 @@ export default function ConnectionSimulator(props) {
 		toggleRunning,
 		setSpeed,
 		reset,
+		rootRef,
 	} = useConnectionSimulator(props);
 
 	return (
-		<div style={sx.root}>
+		<div ref={rootRef} style={sx.root}>
 			<style>{keyframes}</style>
 
 			<Header

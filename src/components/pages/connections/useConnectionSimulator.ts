@@ -1,46 +1,89 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
-const DEFAULTS = {
+export interface SimulatorConfig {
+	nodes: number;
+	connectionsPerNode: number;
+	requestsPerSecond: number;
+	poolUseProbability: number;
+	idleTimeoutMs: number;
+	initialSpeed: number;
+}
+
+const DEFAULTS: SimulatorConfig = {
 	nodes: 4,
 	connectionsPerNode: 5,
 	requestsPerSecond: 20,
-	poolUseProbability: 0.5, // 50% of requests use (and renew) a connection
-	idleTimeoutMs: 10000, // server closes connections idle longer than this
+	poolUseProbability: 0.5,
+	idleTimeoutMs: 10000,
 	initialSpeed: 1,
 };
 
-function makeState(cfg) {
+interface SimEvent {
+	type: "bypass" | "hit" | "fail";
+	at: number;
+}
+
+interface ConnState {
+	id: number;
+	lastUsed: number;
+	uses: number;
+	deaths: number;
+	lastEvent: SimEvent | null;
+}
+
+interface NodeState {
+	id: number;
+	requests: number;
+	failures: number;
+	lastEvent: SimEvent | null;
+	conns: ConnState[];
+}
+
+interface Dispatch {
+	node: number;
+	at: number;
+}
+
+interface SimState {
+	simTime: number;
+	reqAccumulator: number;
+	rr: number;
+	lastDispatch: Dispatch | null;
+	stats: { total: number; poolUses: number; bypassed: number; failures: number };
+	nodes: NodeState[];
+}
+
+function makeState(cfg: SimulatorConfig): SimState {
 	return {
 		simTime: 0,
 		reqAccumulator: 0,
 		rr: 0,
-		lastDispatch: null, // { node, at }
+		lastDispatch: null,
 		stats: { total: 0, poolUses: 0, bypassed: 0, failures: 0 },
 		nodes: Array.from({ length: cfg.nodes }, (_, i) => ({
 			id: i,
 			requests: 0,
 			failures: 0,
-			lastEvent: null, // { type: "bypass" | "hit" | "fail", at }
+			lastEvent: null,
 			conns: Array.from({ length: cfg.connectionsPerNode }, (_, j) => ({
 				id: j,
 				// Stagger initial freshness so the pools don't all expire in unison.
 				lastUsed: -Math.random() * cfg.idleTimeoutMs * 0.5,
 				uses: 0,
 				deaths: 0,
-				lastEvent: null, // { type: "hit" | "fail", at }
+				lastEvent: null,
 			})),
 		})),
 	};
 }
 
-function fireRequest(state, cfg) {
+function fireRequest(state: SimState, cfg: SimulatorConfig): void {
 	const node = state.nodes[state.rr];
 	state.rr = (state.rr + 1) % state.nodes.length;
 	state.stats.total += 1;
 	node.requests += 1;
 	state.lastDispatch = { node: node.id, at: state.simTime };
 
-	// Half the requests never touch the connection pool (cache hit, no-op, etc.)
 	if (Math.random() >= cfg.poolUseProbability) {
 		state.stats.bypassed += 1;
 		node.lastEvent = { type: "bypass", at: state.simTime };
@@ -52,7 +95,6 @@ function fireRequest(state, cfg) {
 	const dead = state.simTime - conn.lastUsed > cfg.idleTimeoutMs;
 
 	if (dead) {
-		// The server closed this connection long ago; the client just found out.
 		state.stats.failures += 1;
 		node.failures += 1;
 		conn.deaths += 1;
@@ -63,12 +105,12 @@ function fireRequest(state, cfg) {
 		node.lastEvent = { type: "hit", at: state.simTime };
 	}
 	conn.uses += 1;
-	conn.lastUsed = state.simTime; // renewed — or re-established after failing
+	conn.lastUsed = state.simTime;
 }
 
-export function useConnectionSimulator(props) {
-	const cfg = { ...DEFAULTS, ...props };
-	const stateRef = useRef(null);
+export function useConnectionSimulator(props?: Partial<SimulatorConfig>) {
+	const cfg: SimulatorConfig = { ...DEFAULTS, ...props };
+	const stateRef = useRef<SimState | null>(null);
 	if (stateRef.current === null) {
 		stateRef.current = makeState(cfg);
 	}
@@ -82,22 +124,30 @@ export function useConnectionSimulator(props) {
 	const speedRef = useRef(speed);
 	speedRef.current = speed;
 
-	useEffect(() => {
-		let raf;
+	// Callback refs can return a cleanup function (React 19), giving us the
+	// same mount/unmount lifecycle as an effect without using useEffect.
+	// A useState initializer (not useCallback) gives it a stable identity,
+	// since the initializer only ever runs once.
+	const [rootRef] = useState(() => (node: Element | null) => {
+		if (node === null) return;
+
+		let raf: number;
 		let last = performance.now();
 		const interval = 1000 / cfg.requestsPerSecond;
 
-		const loop = (t) => {
-			const dt = Math.min(t - last, 100); // clamp away background-tab jumps
+		const loop = (t: number) => {
+			const dt = Math.min(t - last, 100);
 			last = t;
 			if (runningRef.current) {
 				const s = stateRef.current;
-				const simDt = dt * speedRef.current;
-				s.simTime += simDt;
-				s.reqAccumulator += simDt;
-				while (s.reqAccumulator >= interval) {
-					s.reqAccumulator -= interval;
-					fireRequest(s, cfg);
+				if (s !== null) {
+					const simDt = dt * speedRef.current;
+					s.simTime += simDt;
+					s.reqAccumulator += simDt;
+					while (s.reqAccumulator >= interval) {
+						s.reqAccumulator -= interval;
+						fireRequest(s, cfg);
+					}
 				}
 				setTick((x) => x + 1);
 			}
@@ -105,8 +155,7 @@ export function useConnectionSimulator(props) {
 		};
 		raf = requestAnimationFrame(loop);
 		return () => cancelAnimationFrame(raf);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	});
 
 	const toggleRunning = () => setRunning((r) => !r);
 	const reset = () => {
@@ -114,17 +163,11 @@ export function useConnectionSimulator(props) {
 		setTick((x) => x + 1);
 	};
 
-	const state = stateRef.current;
+	const state = stateRef.current ?? makeState(cfg);
 	const now = state.simTime;
-	const deadNow = state.nodes.reduce(
-		(acc, n) =>
-			acc +
-			n.conns.filter((c) => now - c.lastUsed > cfg.idleTimeoutMs).length,
-		0,
-	);
+	const deadNow = state.nodes.reduce((acc, n) => acc + n.conns.filter((c) => now - c.lastUsed > cfg.idleTimeoutMs).length, 0);
 	const totalConns = cfg.nodes * cfg.connectionsPerNode;
-	const poolFailPct =
-		state.stats.poolUses > 0
+	const poolFailPct = state.stats.poolUses > 0
 			? ((state.stats.failures / state.stats.poolUses) * 100).toFixed(1)
 			: "0.0";
 
@@ -140,5 +183,6 @@ export function useConnectionSimulator(props) {
 		toggleRunning,
 		setSpeed,
 		reset,
+		rootRef,
 	};
 }
