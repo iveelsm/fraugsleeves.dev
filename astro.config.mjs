@@ -10,6 +10,7 @@ import react from "@astrojs/react";
 import rehypeNumericReferences from "./src/rehype-numeric-references";
 import { remarkReadingTime } from "./src/remark-reading-time";
 import { FONT_OUTPUT } from "./src/constants";
+import mdx from "@astrojs/mdx";
 
 const site = process.env.SITE_URL || "https://fraugsleeves.dev";
 
@@ -18,6 +19,7 @@ export default defineConfig({
 	site,
 	integrations: [
 		react(),
+		mdx(),
 		fontsIntegration({
 			outputDirectory: FONT_OUTPUT,
 			fonts: [
