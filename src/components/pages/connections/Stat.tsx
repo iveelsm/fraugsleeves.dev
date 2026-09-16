@@ -6,21 +6,25 @@ interface StatProps {
 	color?: string;
 }
 
-const DEFAULT_COLOR = "#e2e8f0";
+const DEFAULT_COLOR = "var(--color-text)";
 
 const sx: { stat: CSSProperties; value: CSSProperties; label: CSSProperties } = {
 	stat: {
-		background: "#1e293b",
-		border: "1px solid #334155",
-		borderRadius: 8,
+		background: "var(--color-surface)",
+		border: "1px solid var(--color-border)",
+		borderRadius: "var(--radius-lg)",
 		padding: "6px 12px",
 		minWidth: 74,
 		flex: "1 1 auto",
 		textAlign: "center",
 	},
-	value: { fontFamily: "ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace", fontSize: 15, fontWeight: 600 },
+	value: {
+		fontFamily: "var(--font-mono)",
+		fontSize: 15,
+		fontWeight: "var(--font-semibold)"
+	},
 	label: {
-		color: "#64748b",
+		color: "var(--uchu-gray-7)",
 		fontSize: 10,
 		textTransform: "uppercase",
 		letterSpacing: "0.06em",
