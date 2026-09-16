@@ -37,7 +37,7 @@ export default function ConnectionSimulator(props: Partial<SimulatorConfig>) {
 			<div className="csim-legend">
 				<LegendItem tone="green" label="fresh" />
 				<LegendItem tone="amber" label="aging" />
-				<LegendItem tone="red" label="near timeout / failed" />
+				<LegendItem tone="red" label="near timeout" />
 				<LegendItem tone="faint" label="dead" />
 				<LegendItem tone="blue" label="request bypassed pool" />
 			</div>

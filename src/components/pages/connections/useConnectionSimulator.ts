@@ -47,11 +47,6 @@ export function useConnectionSimulator(props?: Partial<SimulatorConfig>) {
 		return () => cancelAnimationFrame(raf);
 	});
 
-	const reset = () => {
-		stateRef.current = makeState(cfg);
-		setTick((x) => x + 1);
-	};
-
 	const state = stateRef.current ?? makeState(cfg);
 	const now = state.simTime;
 	const deadNow = state.nodes.reduce((acc, n) => acc + n.conns.filter((c) => now - c.lastUsed > cfg.idleTimeoutMs).length, 0);
@@ -67,7 +62,6 @@ export function useConnectionSimulator(props?: Partial<SimulatorConfig>) {
 			totalConns,
 			poolFailPct,
 		},
-		reset,
 		rootRef,
 	};
 }
