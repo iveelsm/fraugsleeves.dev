@@ -10,8 +10,6 @@ import { Stat } from './Stat';
 import type { SimulatorConfig } from './state.ts';
 import { useConnectionSimulator } from './useConnectionSimulator';
 
-const SPEEDS = [1, 2, 4, 8];
-
 export default function ConnectionSimulator(props: Partial<SimulatorConfig>) {
 	const hook = useConnectionSimulator(props);
 	let config = hook.cfg;
@@ -22,14 +20,7 @@ export default function ConnectionSimulator(props: Partial<SimulatorConfig>) {
 		<div ref={hook.rootRef} style={sx.root}>
 			<style>{keyframes}</style>
 
-			<Header
-				running={metadata.running}
-				speed={metadata.speed}
-				speeds={SPEEDS}
-				onToggleRunning={hook.toggleRunning}
-				onReset={hook.reset}
-				onSpeedChange={hook.setSpeed}
-			/>
+			<Header />
 
 			<div style={sx.stats}>
 				<Stat label="sim time" value={formatClock(metadata.now)} />
@@ -52,7 +43,7 @@ export default function ConnectionSimulator(props: Partial<SimulatorConfig>) {
 				<LegendItem color={palette.green} label="fresh" />
 				<LegendItem color={palette.amber} label="aging" />
 				<LegendItem color={palette.red} label="near timeout / failed" />
-				<LegendItem color={palette.faint} label="dead (server closed it)" />
+				<LegendItem color={palette.faint} label="dead" />
 				<LegendItem color={palette.blue} label="request bypassed pool" />
 			</div>
 		</div>

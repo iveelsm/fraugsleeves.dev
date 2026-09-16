@@ -19,15 +19,7 @@ export function useConnectionSimulator(props?: Partial<SimulatorConfig>) {
 		stateRef.current = makeState(cfg);
 	}
 
-	const [running, setRunning] = useState(true);
-	const [speed, setSpeed] = useState(cfg.initialSpeed);
 	const [, setTick] = useState(0);
-
-	const runningRef = useRef(running);
-	runningRef.current = running;
-	const speedRef = useRef(speed);
-	speedRef.current = speed;
-
 	const [rootRef] = useState(() => (node: Element | null) => {
 		if (node === null) return;
 
@@ -38,26 +30,23 @@ export function useConnectionSimulator(props?: Partial<SimulatorConfig>) {
 		const loop = (t: number) => {
 			const dt = Math.min(t - last, 100);
 			last = t;
-			if (runningRef.current) {
-				const s = stateRef.current;
-				if (s !== null) {
-					const simDt = dt * speedRef.current;
-					s.simTime += simDt;
-					s.reqAccumulator += simDt;
-					while (s.reqAccumulator >= interval) {
-						s.reqAccumulator -= interval;
-						fireRequest(s, cfg);
-					}
+			const s = stateRef.current;
+			if (s !== null) {
+				const simDt = dt;
+				s.simTime += simDt;
+				s.reqAccumulator += simDt;
+				while (s.reqAccumulator >= interval) {
+					s.reqAccumulator -= interval;
+					fireRequest(s, cfg);
 				}
-				setTick((x) => x + 1);
 			}
+			setTick((x) => x + 1);
 			raf = requestAnimationFrame(loop);
 		};
 		raf = requestAnimationFrame(loop);
 		return () => cancelAnimationFrame(raf);
 	});
 
-	const toggleRunning = () => setRunning((r) => !r);
 	const reset = () => {
 		stateRef.current = makeState(cfg);
 		setTick((x) => x + 1);
@@ -77,11 +66,7 @@ export function useConnectionSimulator(props?: Partial<SimulatorConfig>) {
 			deadNow,
 			totalConns,
 			poolFailPct,
-			running,
-			speed,
 		},
-		toggleRunning,
-		setSpeed,
 		reset,
 		rootRef,
 	};
