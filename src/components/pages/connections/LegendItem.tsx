@@ -1,28 +1,22 @@
-import type { CSSProperties } from 'react';
+type LegendTone = "green" | "amber" | "red" | "blue" | "faint";
 
 interface LegendItemProps {
-	color: string;
+	tone: LegendTone;
 	label: string;
 }
 
-const sx: { item: CSSProperties; swatch: CSSProperties } = {
-	item: {
-		display: "inline-flex",
-		alignItems: "center",
-		gap: 5,
-	},
-	swatch: {
-		width: 8,
-		height: 8,
-		borderRadius: 2,
-		display: "inline-block",
-	},
+const TONE_CLASS: Record<LegendTone, string> = {
+	green: "csim-bg-green",
+	amber: "csim-bg-amber",
+	red: "csim-bg-red",
+	blue: "csim-bg-blue",
+	faint: "csim-bg-faint",
 };
 
 export function LegendItem(props: LegendItemProps) {
 	return (
-		<span style={sx.item}>
-			<span style={{ ...sx.swatch, background: props.color }} />
+		<span className="csim-legend-item">
+			<span className={`csim-legend-swatch ${TONE_CLASS[props.tone]}`} />
 			{props.label}
 		</span>
 	);

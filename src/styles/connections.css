@@ -1,0 +1,295 @@
+@keyframes csim-pulse-fail {
+	0% {
+		box-shadow: 0 0 0 0 var(--uchu-red-4);
+	}
+	100% {
+		box-shadow: 0 0 0 8px transparent;
+	}
+}
+
+@keyframes csim-pulse-hit {
+	0% {
+		box-shadow: 0 0 0 0 var(--uchu-green-4);
+	}
+	100% {
+		box-shadow: 0 0 0 8px transparent;
+	}
+}
+
+.csim-root {
+	background: var(--color-bg-alt);
+	color: var(--color-text);
+	border-radius: var(--radius-lg);
+	padding: 16px 16px 14px;
+	font-family: var(--font-mono);
+	font-size: var(--text-sm);
+	line-height: var(--leading-tight);
+	max-width: 100%;
+	box-sizing: border-box;
+	border: 1px solid var(--color-border);
+}
+
+.csim-stats {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-bottom: 12px;
+}
+
+.csim-node-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-bottom: 12px;
+}
+
+.csim-legend {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	color: var(--color-text-muted);
+	font-size: 11px;
+	margin-bottom: 8px;
+}
+
+/* Header */
+
+.csim-header {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	justify-content: space-between;
+	align-items: flex-start;
+	margin-bottom: 12px;
+}
+
+.csim-title {
+	font-family: var(--font-serif);
+	color: var(--color-text-heading);
+	font-weight: var(--font-bold);
+	font-size: var(--text-lg);
+}
+
+/* Stat */
+
+.csim-stat {
+	background: var(--color-surface);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-lg);
+	padding: 6px 12px;
+	min-width: 74px;
+	flex: 1 1 auto;
+	text-align: center;
+}
+
+.csim-stat-value {
+	font-family: var(--font-mono);
+	font-size: 15px;
+	font-weight: var(--font-semibold);
+}
+
+.csim-text-red {
+	color: var(--uchu-red-6);
+}
+
+.csim-text-amber {
+	color: var(--uchu-yellow-6);
+}
+
+.csim-text-green {
+	color: var(--uchu-green-6);
+}
+
+.csim-text-muted {
+	color: var(--color-text-muted);
+}
+
+.csim-stat-label {
+	color: var(--uchu-gray-7);
+	font-size: 10px;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	margin-top: 1px;
+}
+
+/* LegendItem */
+
+.csim-legend-item {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+}
+
+.csim-legend-swatch {
+	width: 8px;
+	height: 8px;
+	border-radius: 2px;
+	display: inline-block;
+}
+
+/* Background tone utilities, shared by the legend swatch and the connection dot/bar */
+
+.csim-bg-green {
+	background: var(--uchu-green-6);
+}
+
+.csim-bg-amber {
+	background: var(--uchu-yellow-6);
+}
+
+.csim-bg-red {
+	background: var(--uchu-red-6);
+}
+
+.csim-bg-blue {
+	background: var(--color-accent);
+}
+
+.csim-bg-faint {
+	background: var(--uchu-gray-7);
+}
+
+/* LoadBalancer */
+
+.csim-lb-row {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 10px;
+}
+
+.csim-lb {
+	background: var(--color-surface);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-lg);
+	padding: 7px 16px;
+	font-family: var(--font-mono);
+	font-size: var(--text-xs);
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.csim-lb-dot {
+	width: 8px;
+	height: 8px;
+	border-radius: var(--radius-full);
+	background: var(--color-accent);
+	display: inline-block;
+}
+
+.csim-lb-info {
+	color: var(--uchu-gray-7);
+	font-size: 11px;
+}
+
+.csim-lb-dispatch {
+	color: var(--color-accent);
+}
+
+/* Node */
+
+.csim-node {
+	background: var(--color-surface);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-lg);
+	padding: 8px 10px;
+	flex: 1 1 150px;
+	min-width: 140px;
+	box-sizing: border-box;
+	transition: border-color 120ms;
+}
+
+.csim-node--hit {
+	border-color: var(--uchu-green-6);
+	animation: csim-pulse-hit 450ms ease-out;
+}
+
+.csim-node--fail {
+	border-color: var(--uchu-red-6);
+	animation: csim-pulse-fail 450ms ease-out;
+}
+
+.csim-node--bypass {
+	border-color: var(--color-accent);
+}
+
+.csim-node-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	margin-bottom: 7px;
+}
+
+.csim-node-name {
+	font-family: var(--font-mono);
+	font-size: 12px;
+	font-weight: var(--font-semibold);
+}
+
+.csim-node-meta {
+	font-family: var(--font-mono);
+	font-size: 10px;
+	color: var(--uchu-gray-7);
+}
+
+.csim-node-fail-count {
+	color: var(--uchu-red-6);
+}
+
+.csim-conn-list {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.csim-conn {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	border-radius: var(--radius-sm);
+	padding: 2px 3px;
+	transition: background 120ms;
+}
+
+.csim-conn--hit {
+	background: color-mix(in srgb, var(--uchu-green-5) 15%, transparent);
+}
+
+.csim-conn--fail {
+	background: color-mix(in srgb, var(--uchu-red-5) 18%, transparent);
+}
+
+.csim-conn-dot {
+	width: 7px;
+	height: 7px;
+	border-radius: var(--radius-full);
+	flex: 0 0 auto;
+}
+
+.csim-conn-dot--dead {
+	box-shadow: 0 0 5px var(--uchu-red-6);
+}
+
+.csim-conn-track {
+	flex: 1 1 auto;
+	height: 6px;
+	background: var(--color-tag-bg);
+	border-radius: var(--radius-sm);
+	overflow: hidden;
+	display: block;
+}
+
+.csim-conn-bar {
+	display: block;
+	height: 100%;
+	border-radius: var(--radius-sm);
+	transition: width 200ms linear;
+	width: var(--conn-bar-width);
+}
+
+.csim-conn-deaths {
+	font-family: var(--font-mono);
+	font-size: 9px;
+	color: var(--uchu-red-6);
+	flex: 0 0 auto;
+}

@@ -1,97 +1,46 @@
-import type { CSSProperties } from 'react';
-
-import { formatClock } from './formatClock';
-import { Header } from './Header';
-import { LegendItem } from './LegendItem';
-import { LoadBalancer } from './LoadBalancer';
-import { Node } from './Node';
-import { palette } from './palette';
-import { Stat } from './Stat';
+import { formatClock } from './formatClock.ts';
+import { Header } from './Header.tsx';
+import { LegendItem } from './LegendItem.tsx';
+import { LoadBalancer } from './LoadBalancer.tsx';
+import { Node } from './Node.tsx';
+import { Stat } from './Stat.tsx';
 import type { SimulatorConfig } from './state.ts';
-import { useConnectionSimulator } from './useConnectionSimulator';
+import { useConnectionSimulator } from './useConnectionSimulator.ts';
 
 export default function ConnectionSimulator(props: Partial<SimulatorConfig>) {
 	const hook = useConnectionSimulator(props);
-	let config = hook.cfg;
-	let state = hook.state;
-	let metadata = hook.metadata;
+	const config = hook.cfg;
+	const state = hook.state;
+	const metadata = hook.metadata;
 
 	return (
-		<div ref={hook.rootRef} style={sx.root}>
-			<style>{keyframes}</style>
-
+		<div ref={hook.rootRef} className="csim-root">
 			<Header />
 
-			<div style={sx.stats}>
+			<div className="csim-stats">
 				<Stat label="sim time" value={formatClock(metadata.now)} />
 				<Stat label="requests" value={state.stats.total} />
 				<Stat label="used pool" value={state.stats.poolUses} />
-				<Stat label="failed" value={state.stats.failures} color={palette.red} />
-				<Stat label="fail rate (pool)" value={`${metadata.poolFailPct}%`} color={state.stats.failures > 0 ? palette.red : palette.muted} />
-				<Stat label="dead now" value={`${metadata.deadNow}/${metadata.totalConns}`} color={metadata.deadNow > 0 ? palette.amber : palette.green} />
+				<Stat label="failed" value={state.stats.failures} tone="red" />
+				<Stat label="fail rate (pool)" value={`${metadata.poolFailPct}%`} tone={state.stats.failures > 0 ? "red" : "muted"} />
+				<Stat label="dead now" value={`${metadata.deadNow}/${metadata.totalConns}`} tone={metadata.deadNow > 0 ? "amber" : "green"} />
 			</div>
 
 			<LoadBalancer requestsPerSecond={config.requestsPerSecond} lastDispatch={state.lastDispatch} now={metadata.now} />
 
-			<div style={sx.nodeRow}>
+			<div className="csim-node-row">
 				{state.nodes.map((node) => (
 					<Node key={node.id} node={node} now={metadata.now} idleTimeoutMs={config.idleTimeoutMs} />
 				))}
 			</div>
 
-			<div style={sx.legend}>
-				<LegendItem color={palette.green} label="fresh" />
-				<LegendItem color={palette.amber} label="aging" />
-				<LegendItem color={palette.red} label="near timeout / failed" />
-				<LegendItem color={palette.faint} label="dead" />
-				<LegendItem color={palette.blue} label="request bypassed pool" />
+			<div className="csim-legend">
+				<LegendItem tone="green" label="fresh" />
+				<LegendItem tone="amber" label="aging" />
+				<LegendItem tone="red" label="near timeout / failed" />
+				<LegendItem tone="faint" label="dead" />
+				<LegendItem tone="blue" label="request bypassed pool" />
 			</div>
 		</div>
 	);
 }
-
-const keyframes = `
-@keyframes csim-pulse-fail {
-  0% { box-shadow: 0 0 0 0 var(--uchu-red-4); }
-  100% { box-shadow: 0 0 0 8px transparent; }
-}
-@keyframes csim-pulse-hit {
-  0% { box-shadow: 0 0 0 0 var(--uchu-green-4); }
-  100% { box-shadow: 0 0 0 8px transparent; }
-}
-`;
-
-const sx: Record<string, CSSProperties> = {
-	root: {
-		background: palette.bg,
-		color: palette.text,
-		borderRadius: "var(--radius-lg)",
-		padding: "16px 16px 14px",
-		fontFamily: "var(--font-mono)",
-		fontSize: "var(--text-sm)",
-		lineHeight: "var(--leading-tight)",
-		maxWidth: "100%",
-		boxSizing: "border-box",
-		border: `1px solid ${palette.cardEdge}`,
-	},
-	stats: {
-		display: "flex",
-		flexWrap: "wrap",
-		gap: 6,
-		marginBottom: 12,
-	},
-	nodeRow: {
-		display: "flex",
-		flexWrap: "wrap",
-		gap: 8,
-		marginBottom: 12,
-	},
-	legend: {
-		display: "flex",
-		flexWrap: "wrap",
-		gap: 12,
-		color: palette.muted,
-		fontSize: 11,
-		marginBottom: 8,
-	},
-};
