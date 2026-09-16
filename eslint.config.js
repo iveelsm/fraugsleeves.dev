@@ -24,16 +24,7 @@ export default [
 					type: "natural",
 					order: "asc",
 					newlinesBetween: 1,
-					groups: [
-						"style",
-						"side-effect-style",
-						"svg",
-						"astro-builtin",
-						"builtin",
-						"external",
-						"astro-components",
-						"import",
-					],
+					groups: ["style", "side-effect-style", "svg", "astro-builtin", "builtin", "external", "astro-components", "import"],
 					customGroups: [
 						{
 							groupName: "astro-builtin",

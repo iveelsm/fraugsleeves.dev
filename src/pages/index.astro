@@ -18,13 +18,7 @@ import { Searchable } from "../layouts/";
 			<div class="social-links">
 				{
 					SOCIAL_LINKS.map((link) => (
-						<a
-							href={link.href}
-							class="social-link"
-							aria-label={link.label}
-							target="_blank"
-							rel="noopener noreferrer"
-						>
+						<a href={link.href} class="social-link" aria-label={link.label} target="_blank" rel="noopener noreferrer">
 							<link.icon width={24} height={24} />
 						</a>
 					))

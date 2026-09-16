@@ -3,9 +3,7 @@ import { getCollection } from "astro:content";
 
 import Card from "./card.astro";
 
-const wayfinders = (await getCollection("wayfinders")).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+const wayfinders = (await getCollection("wayfinders")).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
 <div class="wayfinders-grid">

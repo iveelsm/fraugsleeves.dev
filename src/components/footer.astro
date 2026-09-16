@@ -14,13 +14,7 @@ const currentYear = new Date().getFullYear();
 		<div class="footer-social">
 			{
 				SOCIAL_LINKS.map((link) => (
-					<a
-						href={link.href}
-						class="social-link"
-						aria-label={link.label}
-						target="_blank"
-						rel="noopener noreferrer"
-					>
+					<a href={link.href} class="social-link" aria-label={link.label} target="_blank" rel="noopener noreferrer">
 						<link.icon width={20} height={20} />
 					</a>
 				))
