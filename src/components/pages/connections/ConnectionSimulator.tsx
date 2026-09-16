@@ -1,48 +1,50 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties } from 'react';
 
-import { formatClock } from "./formatClock";
-import { Header } from "./Header";
-import { LegendItem } from "./LegendItem";
-import { LoadBalancer } from "./LoadBalancer";
-import { Node } from "./Node";
-import { palette } from "./palette";
-import { Stat } from "./Stat";
-import type { SimulatorConfig } from "./useConnectionSimulator";
-import { useConnectionSimulator } from "./useConnectionSimulator";
+import { formatClock } from './formatClock';
+import { Header } from './Header';
+import { LegendItem } from './LegendItem';
+import { LoadBalancer } from './LoadBalancer';
+import { Node } from './Node';
+import { palette } from './palette';
+import { Stat } from './Stat';
+import type { SimulatorConfig } from './state.ts';
+import { useConnectionSimulator } from './useConnectionSimulator';
 
 const SPEEDS = [1, 2, 4, 8];
 
 export default function ConnectionSimulator(props: Partial<SimulatorConfig>) {
-	const { cfg, state, now, deadNow, totalConns, poolFailPct, running, speed, toggleRunning, setSpeed, reset, rootRef } =
-		useConnectionSimulator(props);
+	const hook = useConnectionSimulator(props);
+	let config = hook.cfg;
+	let state = hook.state;
+	let metadata = hook.metadata;
 
 	return (
-		<div ref={rootRef} style={sx.root}>
+		<div ref={hook.rootRef} style={sx.root}>
 			<style>{keyframes}</style>
 
 			<Header
-				running={running}
-				speed={speed}
+				running={metadata.running}
+				speed={metadata.speed}
 				speeds={SPEEDS}
-				onToggleRunning={toggleRunning}
-				onReset={reset}
-				onSpeedChange={setSpeed}
+				onToggleRunning={hook.toggleRunning}
+				onReset={hook.reset}
+				onSpeedChange={hook.setSpeed}
 			/>
 
 			<div style={sx.stats}>
-				<Stat label="sim time" value={formatClock(now)} />
+				<Stat label="sim time" value={formatClock(metadata.now)} />
 				<Stat label="requests" value={state.stats.total} />
 				<Stat label="used pool" value={state.stats.poolUses} />
 				<Stat label="failed" value={state.stats.failures} color={palette.red} />
-				<Stat label="fail rate (pool)" value={`${poolFailPct}%`} color={state.stats.failures > 0 ? palette.red : palette.muted} />
-				<Stat label="dead now" value={`${deadNow}/${totalConns}`} color={deadNow > 0 ? palette.amber : palette.green} />
+				<Stat label="fail rate (pool)" value={`${metadata.poolFailPct}%`} color={state.stats.failures > 0 ? palette.red : palette.muted} />
+				<Stat label="dead now" value={`${metadata.deadNow}/${metadata.totalConns}`} color={metadata.deadNow > 0 ? palette.amber : palette.green} />
 			</div>
 
-			<LoadBalancer requestsPerSecond={cfg.requestsPerSecond} lastDispatch={state.lastDispatch} now={now} />
+			<LoadBalancer requestsPerSecond={config.requestsPerSecond} lastDispatch={state.lastDispatch} now={metadata.now} />
 
 			<div style={sx.nodeRow}>
 				{state.nodes.map((node) => (
-					<Node key={node.id} node={node} now={now} idleTimeoutMs={cfg.idleTimeoutMs} />
+					<Node key={node.id} node={node} now={metadata.now} idleTimeoutMs={config.idleTimeoutMs} />
 				))}
 			</div>
 

@@ -1,7 +1,7 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties } from 'react';
 
-import { isRecent } from "./flash";
-import { palette } from "./palette";
+import { isRecent } from './flash.ts';
+import { palette } from './palette.ts';
 
 interface LoadBalancerProps {
 	requestsPerSecond: number;

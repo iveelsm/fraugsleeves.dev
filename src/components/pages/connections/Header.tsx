@@ -1,6 +1,6 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties } from 'react';
 
-import { palette } from "./palette";
+import { palette } from './palette.ts';
 
 interface HeaderProps {
 	running: boolean;

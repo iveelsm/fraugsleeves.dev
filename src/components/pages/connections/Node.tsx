@@ -1,7 +1,7 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties } from 'react';
 
-import { FLASH_MS, flashType } from "./flash";
-import { palette } from "./palette";
+import { FLASH_MS, flashType } from './flash.ts';
+import { palette } from './palette.ts';
 
 interface Conn {
 	id: number;
