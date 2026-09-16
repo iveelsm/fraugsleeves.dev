@@ -1,11 +1,6 @@
 import type { Heading } from "./header";
 
-function buildSubtree(
-	parent: Heading,
-	headings: Heading[],
-	startIndex: number,
-	parentDepth: number,
-): number {
+function buildSubtree(parent: Heading, headings: Heading[], startIndex: number, parentDepth: number): number {
 	let consumed = 0;
 	let i = startIndex;
 
@@ -20,12 +15,7 @@ function buildSubtree(
 		consumed++;
 		i++;
 
-		const childrenConsumed = buildSubtree(
-			current,
-			headings,
-			i,
-			current.depth,
-		);
+		const childrenConsumed = buildSubtree(current, headings, i, current.depth);
 		consumed += childrenConsumed;
 		i += childrenConsumed;
 	}

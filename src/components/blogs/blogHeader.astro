@@ -11,19 +11,14 @@ interface Props {
 	tags: string[];
 }
 
-const { title, date, description, minutesRead, author, editors, tags } =
-	Astro.props;
+const { title, date, description, minutesRead, author, editors, tags } = Astro.props;
 ---
 
 <header class="post-header-fixed">
 	<div class="post-header-box">
 		<div class="post-header-content">
 			<div class="post-header-main">
-				<h1
-					class="post-title"
-					data-pagefind-meta="title"
-					set:html={formatText(title)}
-				/>
+				<h1 class="post-title" data-pagefind-meta="title" set:html={formatText(title)} />
 				<div class="post-meta">
 					<span class="reading-time">{minutesRead}</span>
 				</div>
@@ -51,11 +46,7 @@ const { title, date, description, minutesRead, author, editors, tags } =
 				<div class="post-tags">
 					{
 						tags.map((tag) => (
-							<a
-								href={`/blog?tag=${encodeURIComponent(tag)}`}
-								class="post-tag"
-								data-tag={tag}
-							>
+							<a href={`/blog?tag=${encodeURIComponent(tag)}`} class="post-tag" data-tag={tag}>
 								{tag}
 							</a>
 						))

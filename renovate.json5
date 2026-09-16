@@ -28,10 +28,7 @@
 		},
 		{
 			description: "Disable all Playwright updates",
-			matchPackageNames: [
-				"@playwright/test",
-				"mcr.microsoft.com/playwright",
-			],
+			matchPackageNames: ["@playwright/test", "mcr.microsoft.com/playwright"],
 			enabled: false,
 		},
 		{

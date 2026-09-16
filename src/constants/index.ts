@@ -3,11 +3,9 @@ import { SOCIAL_LINKS } from "./socialLinks";
 
 const SITE_URL = "https://fraugsleeves.dev";
 const DEFAULT_TITLE = "fraugsleeves.dev";
-const DEFAULT_DESCRIPTION =
-	"An exposition of wayfinding within software development";
+const DEFAULT_DESCRIPTION = "An exposition of wayfinding within software development";
 const DEFAULT_IMAGE = `${SITE_URL}/images/logo.png`;
-const DEFAULT_ALT =
-	"A black and white image of a majestic Tyrannosaurus Rex symbolizing how cool this blog is";
+const DEFAULT_ALT = "A black and white image of a majestic Tyrannosaurus Rex symbolizing how cool this blog is";
 const FONT_OUTPUT = "fonts";
 
 export {

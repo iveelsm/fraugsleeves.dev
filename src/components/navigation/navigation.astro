@@ -19,16 +19,10 @@ const currentPath = Astro.url.pathname;
 		</a>
 
 		<MobileNavigation />
-		<DesktopNavigation
-			currentPath={currentPath}
-			navItems={NAVIGATION_ITEMS}
-		/>
+		<DesktopNavigation currentPath={currentPath} navItems={NAVIGATION_ITEMS} />
 	</div>
 </nav>
 
-<MobileNavigationOverlay
-	currentPath={currentPath}
-	navItems={NAVIGATION_ITEMS}
-/>
+<MobileNavigationOverlay currentPath={currentPath} navItems={NAVIGATION_ITEMS} />
 
 <HamburgerMenuIsland client:media="(max-width: 640px)" />

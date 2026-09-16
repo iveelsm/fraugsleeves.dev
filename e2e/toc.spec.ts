@@ -12,9 +12,7 @@ test.describe("Table of contents should...", { tag: "@desktop" }, () => {
 
 	test("have links matching page headings", async ({ page }) => {
 		const tocLinks = page.locator(".article-toc a");
-		const headings = page.locator(
-			"main h1[id], main h2[id], main h3[id], main h4[id]",
-		);
+		const headings = page.locator("main h1[id], main h2[id], main h3[id], main h4[id]");
 
 		const tocCount = await tocLinks.count();
 		const headingsCount = await headings.count();
@@ -50,8 +48,7 @@ test.describe("Table of contents should...", { tag: "@desktop" }, () => {
 		await page.evaluate(() => {
 			const heading = document.querySelectorAll("main h2[id]")[1];
 			if (heading) {
-				const top =
-					heading.getBoundingClientRect().top + window.scrollY - 100;
+				const top = heading.getBoundingClientRect().top + window.scrollY - 100;
 				window.scrollTo({ top, behavior: "instant" });
 			}
 		});
