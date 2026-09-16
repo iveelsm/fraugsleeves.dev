@@ -72,7 +72,7 @@ function fireRequest(state, cfg) {
 }
 
 
-const palette = {
+export const palette = {
   bg: "#0f172a",
   card: "#1e293b",
   cardEdge: "#334155",
@@ -323,17 +323,6 @@ export default function ConnectionSimulator(props) {
         <LegendItem color={palette.faint} label="dead (server closed it)" />
         <LegendItem color={palette.blue} label="request bypassed pool" />
       </div>
-      <div style={sx.footnote}>
-        Every choice here is individually reasonable — the load balancer is
-        perfectly fair, and random selection is uniform. But renewal is
-        probabilistic: with 5 connections and only ~0.5 pool-hits per node per
-        second, each connection has a ({cfg.connectionsPerNode - 1}/
-        {cfg.connectionsPerNode})<sup>10</sup> ≈ 35% chance of sitting untouched
-        past the {cfg.idleTimeoutMs / 1000}s idle timeout. The client only
-        discovers the corpse when it picks it: the request fails, the
-        connection is rebuilt, and the cycle repeats — a permanent background
-        error rate produced by nothing but fair randomness.
-      </div>
     </div>
   );
 }
@@ -357,7 +346,7 @@ const mono =
 const sans =
   "system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
 
-const sx = {
+export const sx = {
   root: {
     background: palette.bg,
     color: palette.text,
@@ -409,23 +398,6 @@ const sx = {
     flexWrap: "wrap",
     gap: 6,
     marginBottom: 12,
-  },
-  stat: {
-    background: palette.card,
-    border: `1px solid ${palette.cardEdge}`,
-    borderRadius: 8,
-    padding: "6px 12px",
-    minWidth: 74,
-    flex: "1 1 auto",
-    textAlign: "center",
-  },
-  statValue: { fontFamily: mono, fontSize: 15, fontWeight: 600 },
-  statLabel: {
-    color: palette.faint,
-    fontSize: 10,
-    textTransform: "uppercase",
-    letterSpacing: "0.06em",
-    marginTop: 1,
   },
   lbRow: { display: "flex", justifyContent: "center", marginBottom: 10 },
   lb: {
@@ -526,13 +498,6 @@ const sx = {
     color: palette.muted,
     fontSize: 11,
     marginBottom: 8,
-  },
-  legendItem: { display: "inline-flex", alignItems: "center", gap: 5 },
-  legendSwatch: {
-    width: 8,
-    height: 8,
-    borderRadius: 2,
-    display: "inline-block",
   },
   footnote: {
     color: palette.muted,
