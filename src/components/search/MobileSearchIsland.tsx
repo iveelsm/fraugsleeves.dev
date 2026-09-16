@@ -61,11 +61,7 @@ export default function MobileSearchIsland() {
 					</div>
 					<div className="search-overlay-form">
 						<div className="search-overlay-input-wrapper">
-							<SearchIcon
-								className="search-overlay-icon"
-								width={20}
-								height={20}
-							/>
+							<SearchIcon className="search-overlay-icon" width={20} height={20} />
 							<input
 								ref={inputRef}
 								id="search-overlay-input"
@@ -80,29 +76,12 @@ export default function MobileSearchIsland() {
 							/>
 						</div>
 					</div>
-					<div
-						id="search-overlay-results"
-						className="search-overlay-results"
-					>
-						{status === "error" && (
-							<div className="search-no-results">
-								Search unavailable
-							</div>
-						)}
-						{status === "no-results" && (
-							<div className="search-no-results">
-								No results found
-							</div>
-						)}
+					<div id="search-overlay-results" className="search-overlay-results">
+						{status === "error" && <div className="search-no-results">Search unavailable</div>}
+						{status === "no-results" && <div className="search-no-results">No results found</div>}
 						{results.map((result) => (
-							<a
-								key={result.url}
-								href={result.url}
-								className="search-result"
-							>
-								<div className="search-result-title">
-									{result.title}
-								</div>
+							<a key={result.url} href={result.url} className="search-result">
+								<div className="search-result-title">{result.title}</div>
 								<div
 									className="search-result-excerpt"
 									dangerouslySetInnerHTML={{
@@ -114,8 +93,8 @@ export default function MobileSearchIsland() {
 					</div>
 					<div className="search-overlay-hint">
 						<p>
-							Try searching for topics like &quot;golang&quot;,
-							&quot;microservices&quot;, or &quot;context&quot;
+							Try searching for topics like &quot;golang&quot;, &quot;microservices&quot;, or
+							&quot;context&quot;
 						</p>
 					</div>
 				</div>

@@ -15,17 +15,13 @@ interface PagefindResult {
 
 interface Pagefind {
 	init: () => Promise<void>;
-	search: (
-		query: string,
-	) => Promise<{ results: { data: () => Promise<PagefindResult> }[] }>;
+	search: (query: string) => Promise<{ results: { data: () => Promise<PagefindResult> }[] }>;
 }
 
 export function usePagefind(maxResults: number = 5) {
 	const pagefindRef = useRef<Pagefind | null>(null);
 	const [results, setResults] = useState<SearchResult[]>([]);
-	const [status, setStatus] = useState<"idle" | "no-results" | "error">(
-		"idle",
-	);
+	const [status, setStatus] = useState<"idle" | "no-results" | "error">("idle");
 	const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
 	const loadPagefind = useCallback(async (): Promise<Pagefind | null> => {
@@ -72,20 +68,12 @@ export function usePagefind(maxResults: number = 5) {
 						return;
 					}
 
-					const data = await Promise.all(
-						searchResponse.results
-							.slice(0, maxResults)
-							.map((r) => r.data()),
-					);
+					const data = await Promise.all(searchResponse.results.slice(0, maxResults).map((r) => r.data()));
 
 					setResults(
 						data.map((r) => ({
 							url: r.url,
-							title:
-								r.meta?.title ||
-								r.meta?.name ||
-								r.title ||
-								r.url,
+							title: r.meta?.title || r.meta?.name || r.title || r.url,
 							excerpt: r.excerpt,
 						})),
 					);

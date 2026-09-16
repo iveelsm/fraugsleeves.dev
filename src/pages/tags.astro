@@ -13,10 +13,7 @@ const uniqueTags = await getUniqueOccurences();
 		<div class="tags-list">
 			{
 				Object.keys(uniqueTags).map((tag) => (
-					<a
-						href={`/blog?tag=${encodeURIComponent(tag)}`}
-						class="tag-link"
-					>
+					<a href={`/blog?tag=${encodeURIComponent(tag)}`} class="tag-link">
 						<span class="tag-name">{tag}</span>
 						<span class="tag-count">{uniqueTags[tag]}</span>
 					</a>

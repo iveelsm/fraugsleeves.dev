@@ -13,9 +13,7 @@ const { frontmatter, headings } = Astro.props;
 const { minutesRead } = frontmatter;
 
 const article = {
-	publishedTime: frontmatter.pubDate
-		? new Date(frontmatter.pubDate).toISOString()
-		: new Date().toISOString(),
+	publishedTime: frontmatter.pubDate ? new Date(frontmatter.pubDate).toISOString() : new Date().toISOString(),
 	authors: frontmatter.author ? [frontmatter.author] : [],
 	tags: frontmatter.tags ? frontmatter.tags : [],
 };

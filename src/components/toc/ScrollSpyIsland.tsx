@@ -3,9 +3,7 @@ import { useEffect } from "react";
 export default function ScrollSpyIsland() {
 	useEffect(() => {
 		const tocLinks = document.querySelectorAll(".article-toc a");
-		const headings = document.querySelectorAll(
-			"main h1[id], main h2[id], main h3[id], main h4[id]",
-		);
+		const headings = document.querySelectorAll("main h1[id], main h2[id], main h3[id], main h4[id]");
 
 		if (headings.length === 0 || tocLinks.length === 0) {
 			return;
@@ -40,8 +38,7 @@ export default function ScrollSpyIsland() {
 		);
 
 		const checkIfAtBottom = () => {
-			const scrollTop =
-				window.scrollY || document.documentElement.scrollTop;
+			const scrollTop = window.scrollY || document.documentElement.scrollTop;
 			const scrollHeight = document.documentElement.scrollHeight;
 			const clientHeight = document.documentElement.clientHeight;
 

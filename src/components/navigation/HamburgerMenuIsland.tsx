@@ -33,18 +33,14 @@ export default function HamburgerMenuIsland() {
 		}
 
 		function handleEscape(e: KeyboardEvent) {
-			if (
-				e.key === "Escape" &&
-				mobileNavOverlay!.classList.contains("active")
-			) {
+			if (e.key === "Escape" && mobileNavOverlay!.classList.contains("active")) {
 				closeMenu();
 			}
 		}
 
 		hamburgerBtn.addEventListener("click", toggleMenu);
 
-		const mobileNavLinks =
-			mobileNavOverlay.querySelectorAll(".mobile-nav-link");
+		const mobileNavLinks = mobileNavOverlay.querySelectorAll(".mobile-nav-link");
 		mobileNavLinks.forEach((link) => {
 			link.addEventListener("click", handleLinkClick);
 		});

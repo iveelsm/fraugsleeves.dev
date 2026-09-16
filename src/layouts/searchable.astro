@@ -19,44 +19,22 @@ interface Props {
 	class?: string;
 }
 
-const {
-	title,
-	description,
-	image,
-	alt,
-	article,
-	class: className,
-} = Astro.props;
+const { title, description, image, alt, article, class: className } = Astro.props;
 ---
 
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link
-			rel="icon"
-			type="image/png"
-			href="/favicon-96x96.png"
-			sizes="96x96"
-		/>
+		<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="shortcut icon" href="/favicon.ico" />
-		<link
-			rel="apple-touch-icon"
-			sizes="180x180"
-			href="/apple-touch-icon.png"
-		/>
+		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 		<meta name="apple-mobile-web-app-title" content="fraugsleeves.dev" />
 		<link rel="manifest" href="/site.webmanifest" />
 		<PreloadFonts />
 		<Rss />
-		<SEO
-			title={title}
-			description={description}
-			image={image}
-			alt={alt}
-			article={article}
-		/>
+		<SEO title={title} description={description} image={image} alt={alt} article={article} />
 		<slot name="head" />
 	</head>
 	<Body class={className}>

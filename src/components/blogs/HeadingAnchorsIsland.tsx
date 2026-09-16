@@ -2,9 +2,7 @@ import { useEffect } from "react";
 
 export default function HeadingAnchorsIsland() {
 	useEffect(() => {
-		const anchorLinks = document.querySelectorAll(
-			".post-content .heading-anchor",
-		);
+		const anchorLinks = document.querySelectorAll(".post-content .heading-anchor");
 
 		const controllers: AbortController[] = [];
 
@@ -40,9 +38,7 @@ export default function HeadingAnchorsIsland() {
 			);
 		});
 
-		document
-			.querySelector(".post-content")
-			?.setAttribute("data-hydrated", "");
+		document.querySelector(".post-content")?.setAttribute("data-hydrated", "");
 
 		return () => {
 			controllers.forEach((c) => c.abort());

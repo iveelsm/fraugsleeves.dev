@@ -80,11 +80,7 @@ export default function DesktopSearchIsland() {
 				className="search-input-wrapper search-desktop"
 				style={{ position: "relative", zIndex: 300 }}
 			>
-				<SearchIcon
-					className="search-input-icon"
-					width={16}
-					height={16}
-				/>
+				<SearchIcon className="search-input-icon" width={16} height={16} />
 				<input
 					ref={inputRef}
 					id="search-input"
@@ -113,25 +109,11 @@ export default function DesktopSearchIsland() {
 				className={`search-dropdown search-desktop${results.length > 0 || status !== "idle" ? " visible" : ""}`}
 			>
 				<div id="search-results" className="search-results">
-					{status === "error" && (
-						<div className="search-no-results">
-							Search unavailable
-						</div>
-					)}
-					{status === "no-results" && (
-						<div className="search-no-results">
-							No results found
-						</div>
-					)}
+					{status === "error" && <div className="search-no-results">Search unavailable</div>}
+					{status === "no-results" && <div className="search-no-results">No results found</div>}
 					{results.map((result) => (
-						<a
-							key={result.url}
-							href={result.url}
-							className="search-result"
-						>
-							<div className="search-result-title">
-								{result.title}
-							</div>
+						<a key={result.url} href={result.url} className="search-result">
+							<div className="search-result-title">{result.title}</div>
 							<div
 								className="search-result-excerpt"
 								dangerouslySetInnerHTML={{

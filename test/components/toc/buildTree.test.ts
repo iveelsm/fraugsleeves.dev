@@ -28,11 +28,7 @@ describe("buildTree", () => {
 		});
 
 		it("should handle multiple h2 headings without nesting", () => {
-			const headings = [
-				h(2, "Section One"),
-				h(2, "Section Two"),
-				h(2, "Section Three"),
-			];
+			const headings = [h(2, "Section One"), h(2, "Section Two"), h(2, "Section Three")];
 			const result = buildTree(headings);
 
 			expect(result).toHaveLength(3);
@@ -55,11 +51,7 @@ describe("buildTree", () => {
 		});
 
 		it("should nest multiple h3s under an h2", () => {
-			const headings = [
-				h(2, "Parent"),
-				h(3, "Child One"),
-				h(3, "Child Two"),
-			];
+			const headings = [h(2, "Parent"), h(3, "Child One"), h(3, "Child Two")];
 			const result = buildTree(headings);
 
 			expect(result).toHaveLength(1);
@@ -72,11 +64,7 @@ describe("buildTree", () => {
 
 	describe("deeply nested headings", () => {
 		it("should handle h2 > h3 > h4 nesting", () => {
-			const headings = [
-				h(2, "Level 2"),
-				h(3, "Level 3"),
-				h(4, "Level 4"),
-			];
+			const headings = [h(2, "Level 2"), h(3, "Level 3"), h(4, "Level 4")];
 			const result = buildTree(headings);
 
 			expect(result).toHaveLength(1);
@@ -88,21 +76,14 @@ describe("buildTree", () => {
 		});
 
 		it("should handle h2 > h3 > h4 > h5 nesting", () => {
-			const headings = [
-				h(2, "Level 2"),
-				h(3, "Level 3"),
-				h(4, "Level 4"),
-				h(5, "Level 5"),
-			];
+			const headings = [h(2, "Level 2"), h(3, "Level 3"), h(4, "Level 4"), h(5, "Level 5")];
 			const result = buildTree(headings);
 
 			expect(result).toHaveLength(1);
 			expect(result[0].children).toHaveLength(1);
 			expect(result[0].children[0].children).toHaveLength(1);
 			expect(result[0].children[0].children[0].children).toHaveLength(1);
-			expect(result[0].children[0].children[0].children[0].text).toBe(
-				"Level 5",
-			);
+			expect(result[0].children[0].children[0].children[0].text).toBe("Level 5");
 		});
 	});
 
@@ -176,11 +157,7 @@ describe("buildTree", () => {
 
 	describe("headings should not appear twice", () => {
 		it("should not duplicate headings in the tree", () => {
-			const headings = [
-				h(2, "Parent"),
-				h(3, "Child One"),
-				h(3, "Child Two"),
-			];
+			const headings = [h(2, "Parent"), h(3, "Child One"), h(3, "Child Two")];
 			const result = buildTree(headings);
 
 			const totalInTree = countHeadings(result);
@@ -188,13 +165,7 @@ describe("buildTree", () => {
 		});
 
 		it("should not duplicate deeply nested headings", () => {
-			const headings = [
-				h(2, "A"),
-				h(3, "B"),
-				h(4, "C"),
-				h(3, "D"),
-				h(2, "E"),
-			];
+			const headings = [h(2, "A"), h(3, "B"), h(4, "C"), h(3, "D"), h(2, "E")];
 			const result = buildTree(headings);
 
 			const totalInTree = countHeadings(result);
@@ -232,13 +203,7 @@ describe("buildTree", () => {
 		});
 
 		it("should handle consecutive deep nesting without duplication", () => {
-			const headings = [
-				h(2, "H2"),
-				h(3, "H3"),
-				h(4, "H4"),
-				h(5, "H5"),
-				h(6, "H6"),
-			];
+			const headings = [h(2, "H2"), h(3, "H3"), h(4, "H4"), h(5, "H5"), h(6, "H6")];
 			const result = buildTree(headings);
 
 			const totalInTree = countHeadings(result);
@@ -246,14 +211,7 @@ describe("buildTree", () => {
 		});
 
 		it("should not duplicate when returning to higher levels", () => {
-			const headings = [
-				h(2, "A"),
-				h(3, "B"),
-				h(4, "C"),
-				h(2, "D"),
-				h(3, "E"),
-				h(4, "F"),
-			];
+			const headings = [h(2, "A"), h(3, "B"), h(4, "C"), h(2, "D"), h(3, "E"), h(4, "F")];
 			const result = buildTree(headings);
 
 			const totalInTree = countHeadings(result);

@@ -23,11 +23,7 @@ const { currentPath, navItems } = Astro.props;
 					class:list={[
 						"toolbar-link",
 						{
-							active: isActive(
-								currentPath,
-								item.href,
-								item.exact,
-							),
+							active: isActive(currentPath, item.href, item.exact),
 						},
 					]}
 				>
