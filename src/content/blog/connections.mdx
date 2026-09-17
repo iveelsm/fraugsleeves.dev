@@ -2,17 +2,19 @@
 title: "The probability of connection failures"
 pubDate: 2026-09-15
 shortDescription: "Explores the probability of connection failures in distributed systems."
-description: "Discussing the impact of connection failures for databases by exploring the probability of connection failures in distributed systems against a variety of connection modes, throughput and refresh intervals."
+description: "This articles is focused around discussing the impact of connection failures in distributed systems, most commonly for persistent database connections by exploring the probability of connection failures in distributed systems against a variety of connection modes, throughput and refresh intervals."
 author: "Mikey Sleevi"
 image:
     url: "https://fraugsleeves.dev/images/epoll_header.png"
     alt: "A diagram of the relationship between process file descriptor tables, file tables and inode tables. It displays four tables of varying colors, two process file descriptor tables and one for the each of the remaining two types. It establishes the major relationships, drawing arrows between shared file descriptors resulting from forks, individual file descriptors and the relationship between file and inode on disk."
-tags: ["node.js", "asynchronous", "polling", "linux", "c", "how-it-works"]
+tags: ["http", "distributed-systems", "mathematics", "how-it-works"]
 ---
 
 import ConnectionSimulator from "../../components/pages/connectionSimulator.astro";
 
 # Introduction
+
+This article is going to be going through a tour of the mathematics and impact of connection failures. We will be exploring the common methods for distributing traffic, the semantics of HTTP persistent connections, the mathematics around the probability of connection failures in distributed systems. The majority of this article is structured through a lens of an ephemeral outage the author tracked down, but provides an expansion to allow the reader to explore a variety of possibilities.
 
 # Common styles of connection methods
 
@@ -26,10 +28,12 @@ import ConnectionSimulator from "../../components/pages/connectionSimulator.astr
 
 ## A simple background architecture
 
-## Mathematical description
-
 ## Simulation
 
 <ConnectionSimulator />
 
 # Estimating your failure rate
+
+## The mathematics of connection failure
+
+# References
