@@ -1,8 +1,8 @@
 ---
 title: "The probability of connection failures"
 pubDate: 2026-09-15
-shortDescription: "Explores the probability of connection failures in distributed systems."
-description: "This articles is focused around discussing the impact of connection failures in distributed systems, most commonly for persistent database connections by exploring the probability of connection failures in distributed systems against a variety of connection modes, throughput and refresh intervals."
+shortDescription: "Explores the impact and probability of connection failures in distributed systems."
+description: "This article is focused around discussing the impact of connection failures in distributed systems, most commonly for persistent database connections by exploring the probability of connection failures in distributed systems against a variety of connection modes, throughput and refresh intervals."
 author: "Mikey Sleevi"
 image:
     url: "https://fraugsleeves.dev/images/epoll_header.png"
@@ -16,7 +16,15 @@ import ConnectionSimulator from "../../components/pages/connectionSimulator.astr
 
 This article is going to be going through a tour of the mathematics and impact of connection failures. We will be exploring the common methods for distributing traffic, the semantics of HTTP persistent connections, the mathematics around the probability of connection failures in distributed systems. The majority of this article is structured through a lens of an ephemeral outage the author tracked down, but provides an expansion to allow the reader to explore a variety of possibilities.
 
-# Common styles of connection methods
+# Common patterns for connection distribution
+
+There are probably an infinite number of ways to distribute connections between a finite number of nodes. We could distribute based on moon cycles, or the modulo of the current second and node count, or we could do something a bit more sane. In general there are three really commons load balancer patterns for request distribution, each has it's drawbacks and benefits.[[1]](https://www.cloudflare.com/learning/performance/types-of-load-balancing-algorithms/) They are:
+
+* **Round Robin**: Distributes traffic to a list of servers in a rotation.
+* **Least Connections**: Checks which servers have the fewest connections open at the time and sends traffic to those servers.
+* **Resource Based**: Distributes load based on what resources each server has available at the time.
+
+Of these, **Round Robin** is far and away the most common algorithm, followed by **Least Connections**. However, we will be replacing the final selection with something unconventional, **Random** selection. The reason being is that **Resource Based** distribution is relatively uncommon, and anyone using it is already understands everything this article is about to lay out. In addition, **Random** selection is often a simple replacement for **Round Robin** with suprisingly good results[[2]](https://vigna.di.unimi.it/ftp/papers/ScrambledLinear.pdf) for small sets while being easier to implement in production code.
 
 ## Round Robin
 
@@ -37,3 +45,6 @@ This article is going to be going through a tour of the mathematics and impact o
 ## The mathematics of connection failure
 
 # References
+
+1. https://www.cloudflare.com/learning/performance/types-of-load-balancing-algorithms/
+2. https://vigna.di.unimi.it/ftp/papers/ScrambledLinear.pdf
