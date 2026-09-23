@@ -23,13 +23,11 @@ const { title, date, description, minutesRead, author } = Astro.props;
 			</div>
 			<div class="post-header-collapsible">
 				<p class="post-summary">{description}</p>
-				{
-					author && (
-						<p class="post-author-line">
-							<strong>Author:</strong> {author}
-						</p>
-					)
-				}
+				{author && (
+					<p class="post-author-line">
+						<strong>Author:</strong> {author}
+					</p>
+				)}
 				<span class="post-header-date">
 					<strong>Published:</strong>
 					{new Date(date).toDateString()}

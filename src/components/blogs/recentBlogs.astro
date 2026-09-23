@@ -11,17 +11,18 @@ const recentBlogs = allBlogs.slice(0, 3);
 <section class="posts-section">
 	<h2 class="section-title">Recent Posts</h2>
 	<ul class="posts-list">
-		{
-			recentBlogs.map((post) => (
-				<BlogPostItem
-					title={post.data.title}
-					href={`/blog/${post.id}`}
-					date={post.data.pubDate}
-					description={post.data.description}
-					tags={post.data.tags}
-				/>
-			))
-		}
+		{recentBlogs.map((post) => (
+			<BlogPostItem
+				title={post.data.title}
+				href={`/blog/${post.id}`}
+				date={post.data.pubDate}
+				description={post.data.description}
+				tags={post.data.tags}
+			/>
+		))}
 	</ul>
-	<a href="/blog" class="view-all-link"> View all posts → </a>
+	<a href="/blog" class="view-all-link">
+		{" "}
+		View all posts →{" "}
+	</a>
 </section>

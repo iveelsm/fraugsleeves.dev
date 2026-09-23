@@ -16,13 +16,11 @@ import { Searchable } from "../layouts/";
 			<h1 class="welcome-title">Welcome!</h1>
 			<p class="welcome-text">To an exposition of wayfinding within software development</p>
 			<div class="social-links">
-				{
-					SOCIAL_LINKS.map((link) => (
-						<a href={link.href} class="social-link" aria-label={link.label} target="_blank" rel="noopener noreferrer">
-							<link.icon width={24} height={24} />
-						</a>
-					))
-				}
+				{SOCIAL_LINKS.map((link) => (
+					<a href={link.href} class="social-link" aria-label={link.label} target="_blank" rel="noopener noreferrer">
+						<link.icon width={24} height={24} />
+					</a>
+				))}
 			</div>
 		</section>
 

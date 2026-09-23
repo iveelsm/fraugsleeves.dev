@@ -9,16 +9,16 @@ const currentYear = new Date().getFullYear();
 <footer class="site-footer">
 	<div class="footer-content">
 		<div class="footer-copyright">
-			<p>© {currentYear} {DEFAULT_TITLE}</p>
+			<p>
+				© {currentYear} {DEFAULT_TITLE}
+			</p>
 		</div>
 		<div class="footer-social">
-			{
-				SOCIAL_LINKS.map((link) => (
-					<a href={link.href} class="social-link" aria-label={link.label} target="_blank" rel="noopener noreferrer">
-						<link.icon width={20} height={20} />
-					</a>
-				))
-			}
+			{SOCIAL_LINKS.map((link) => (
+				<a href={link.href} class="social-link" aria-label={link.label} target="_blank" rel="noopener noreferrer">
+					<link.icon width={20} height={20} />
+				</a>
+			))}
 		</div>
 	</div>
 </footer>

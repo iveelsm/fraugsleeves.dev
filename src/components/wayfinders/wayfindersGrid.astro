@@ -7,14 +7,12 @@ const wayfinders = (await getCollection("wayfinders")).sort((a, b) => b.data.pub
 ---
 
 <div class="wayfinders-grid">
-	{
-		wayfinders.map((wayfinder) => (
-			<Card
-				title={wayfinder.data.title}
-				description={wayfinder.data.description}
-				date={wayfinder.data.pubDate}
-				href={`/wayfinders/${wayfinder.id}`}
-			/>
-		))
-	}
+	{wayfinders.map((wayfinder) => (
+		<Card
+			title={wayfinder.data.title}
+			description={wayfinder.data.description}
+			date={wayfinder.data.pubDate}
+			href={`/wayfinders/${wayfinder.id}`}
+		/>
+	))}
 </div>

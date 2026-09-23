@@ -20,15 +20,13 @@ import { formatText } from "../formatText";
 		<span class="post-date">{formatDate(date)}</span>
 	</a>
 	{description && <p class="post-description">{description}</p>}
-	{
-		showTags && tags.length > 0 && (
-			<div class="post-tags">
-				{tags.map((tag: string) => (
-					<a href={`/blog?tag=${encodeURIComponent(tag)}`} class="post-tag" data-tag={tag}>
-						{tag}
-					</a>
-				))}
-			</div>
-		)
-	}
+	{showTags && tags.length > 0 && (
+		<div class="post-tags">
+			{tags.map((tag: string) => (
+				<a href={`/blog?tag=${encodeURIComponent(tag)}`} class="post-tag" data-tag={tag}>
+					{tag}
+				</a>
+			))}
+		</div>
+	)}
 </li>

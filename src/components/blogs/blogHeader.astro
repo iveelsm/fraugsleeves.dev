@@ -25,32 +25,26 @@ const { title, date, description, minutesRead, author, editors, tags } = Astro.p
 			</div>
 			<div class="post-header-collapsible">
 				<p class="post-summary">{description}</p>
-				{
-					author && (
-						<p class="post-author-line">
-							<strong>Author:</strong> {author}
-						</p>
-					)
-				}
-				{
-					editors && editors.length > 0 && (
-						<p class="post-editors-line">
-							<strong>Editors:</strong> {editors.join(", ")}
-						</p>
-					)
-				}
+				{author && (
+					<p class="post-author-line">
+						<strong>Author:</strong> {author}
+					</p>
+				)}
+				{editors && editors.length > 0 && (
+					<p class="post-editors-line">
+						<strong>Editors:</strong> {editors.join(", ")}
+					</p>
+				)}
 				<span class="post-header-date">
 					<strong>Published:</strong>
 					{new Date(date).toDateString()}
 				</span>
 				<div class="post-tags">
-					{
-						tags.map((tag) => (
-							<a href={`/blog?tag=${encodeURIComponent(tag)}`} class="post-tag" data-tag={tag}>
-								{tag}
-							</a>
-						))
-					}
+					{tags.map((tag) => (
+						<a href={`/blog?tag=${encodeURIComponent(tag)}`} class="post-tag" data-tag={tag}>
+							{tag}
+						</a>
+					))}
 				</div>
 			</div>
 		</div>
