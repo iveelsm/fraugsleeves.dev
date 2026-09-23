@@ -16,21 +16,19 @@ const { currentPath, navItems } = Astro.props;
 
 <div class="toolbar-right toolbar-desktop">
 	<div class="toolbar-links">
-		{
-			navItems.map((item) => (
-				<a
-					href={item.href}
-					class:list={[
-						"toolbar-link",
-						{
-							active: isActive(currentPath, item.href, item.exact),
-						},
-					]}
-				>
-					{item.label}
-				</a>
-			))
-		}
+		{navItems.map((item) => (
+			<a
+				href={item.href}
+				class:list={[
+					"toolbar-link",
+					{
+						active: isActive(currentPath, item.href, item.exact),
+					},
+				]}
+			>
+				{item.label}
+			</a>
+		))}
 	</div>
 	<DesktopSearch />
 </div>

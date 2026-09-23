@@ -7,14 +7,12 @@ const { headings } = Astro.props;
 const toc = buildTree(headings);
 ---
 
-{
-	toc && toc.length > 0 && (
-		<nav class="article-toc">
-			<ul>
-				{toc.map((heading) => (
-					<Entry heading={heading} />
-				))}
-			</ul>
-		</nav>
-	)
-}
+{toc && toc.length > 0 && (
+	<nav class="article-toc">
+		<ul>
+			{toc.map((heading) => (
+				<Entry heading={heading} />
+			))}
+		</ul>
+	</nav>
+)}
