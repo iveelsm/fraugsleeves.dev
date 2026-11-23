@@ -1,7 +1,9 @@
 {
 	extends: ["config:recommended", "helpers:pinGitHubActionDigests"],
 	minimumReleaseAge: "14 days",
-	dependencyDashboard: true,
+	dependencyDashboard: {
+		enabled: true,
+	},
 	packageRules: [
 		{
 			groupName: "npm dependencies",
